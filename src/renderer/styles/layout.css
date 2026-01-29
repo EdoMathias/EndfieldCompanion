@@ -2,19 +2,37 @@
    Main Layout
 --------------------------------*/
 
-.tracker-main {
-  padding: 20px;
-  height: calc(100vh - 60px);
-  overflow: hidden;
-  width: 100%;
-  box-sizing: border-box;
+.app-layout {
   display: flex;
-  flex-direction: row;
-  gap: 20px;
+  flex-direction: column;
+  height: 100vh;
   background-color: #0b0c15;
 }
 
-.tracker-main-content-wrapper {
+.app-body {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.side-nav {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: #161925;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  /* border-radius: var(--radius); */
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.1);
+}
+
+.main-content {
+  flex: 1;
+  overflow: hidden;
+  background-color: #0b0c15;
+  padding: 20px;
+}
+
+.main-content-wrapper {
   flex: 1;
   display: flex;
   flex-direction: row;
@@ -22,7 +40,7 @@
   overflow: hidden;
 }
 
-.tracker-main-content {
+.main-content-container {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -114,11 +132,9 @@
   justify-content: center;
   padding: 60px 40px;
   text-align: center;
-  background: linear-gradient(
-    135deg,
-    rgba(6, 182, 212, 0.03) 0%,
-    rgba(6, 182, 212, 0.08) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(6, 182, 212, 0.03) 0%,
+      rgba(6, 182, 212, 0.08) 100%);
   border: 1px dashed rgba(6, 182, 212, 0.3);
   border-radius: var(--radius);
   min-height: 300px;
@@ -154,17 +170,18 @@
    Ad Container Sidebar
 --------------------------------*/
 
-.tracker-ad-sidebar {
+.ad-sidebar {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 20px;
   flex-shrink: 0;
   width: 440px;
   height: 100%;
   align-items: center;
 }
 
-.tracker-ad-container-base {
+.ad-container-base {
   background-color: #161925;
   border: 1px solid rgba(52, 211, 153, 0.2);
   border-radius: var(--radius);

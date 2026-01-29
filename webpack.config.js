@@ -8,8 +8,8 @@ const
 module.exports = env => ({
     entry: {
         background: './src/main/background.ts',
-        main_desktop: './src/renderer/main-window/main.tsx',
-        main_ingame: './src/renderer/main-window/main.tsx'
+        main_desktop: './src/renderer/main-window/Main.tsx',
+        main_ingame: './src/renderer/main-window/Main.tsx'
     },
     devtool: 'inline-source-map',
     module: {
