@@ -23,13 +23,13 @@
   "data": {
     "start_window": "background",
     "hotkeys": {
-      "Toggle In-Game Tracker": {
-        "title": "Toggle In-Game Tracker",
+      "Toggle In-Game Main": {
+        "title": "Toggle In-Game Main",
         "action-type": "custom",
         "default": "Ctrl+T"
       },
-      "Toggle Desktop Tracker": {
-        "title": "Toggle Desktop Tracker",
+      "Toggle Desktop Main": {
+        "title": "Toggle Desktop Main",
         "action-type": "custom",
         "default": "Ctrl+Shift+T"
       }
@@ -51,8 +51,8 @@
         "background_optimization": true,
         "is_background_page": true
       },
-      "tracker_desktop": {
-        "file": "tracker_desktop.html",
+      "main_desktop": {
+        "file": "main_desktop.html",
         "desktop_only": true,
         "native_window": true,
         "resizable": true,
@@ -68,15 +68,15 @@
           "height": 800
         }
       },
-      "tracker_ingame": {
-        "file": "tracker_ingame.html",
+      "main_ingame": {
+        "file": "main_ingame.html",
         "in_game_only": true,
         "resizable": true,
         "transparent": true,
         "override_on_update": true,
         "grab_keyboard_focus": true,
         "focus_game_takeover": "ReleaseOnHidden",
-        "focus_game_takeover_release_hotkey": "Toggle In-Game Tracker",
+        "focus_game_takeover_release_hotkey": "Toggle In-Game Main",
         "size": {
           "width": 1600,
           "height": 800

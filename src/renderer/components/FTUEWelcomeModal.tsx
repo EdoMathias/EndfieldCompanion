@@ -10,11 +10,11 @@ const logger = createLogger('FTUEWelcomeModal');
 export const FTUEWelcomeModal: React.FC = () => {
   const { shouldShowStep, markStepComplete } = useFTUE();
   const [hotkeys, setHotkeys] = useState<{
-    trackMeIngame: string;
-    trackMeDesktop: string;
+    toggleMainIngameWindow: string;
+    toggleMainDesktopWindow: string;
   }>({
-    trackMeIngame: 'Ctrl+G',
-    trackMeDesktop: 'Ctrl+Shift+G',
+    toggleMainIngameWindow: 'Ctrl+G',
+    toggleMainDesktopWindow: 'Ctrl+Shift+G',
   });
 
   const show = shouldShowStep('welcome');
@@ -24,11 +24,11 @@ export const FTUEWelcomeModal: React.FC = () => {
 
     const loadHotkeys = async () => {
       try {
-        const [trackMeIngame, trackMeDesktop] = await Promise.all([
-          OWHotkeys.getHotkeyText(kHotkeys.toggleTrackerIngameWindow),
-          OWHotkeys.getHotkeyText(kHotkeys.toggleTrackerDesktopWindow),
+        const [toggleMainIngameWindow, toggleMainDesktopWindow] = await Promise.all([
+          OWHotkeys.getHotkeyText(kHotkeys.toggleMainIngameWindow),
+          OWHotkeys.getHotkeyText(kHotkeys.toggleMainDesktopWindow),
         ]);
-        setHotkeys({ trackMeIngame, trackMeDesktop });
+        setHotkeys({ toggleMainIngameWindow, toggleMainDesktopWindow });
       } catch (error) {
         logger.error('Error loading hotkeys:', error);
       }
@@ -60,10 +60,10 @@ export const FTUEWelcomeModal: React.FC = () => {
               <h3>Window Management</h3>
               <p>Control your app windows with customizable hotkeys.</p>
               <span>Show/Hide the window in-game with: </span>
-              <div className="ftue-hotkey-badge">{hotkeys.trackMeIngame}</div>
+              <div className="ftue-hotkey-badge">{hotkeys.toggleMainIngameWindow}</div>
               <br />
               <span>Show/Hide the window on desktop with: </span>
-              <div className="ftue-hotkey-badge">{hotkeys.trackMeDesktop}</div>
+              <div className="ftue-hotkey-badge">{hotkeys.toggleMainDesktopWindow}</div>
             </div>
           </div>
 

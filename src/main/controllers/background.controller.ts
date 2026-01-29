@@ -58,7 +58,7 @@ export class BackgroundController {
       this._isGameRunning = true;
     } else {
       // Change later to primary
-      await this._windowsController.showTrackerDesktopWindow('secondary');
+      await this._windowsController.showMainDesktopWindow('secondary');
       this._isGameRunning = false;
     }
   }
@@ -72,7 +72,7 @@ export class BackgroundController {
       this._isGameRunning = true;
     } else {
       // Change later to primary
-      await this._windowsController.showTrackerDesktopWindow('secondary');
+      await this._windowsController.showMainDesktopWindow('secondary');
       this._isGameRunning = false;
     }
   }
@@ -81,21 +81,21 @@ export class BackgroundController {
    * Sets up the hotkey handlers.
    */
   private setupHotkeyHandlers(): void {
-    // Show/Hide Desktop Tracker Window
-    this._hotkeysService.on(kHotkeys.toggleTrackerDesktopWindow, async () => {
+    // Show/Hide Desktop Main Window
+    this._hotkeysService.on(kHotkeys.toggleMainDesktopWindow, async () => {
       try {
-        await this._windowsController.toggleTrackerDesktopWindow();
+        await this._windowsController.toggleMainDesktopWindow();
       } catch (error) {
-        logger.error('Error toggling desktop tracker window:', error);
+        logger.error('Error toggling desktop main window:', error);
       }
     });
 
-    // Show/Hide In-Game Tracker Window
-    this._hotkeysService.on(kHotkeys.toggleTrackerIngameWindow, async () => {
+    // Show/Hide In-Game Main Window
+    this._hotkeysService.on(kHotkeys.toggleMainIngameWindow, async () => {
       try {
-        await this._windowsController.toggleTrackerIngameWindow();
+        await this._windowsController.toggleMainIngameWindow();
       } catch (error) {
-        logger.error('Error toggling in-game tracker window:', error);
+        logger.error('Error toggling in-game main window:', error);
       }
     });
 
@@ -109,7 +109,7 @@ export class BackgroundController {
       await this._windowsController.onGameLaunch();
     } else {
       // Change later to primary
-      await this._windowsController.showTrackerDesktopWindow('secondary');
+      await this._windowsController.showMainDesktopWindow('secondary');
     }
   }
 

@@ -19,38 +19,38 @@ export class WindowsController {
     }
 
     public async onGameLaunch(): Promise<void> {
-        // if has second monitor, show the tracker window on the second monitor
+        // if has second monitor, show the main desktop window on the second monitor
         if (this._monitorsService.hasSecondMonitor()) {
-            await this._windowsService.showTrackerDesktopWindow('secondary');
-            logger.log('Moving tracker desktop window to secondary monitor');
+            await this._windowsService.showMainDesktopWindow('secondary');
+            logger.log('Moving main desktop window to secondary monitor');
         }
 
-        // Create the in-game tracker window but don't show it yet
-        await this._windowsService.createTrackerIngameWindow();
+        // Create the main in-game window but don't show it yet
+        await this._windowsService.createMainIngameWindow();
     }
 
     public async onGameExit(): Promise<void> {
-        // Close the in-game tracker window
-        await this._windowsService.closeTrackerIngameWindow();
+        // Close the main in-game window
+        await this._windowsService.closeMainIngameWindow();
 
-        // Move the desktop tracker window to the center of the main monitor
-        await this._windowsService.showTrackerDesktopWindow('primary');
+        // Move the main desktop window to the center of the main monitor
+        await this._windowsService.showMainDesktopWindow('primary');
     }
 
-    public async showTrackerDesktopWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
-        await this._windowsService.showTrackerDesktopWindow(centerOnMonitor, dockTo);
+    public async showMainDesktopWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        await this._windowsService.showMainDesktopWindow(centerOnMonitor, dockTo);
     }
 
-    public async showTrackerIngameWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
-        await this._windowsService.showTrackerIngameWindow(centerOnMonitor, dockTo);
+    public async showMainIngameWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        await this._windowsService.showMainIngameWindow(centerOnMonitor, dockTo);
     }
 
-    public async toggleTrackerDesktopWindow(): Promise<void> {
-        await this._windowsService.toggleTrackerDesktopWindow();
+    public async toggleMainDesktopWindow(): Promise<void> {
+        await this._windowsService.toggleMainDesktopWindow();
     }
 
-    public async toggleTrackerIngameWindow(): Promise<void> {
-        await this._windowsService.toggleTrackerIngameWindow();
+    public async toggleMainIngameWindow(): Promise<void> {
+        await this._windowsService.toggleMainIngameWindow();
     }
 }
 

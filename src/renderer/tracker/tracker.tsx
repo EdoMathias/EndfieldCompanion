@@ -173,7 +173,7 @@ const Tracker: React.FC = () => {
       try {
         // Try to get hotkey text from any game
         const text = await OWHotkeys.getHotkeyText(
-          kHotkeys.toggleTrackerIngameWindow
+          kHotkeys.toggleMainIngameWindow
         );
         setHotkeyText(text);
       } catch (error) {
@@ -183,7 +183,7 @@ const Tracker: React.FC = () => {
 
     overwolf.settings.hotkeys.onChanged.addListener(
       (event: overwolf.settings.hotkeys.OnChangedEvent) => {
-        if (event.name === kHotkeys.toggleTrackerIngameWindow) {
+        if (event.name === kHotkeys.toggleMainIngameWindow) {
           setHotkeyText(event.binding);
         }
       }

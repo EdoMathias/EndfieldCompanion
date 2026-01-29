@@ -15,25 +15,25 @@ export const useWindowInfo = (): { windowName: string; isIngameWindow: boolean }
           if (result.success && result.window) {
             const windowName = result.window.name;
             // Check if it's desktop or in-game version
-            if (windowName === kWindowNames.trackerDesktop || windowName === kWindowNames.trackerIngame) {
+            if (windowName === kWindowNames.mainDesktop || windowName === kWindowNames.mainIngame) {
               resolve(windowName);
             } else {
               // Fallback to desktop if detection fails
-              resolve(kWindowNames.trackerDesktop);
+              resolve(kWindowNames.mainDesktop);
             }
           } else {
             // Fallback to desktop if detection fails
-            resolve(kWindowNames.trackerDesktop);
+            resolve(kWindowNames.mainDesktop);
           }
         });
       });
     };
 
     detectWindowName().then((windowName) => {
-      logger.log('Detected tracker window', windowName);
+      logger.log('Detected main window', windowName);
       // Set whether this is the in-game window
       setWindowName(windowName);
-      setIsIngameWindow(windowName === kWindowNames.trackerIngame);
+      setIsIngameWindow(windowName === kWindowNames.mainIngame);
     });
   }, []);
 

@@ -3,13 +3,13 @@ export const kEndfieldClassId = 27724;
 
 export const kWindowNames = {
   background: 'background',
-  trackerDesktop: 'tracker_desktop',
-  trackerIngame: 'tracker_ingame',
+  mainDesktop: 'main_desktop',
+  mainIngame: 'main_ingame',
 };
 
 export const kHotkeys = {
-  toggleTrackerIngameWindow: 'Toggle In-Game Tracker',
-  toggleTrackerDesktopWindow: 'Toggle Desktop Tracker',
+  toggleMainIngameWindow: 'Toggle In-Game Main',
+  toggleMainDesktopWindow: 'Toggle Desktop Main',
 };
 
 export type HotkeyData = {

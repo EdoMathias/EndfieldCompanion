@@ -16,8 +16,8 @@ interface FTUEContextType {
 
 const FTUEContext = createContext<FTUEContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'fortnite_tracker_ftue_completed';
-const STEPS_STORAGE_KEY = 'fortnite_tracker_ftue_steps';
+const STORAGE_KEY = 'endfield_companion_ftue_completed';
+const STEPS_STORAGE_KEY = 'endfield_companion_ftue_steps';
 
 export const FTUEProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isFTUEComplete, setIsFTUEComplete] = useState<boolean>(() => {

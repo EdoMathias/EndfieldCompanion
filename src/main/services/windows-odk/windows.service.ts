@@ -11,18 +11,18 @@ const logger = createLogger('WindowsManagerService');
 type WindowTypes = DesktopWindow | OSRWindow;
 
 const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = {
-    'tracker_desktop': {
-        id: 'tracker_desktop',
-        url: 'tracker_desktop.html',
+    'main_desktop': {
+        id: 'main_desktop',
+        url: 'main_desktop.html',
         width: 1600,
         minWidth: 1600,
         height: 800,
         minHeight: 800,
         resizable: true,
     },
-    'tracker_ingame': {
-        id: 'tracker_ingame',
-        url: 'tracker_ingame.html',
+    'main_ingame': {
+        id: 'main_ingame',
+        url: 'main_ingame.html',
         width: 1600,
         height: 800,
         minWidth: 1600,
@@ -33,8 +33,8 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
 }
 
 export class WindowsService {
-    private _trackerDesktopWindow: DesktopWindow | undefined;
-    private _trackerIngameWindow: OSRWindow | undefined;
+    private _mainDesktopWindow: DesktopWindow | undefined;
+    private _mainIngameWindow: OSRWindow | undefined;
 
     private _monitorsService: MonitorsService;
 
@@ -59,57 +59,57 @@ export class WindowsService {
     }
 
     //--------------------------------------------------------------------------
-    // Tracker Desktop Window
-    public async createTrackerDesktopWindow(): Promise<void> {
-        if (this._trackerDesktopWindow && await this._trackerDesktopWindow.isOpen()) {
+    // Main Desktop Window
+    public async createMainDesktopWindow(): Promise<void> {
+        if (this._mainDesktopWindow && await this._mainDesktopWindow.isOpen()) {
             return;
         } else {
-            this._trackerDesktopWindow = new DesktopWindow(windowsConfigs['tracker_desktop']);
-            logger.log('Tracker desktop window created');
+            this._mainDesktopWindow = new DesktopWindow(windowsConfigs['main_desktop']);
+            logger.log('Main desktop window created');
         }
     }
 
-    public async showTrackerDesktopWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
-        if (!this._trackerDesktopWindow || !(await this._trackerDesktopWindow.isOpen())) {
-            await this.createTrackerDesktopWindow();
+    public async showMainDesktopWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        if (!this._mainDesktopWindow || !(await this._mainDesktopWindow.isOpen())) {
+            await this.createMainDesktopWindow();
         }
 
-        await this.showWindow(this._trackerDesktopWindow, centerOnMonitor, dockTo);
+        await this.showWindow(this._mainDesktopWindow, centerOnMonitor, dockTo);
     }
 
-    public async closeTrackerDesktopWindow(): Promise<void> {
-        await this.closeWindow(this._trackerDesktopWindow);
+    public async closeMainDesktopWindow(): Promise<void> {
+        await this.closeWindow(this._mainDesktopWindow);
     }
 
-    public async toggleTrackerDesktopWindow(): Promise<void> {
-        await this.toggleWindow(this._trackerDesktopWindow);
+    public async toggleMainDesktopWindow(): Promise<void> {
+        await this.toggleWindow(this._mainDesktopWindow);
     }
 
     //--------------------------------------------------------------------------
-    // Tracker Ingame Window
-    public async createTrackerIngameWindow(): Promise<void> {
-        if (this._trackerIngameWindow && await this._trackerIngameWindow.isOpen()) {
+    // Main Ingame Window
+    public async createMainIngameWindow(): Promise<void> {
+        if (this._mainIngameWindow && await this._mainIngameWindow.isOpen()) {
             return;
         } else {
-            this._trackerIngameWindow = new OSRWindow(windowsConfigs['tracker_ingame']);
-            logger.log('Tracker in-game window created');
+            this._mainIngameWindow = new OSRWindow(windowsConfigs['main_ingame']);
+            logger.log('Main in-game window created');
         }
     }
 
-    public async showTrackerIngameWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
-        if (!this._trackerIngameWindow || !(await this._trackerIngameWindow.isOpen())) {
-            await this.createTrackerIngameWindow();
+    public async showMainIngameWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        if (!this._mainIngameWindow || !(await this._mainIngameWindow.isOpen())) {
+            await this.createMainIngameWindow();
         }
 
-        await this.showWindow(this._trackerIngameWindow, centerOnMonitor, dockTo);
+        await this.showWindow(this._mainIngameWindow, centerOnMonitor, dockTo);
     }
 
-    public async closeTrackerIngameWindow(): Promise<void> {
-        await this.closeWindow(this._trackerIngameWindow);
+    public async closeMainIngameWindow(): Promise<void> {
+        await this.closeWindow(this._mainIngameWindow);
     }
 
-    public async toggleTrackerIngameWindow(): Promise<void> {
-        await this.toggleWindow(this._trackerIngameWindow);
+    public async toggleMainIngameWindow(): Promise<void> {
+        await this.toggleWindow(this._mainIngameWindow);
     }
 
     //--------------------------------------------------------------------------
