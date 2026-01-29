@@ -12,14 +12,20 @@ body {
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-ark);
+  height: 100%;
+  margin: 0;
 }
 
 html {
   font-size: var(--font-size);
+  height: 100%;
+  margin: 0;
 }
 
-body {
-  font-family: var(--font-ark);
+#root {
+  height: 100%;
+  margin: 0;
 }
 
 /* ------------------------------

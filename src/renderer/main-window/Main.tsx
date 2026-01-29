@@ -65,14 +65,23 @@ const Main: React.FC = () => {
 
             <div className="app-body">
                 <div className="side-nav-wrapper">
-                    <div
-                        className={`side-nav ${navExpanded ? 'side-nav--expanded' : ''}`}
-                        onMouseEnter={() => setNavExpanded(true)}
-                        onMouseLeave={() => setNavExpanded(false)}
-                    >
+                    <div className={`side-nav ${navExpanded ? 'side-nav--expanded' : ''}`}>
                         <button className="side-nav-button">
                             <img src="../../img/logo-icon.png" alt="Side Nav Icon" />
-                            <span>Home</span>
+                            <span>Rare Growth</span>
+                        </button>
+                        <button className="side-nav-button">
+                            <img src="../../img/logo-icon.png" alt="Side Nav Icon" />
+                            <span>Rotations</span>
+                        </button>
+                        <button
+                            type="button"
+                            className="side-nav-toggle"
+                            onClick={() => setNavExpanded(!navExpanded)}
+                            title={navExpanded ? 'Collapse menu' : 'Expand menu'}
+                            aria-expanded={navExpanded}
+                        >
+                            <span>{navExpanded ? '<<' : '>>'}</span>
                         </button>
                     </div>
                 </div>
