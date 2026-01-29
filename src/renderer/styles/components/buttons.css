@@ -1,0 +1,146 @@
+/* ------------------------------
+   Button Base Styles
+--------------------------------*/
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: var(--font-ark);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ------------------------------
+   Button Variants
+--------------------------------*/
+
+.btn-primary {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.btn-primary:hover:not(.btn-disabled) {
+  background-color: rgba(45, 244, 167, 0.1);
+  border-color: rgba(45, 244, 167, 0.4);
+  color: rgba(45, 244, 167, 1);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background-color: rgba(212, 6, 6, 0.1);
+  border-color: rgba(212, 6, 6, 0.3);
+  color: rgba(212, 6, 6, 1);
+}
+
+.btn-danger:hover:not(.btn-disabled) {
+  background-color: rgba(212, 6, 6, 0.2);
+  border-color: rgba(212, 6, 6, 0.5);
+  box-shadow: 0 0 8px rgba(212, 6, 6, 0.2);
+}
+
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.btn-secondary:hover:not(.btn-disabled) {
+  background-color: rgba(45, 244, 167, 0.1);
+  border-color: rgba(45, 244, 167, 0.4);
+  color: rgba(45, 244, 167, 1);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  border-color: transparent;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.btn-ghost:hover:not(.btn-disabled) {
+  background-color: rgba(45, 244, 167, 0.1);
+  color: rgba(45, 244, 167, 1);
+}
+
+/* ------------------------------
+   Button Sizes
+--------------------------------*/
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-medium {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.btn-large {
+  padding: 14px 28px;
+  font-size: 16px;
+}
+
+/* ------------------------------
+   Settings Buttons
+--------------------------------*/
+
+.settings-button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: var(--font-ark);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 120ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid;
+}
+
+.settings-button-primary {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.settings-button-primary:hover {
+  background-color: rgba(45, 244, 167, 0.1);
+  border-color: rgba(45, 244, 167, 0.4);
+  color: rgba(45, 244, 167, 1);
+  transform: translateY(-1px);
+}
+
+.settings-button-danger {
+  background-color: rgba(212, 6, 6, 0.1);
+  border-color: rgba(212, 6, 6, 0.3);
+  color: rgba(212, 6, 6, 1);
+}
+
+.settings-button-danger:hover {
+  background-color: rgba(212, 6, 6, 0.2);
+  border-color: rgba(212, 6, 6, 0.5);
+  box-shadow: 0 0 8px rgba(212, 6, 6, 0.2);
+}
+
+.settings-button:active {
+  transform: scale(0.95);
+}
