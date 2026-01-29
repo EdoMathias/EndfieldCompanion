@@ -13,6 +13,7 @@ import { useAppVersion } from '../hooks/useAppVersion';
 const Main: React.FC = () => {
     const { isIngameWindow } = useWindowInfo();
     const appVersion = useAppVersion();
+    const [navExpanded, setNavExpanded] = React.useState(false);
 
     //------------------------HEADER ACTION BUTTONS-----------------------------
     const handleSettingsClick = () => {
@@ -63,11 +64,17 @@ const Main: React.FC = () => {
             </div>
 
             <div className="app-body">
-                <div className="side-nav">
-                    <button className="side-nav-button">
-                        <img src="../../img/logo-icon.png" alt="Side Nav Icon" />
-                        <span>Home</span>
-                    </button>
+                <div className="side-nav-wrapper">
+                    <div
+                        className={`side-nav ${navExpanded ? 'side-nav--expanded' : ''}`}
+                        onMouseEnter={() => setNavExpanded(true)}
+                        onMouseLeave={() => setNavExpanded(false)}
+                    >
+                        <button className="side-nav-button">
+                            <img src="../../img/logo-icon.png" alt="Side Nav Icon" />
+                            <span>Home</span>
+                        </button>
+                    </div>
                 </div>
 
                 <main className="main-content">
