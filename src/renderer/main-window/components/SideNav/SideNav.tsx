@@ -1,0 +1,35 @@
+import React from 'react';
+
+import SideNavButton from './SideNavButton';
+import SideNavToggle from './SideNavToggle';
+
+interface SideNavProps {
+    views: Array<{
+        name: string;
+        icon: string;
+    }>;
+    activeView: string;
+    setActiveView: (view: string) => void;
+}
+
+const SideNav: React.FC<SideNavProps> = ({ views, activeView, setActiveView }) => {
+    const [navExpanded, setNavExpanded] = React.useState(false);
+
+    const handleViewClick = (view: string) => {
+        setActiveView(view);
+        setNavExpanded(false);
+    };
+
+    return (
+        <div className="side-nav-wrapper">
+            <div className={`side-nav ${navExpanded ? 'side-nav--expanded' : ''}`}>
+                {views.map((view) => (
+                    <SideNavButton key={view.name} icon={view.icon} title={view.name} active={view.name === activeView} onClick={() => handleViewClick(view.name)} />
+                ))}
+                <SideNavToggle navExpanded={navExpanded} setNavExpanded={setNavExpanded} />
+            </div>
+        </div>
+    );
+};
+
+export default SideNav;

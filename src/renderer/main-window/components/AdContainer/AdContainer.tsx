@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { createLogger } from '../../../shared/services/Logger';
-import { useFTUE } from '../../contexts/FTUEContext';
+import { createLogger } from '../../../../shared/services/Logger';
+import { useFTUE } from '../../../contexts/FTUEContext';
 
 const logger = createLogger('AdContainer');
 

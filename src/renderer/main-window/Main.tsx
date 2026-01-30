@@ -4,16 +4,19 @@ import '../styles/index.css';
 
 // Components
 import { AppHeader } from '../components';
-import { AdContainer } from './ad-view/AdContainer';
+import { AdContainer } from './components/AdContainer/AdContainer';
+import SideNav from './components/SideNav/SideNav';
 
 // Custom hooks
 import { useWindowInfo } from '../hooks/useWindowInfo';
 import { useAppVersion } from '../hooks/useAppVersion';
 
+// Config
+import { viewsConfig } from './config/views.config';
+
 const Main: React.FC = () => {
     const { isIngameWindow } = useWindowInfo();
     const appVersion = useAppVersion();
-    const [navExpanded, setNavExpanded] = React.useState(false);
 
     //------------------------HEADER ACTION BUTTONS-----------------------------
     const handleSettingsClick = () => {
@@ -47,6 +50,20 @@ const Main: React.FC = () => {
         ];
     //------------------------HEADER ACTION BUTTONS-----------------------------
 
+    // Convert views config to format expected by SideNav
+    const views = viewsConfig.map(view => ({
+        name: view.name,
+        icon: view.icon,
+    }));
+
+    const [activeView, setActiveView] = React.useState(
+        viewsConfig.find(view => view.active)?.name ?? viewsConfig[0].name
+    );
+
+    // Get the active view component
+    const activeViewConfig = viewsConfig.find(view => view.name === activeView);
+    const ActiveViewComponent = activeViewConfig?.component;
+
     return (
         <div className="app-layout">
 
@@ -64,34 +81,15 @@ const Main: React.FC = () => {
             </div>
 
             <div className="app-body">
-                <div className="side-nav-wrapper">
-                    <div className={`side-nav ${navExpanded ? 'side-nav--expanded' : ''}`}>
-                        <button className="side-nav-button">
-                            <img src="../../img/logo-icon.png" alt="Side Nav Icon" />
-                            <span>Rare Growth</span>
-                        </button>
-                        <button className="side-nav-button">
-                            <img src="../../img/logo-icon.png" alt="Side Nav Icon" />
-                            <span>Rotations</span>
-                        </button>
-                        <button
-                            type="button"
-                            className="side-nav-toggle"
-                            onClick={() => setNavExpanded(!navExpanded)}
-                            title={navExpanded ? 'Collapse menu' : 'Expand menu'}
-                            aria-expanded={navExpanded}
-                        >
-                            <span>{navExpanded ? '<<' : '>>'}</span>
-                        </button>
-                    </div>
-                </div>
+                <SideNav views={views} activeView={activeView} setActiveView={setActiveView} />
 
                 <main className="main-content">
                     <div className="main-content-wrapper">
                         <div className="main-content-container">
                             <div className="main-content-header">
-                                <h1>Main Content</h1>
+                                <h1>{activeView}</h1>
                             </div>
+                            {ActiveViewComponent && <ActiveViewComponent />}
                         </div>
                     </div>
                 </main>
