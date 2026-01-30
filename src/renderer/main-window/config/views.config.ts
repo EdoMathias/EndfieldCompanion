@@ -1,12 +1,12 @@
 import React from 'react';
 import { ViewConfig } from '../types/views.types';
-import { RareGrowth, Rotations } from '../views';
+import { ResourcesView, Rotations } from '../views';
 
 export const viewsConfig: ViewConfig[] = [
     {
-        name: 'Rare Growth',
+        name: 'Resources',
         icon: '🌱',
-        component: RareGrowth,
+        component: ResourcesView,
         active: true,
     },
     {
