@@ -1,0 +1,223 @@
+/* ------------------------------
+   Resources View Styles
+   Maintainable structure for future additions
+--------------------------------*/
+
+/* ------------------------------
+   Resources Container
+--------------------------------*/
+
+.resources-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px;
+}
+
+/* ------------------------------
+   Resources Header
+--------------------------------*/
+
+.resources-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 20px;
+  background-color: #161925;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: var(--radius);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.1);
+  margin-bottom: 16px;
+}
+
+.resources-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.resources-header-title {
+  font-family: var(--font-ark);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resources-header-reset {
+  font-family: var(--font-ark);
+  font-size: 13px;
+  color: var(--muted-foreground);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resources-header-countdown {
+  font-weight: var(--font-weight-medium);
+  color: rgba(6, 182, 212, 1);
+  font-size: 14px;
+  padding: 2px 8px;
+  background-color: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(6, 182, 212, 0.2);
+  letter-spacing: 0.3px;
+}
+
+.resources-header-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.resources-header-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-ark);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: var(--font-weight-medium);
+}
+
+.resources-header-select {
+  padding: 8px 12px;
+  background-color: #0c1327;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  font-family: var(--font-ark);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  min-width: 200px;
+}
+
+.resources-header-select:hover {
+  border-color: rgba(6, 182, 212, 0.5);
+  background-color: rgba(6, 182, 212, 0.05);
+}
+
+.resources-header-select:focus {
+  border-color: rgba(6, 182, 212, 0.6);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
+  background-color: rgba(6, 182, 212, 0.08);
+}
+
+.resources-header-select option {
+  background-color: #0c1327;
+  color: var(--foreground);
+  padding: 8px;
+}
+
+/* ------------------------------
+   Resources Content
+   (Placeholder for future content sections)
+--------------------------------*/
+
+.resources-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ------------------------------
+   Resources Cards/Grid
+   (Placeholder for future card/grid layouts)
+--------------------------------*/
+
+.resources-grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* ------------------------------
+   Resources List
+   (Placeholder for future list layouts)
+--------------------------------*/
+
+.resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ------------------------------
+   Resources Empty State
+   (Placeholder for future empty states)
+--------------------------------*/
+
+.resources-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  background: rgba(6, 182, 212, 0.02);
+  border: 1px dashed rgba(6, 182, 212, 0.15);
+  border-radius: var(--radius);
+  margin: 16px;
+}
+
+.resources-empty-icon {
+  font-size: 36px;
+  filter: grayscale(0.3);
+  opacity: 0.8;
+}
+
+.resources-empty-title {
+  font-family: var(--font-ark);
+  font-size: 15px;
+  font-weight: var(--font-weight-medium);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.resources-empty-hint {
+  font-family: var(--font-ark);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  max-width: 240px;
+  line-height: 1.4;
+}
+
+/* ------------------------------
+   Resources Status/Loading
+   (Placeholder for future status indicators)
+--------------------------------*/
+
+.resources-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+
+.resources-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(6, 182, 212, 0.8);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

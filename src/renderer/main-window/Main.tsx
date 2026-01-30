@@ -86,9 +86,6 @@ const Main: React.FC = () => {
                 <main className="main-content">
                     <div className="main-content-wrapper">
                         <div className="main-content-container">
-                            <div className="main-content-header">
-                                <h1>{activeView}</h1>
-                            </div>
                             {ActiveViewComponent && <ActiveViewComponent />}
                         </div>
                     </div>
