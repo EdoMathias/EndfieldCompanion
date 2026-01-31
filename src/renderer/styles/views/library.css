@@ -90,8 +90,8 @@
 }
 
 .library-sort-select option {
-  background: #1a1a1a;
-  color: rgba(255, 255, 255, 0.9);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
 }
 
 /* ------------------------------
@@ -275,7 +275,7 @@
 }
 
 .library-favorite-btn.active {
-  color: #ffc832;
+  color: var(--color-warning);
   background: rgba(255, 200, 50, 0.15);
   border-color: rgba(255, 200, 50, 0.35);
 }

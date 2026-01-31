@@ -16,16 +16,16 @@
 }
 
 .overview-tile {
-  background-color: #161925;
-  border: 1px solid rgba(52, 211, 153, 0.2);
+  background-color: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   border-radius: var(--radius);
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.1);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
   transition: all 0.2s ease;
 }
 
 .overview-tile:hover {
-  border-color: rgba(52, 211, 153, 0.4);
-  box-shadow: 0 0 16px rgba(52, 211, 153, 0.2);
+  border-color: color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
 }
 
 /* ------------------------------
@@ -42,7 +42,7 @@
 
 .overview-tile-icon {
   font-size: 36px;
-  filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.4));
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent-primary) 40%, transparent));
 }
 
 .overview-tile-content {

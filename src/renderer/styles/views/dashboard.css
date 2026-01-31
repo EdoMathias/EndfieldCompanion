@@ -22,7 +22,7 @@
 .dashboard-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
@@ -77,10 +77,10 @@
 --------------------------------*/
 
 .dashboard-chart-card {
-  background-color: #161925;
-  border: 1px solid rgba(52, 211, 153, 0.2);
+  background-color: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   border-radius: var(--radius);
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.1);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
   padding: 16px;
   transition: all 0.2s ease;
   min-width: 0;
@@ -94,8 +94,8 @@
 }
 
 .dashboard-chart-card:hover {
-  border-color: rgba(52, 211, 153, 0.4);
-  box-shadow: 0 0 16px rgba(52, 211, 153, 0.2);
+  border-color: color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
 }
 
 /* ------------------------------
@@ -122,13 +122,13 @@
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-primary);
   white-space: nowrap;
 }
 
 .dashboard-chart-icon {
   font-size: 20px;
-  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.4));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-accent-primary) 40%, transparent));
 }
 
 /* ------------------------------
@@ -149,13 +149,13 @@
 .dashboard-stat-value {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(52, 211, 153, 1);
+  color: var(--color-accent-primary);
   white-space: nowrap;
 }
 
 .dashboard-stat-label {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -263,13 +263,13 @@
   display: block;
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .dashboard-doughnut-label {
   display: block;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -302,7 +302,7 @@
 }
 
 .dashboard-legend-label {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-text-primary);
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -312,7 +312,7 @@
 }
 
 .dashboard-legend-value {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
@@ -380,18 +380,18 @@
 }
 
 .week-comparison-change.positive {
-  background: rgba(52, 211, 153, 0.15);
-  color: rgba(52, 211, 153, 1);
+  background: color-mix(in srgb, var(--color-success) 15%, transparent);
+  color: var(--color-success);
 }
 
 .week-comparison-change.negative {
-  background: rgba(255, 91, 122, 0.15);
-  color: rgba(255, 91, 122, 1);
+  background: color-mix(in srgb, var(--color-danger) 15%, transparent);
+  color: var(--color-danger);
 }
 
 .week-comparison-change.neutral {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  background: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  color: var(--color-text-muted);
 }
 
 .week-comparison-change .change-icon {
@@ -464,7 +464,7 @@
 .recent-session-duration {
   font-size: 11px;
   font-weight: 600;
-  color: rgba(52, 211, 153, 1);
+  color: var(--color-accent-primary);
 }
 
 .recent-session-time {
