@@ -18,19 +18,54 @@ const STORAGE_SERVER = 'endfield.resources.server.v1';
  */
 const STORAGE_LAST_RESET_KEY = 'endfield.resources.lastAppliedResetKey.v1';
 
+
+// Demo nodes for testing.
+const demoNodes: ResourceNode[] = [
+    {
+        id: '1',
+        current: 0,
+        max: 8,
+        enabled: true,
+        order: 0,
+        name: 'Resource 1',
+        map: 'Valley IV',
+        region: 'The Hub',
+        tracked: false,
+    },
+    {
+        id: '2',
+        current: 0,
+        max: 8,
+        enabled: true,
+        order: 0,
+        name: 'Resource 2',
+        map: 'Valley IV',
+        region: 'The Hub',
+        tracked: false,
+    },
+];
+// Demo nodes for testing.
+
 /**
  * Loads the nodes from the local storage.
  * @returns The nodes
  */
 function loadNodes(): ResourceNode[] {
-    const nodes = localStorage.getItem(STORAGE_NODES);
-    if (!nodes) return [];
     try {
+        const nodes = localStorage.getItem(STORAGE_NODES);
+        if (!nodes) {
+            return demoNodes;
+        }
+
         const parsedNodes = JSON.parse(nodes);
-        return Array.isArray(parsedNodes) ? parsedNodes : [];
+        if (!Array.isArray(parsedNodes) || parsedNodes.length === 0) {
+            return demoNodes;
+        }
+
+        return parsedNodes;
     } catch (error) {
-        console.error('Error parsing nodes from local storage:', error);
-        return [];
+        console.error('Error loading nodes from local storage:', error);
+        return demoNodes;
     }
 }
 
@@ -62,6 +97,15 @@ export function useResourcesStore() {
         localStorage.setItem(STORAGE_SERVER, serverRegion);
     }, [serverRegion]);
 
+    /**
+     * Toggles the tracking of a node and persists it to the local storage.
+     * Nodes are stored in an array of objects
+     */
+    const toggleNodeTracking = useCallback((nodeId: string) => {
+        setNodesState(prevNodes =>
+            prevNodes.map(node => (node.id === nodeId ? { ...node, tracked: !node.tracked } : node))
+        );
+    }, []);
 
     /**
      * Sets the server region and persists it to the local storage.
@@ -70,9 +114,10 @@ export function useResourcesStore() {
         setServerRegionState(region);
 
         // Prevent accidental multi-increment when switching server regions.
-        const currentKey = getMostRecentResetKey(new Date(), serverRegion);
+        // Use the new region value, not the old one
+        const currentKey = getMostRecentResetKey(new Date(), region);
         localStorage.setItem(STORAGE_LAST_RESET_KEY, currentKey);
-    }, [serverRegion]);
+    }, []);
 
 
     /**
@@ -137,7 +182,8 @@ export function useResourcesStore() {
             }))
     }, []);
 
-    // Daily reset checker (runs on mount and every second)
+    // Daily reset checker (runs on mount and every minute)
+    // Checking every minute is sufficient since resets happen daily at 04:00
     useEffect(() => {
         const tick = () => {
             const now = new Date();
@@ -159,7 +205,8 @@ export function useResourcesStore() {
         };
 
         tick();
-        const interval = setInterval(tick, 1000);
+        // Check every minute instead of every second for better performance
+        const interval = setInterval(tick, 60_000);
         return () => clearInterval(interval);
     }, [serverRegion, applyDailyIncrement]);
 
@@ -167,6 +214,7 @@ export function useResourcesStore() {
         nodes,
         serverRegion,
         setServerRegion,
+        toggleNodeTracking,
         setCurrentNodeNumber,
         setMaxNodeNumber,
         clearCurrentNodeNumber,

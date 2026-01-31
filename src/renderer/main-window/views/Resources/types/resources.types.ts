@@ -11,5 +11,6 @@ export type ResourceNode = {
     current: number;  // user controlled (0..max)
 
     enabled: boolean;
+    tracked: boolean;
     order: number;
 };
