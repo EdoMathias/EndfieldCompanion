@@ -9,9 +9,11 @@ interface ResourcesHeaderProps {
     onMapChange: (map: string) => void;
     maxedNodes: number;
     totalGatherables: number;
+    explorationLevel: number;
+    onExplorationLevelChange: (level: number) => void;
 }
 
-const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServerRegionChange, selectedMap, onMapChange, maxedNodes, totalGatherables }) => {
+const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServerRegionChange, selectedMap, onMapChange, maxedNodes, totalGatherables, explorationLevel, onExplorationLevelChange }) => {
 
     const [now, setNow] = useState(() => Date.now());
 
@@ -64,8 +66,26 @@ const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServe
                 </div>
             </div>
 
-            {/* Row 3: Chips */}
+            {/* Row 3: Exploration Level and Chips */}
             <div className="resources-header-row-3">
+                <div className="resources-header-exploration-level">
+                    <label className="resources-header-label">
+                        Exploration Level
+                        <input
+                            type="number"
+                            className="resources-header-exploration-input"
+                            min={1}
+                            max={7}
+                            value={explorationLevel}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value, 10);
+                                if (!isNaN(value)) {
+                                    onExplorationLevelChange(value);
+                                }
+                            }}
+                        />
+                    </label>
+                </div>
                 <div className="resources-header-chip">
                     <span className="resources-header-chip-label">Maxed Nodes:</span>
                     <span className="resources-header-chip-value">{maxedNodes}</span>

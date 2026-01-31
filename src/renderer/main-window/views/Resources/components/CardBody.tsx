@@ -5,12 +5,15 @@ interface CardBodyProps {
     node: ResourceNode;
     onCurrentNumberChange: (nodeId: string, number: number) => void;
     onMaxNumberChange: (nodeId: string, max: number) => void;
+    explorationLevel: number;
 }
 
-const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxNumberChange }) => {
+const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxNumberChange, explorationLevel }) => {
     const isMaxedOut = node.current >= node.max;
     const isGrowing = node.current < node.max && node.current >= 0;
-    const tomorrowCount = Math.min(node.current + 1, node.max);
+    // If exploration level is 7, increment by 2 per day instead of 1
+    const incrementPerDay = explorationLevel === 7 ? 2 : 1;
+    const tomorrowCount = Math.min(node.current + incrementPerDay, node.max);
 
     const [isEditingMaxAmount, setIsEditingMaxAmount] = useState(false);
     const [editMaxValue, setEditMaxValue] = useState(node.max.toString());
@@ -60,8 +63,13 @@ const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxN
     return (
         <div className="resource-node-card-body">
 
-            {/* Container - black background */}
-            <div className="resource-node-card-body-container">
+            {/* Container - with map image background */}
+            <div 
+                className="resource-node-card-body-container"
+                style={{
+                    backgroundImage: node.mapLocationImage ? `url(${node.mapLocationImage})` : undefined,
+                }}
+            >
                 <div className="resource-node-card-body-counter">
                     {/* Current amount / max amount */}
                     {isEditingCurrentAmount ?

@@ -1,12 +1,16 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { useResourcesStore } from './hooks/useResourcesStore';
 import ResourcesHeader from './components/ResourcesHeader';
 import RegionGroup from './components/RegionGroup';
+import MapLocationModal from './components/MapLocationModal';
 import { ResourceNode } from './types/resources.types';
 
 const ResourcesView: React.FC = () => {
 
-    const { nodes, serverRegion, setServerRegion, selectedMap, setSelectedMap, toggleNodeTracking, setCurrentNodeNumber, setMaxNodeNumber, clearCurrentNodeNumber, toggleRegionCollapsed, isRegionCollapsed } = useResourcesStore();
+    const { nodes, serverRegion, setServerRegion, selectedMap, setSelectedMap, toggleNodeTracking, setCurrentNodeNumber, setMaxNodeNumber, clearCurrentNodeNumber, toggleRegionCollapsed, isRegionCollapsed, explorationLevel, setExplorationLevel } = useResourcesStore();
+    
+    const [selectedNodeForMap, setSelectedNodeForMap] = useState<ResourceNode | null>(null);
+    const containerRef = useRef<HTMLElement>(null);
 
     const filteredNodes = useMemo(() => {
         return nodes.filter(node => node.map === selectedMap);
@@ -64,7 +68,7 @@ const ResourcesView: React.FC = () => {
     }, [filteredNodes]);
 
     return (
-        <section className="resources-container">
+        <section className="resources-container" ref={containerRef}>
             <ResourcesHeader 
                 serverRegion={serverRegion} 
                 onServerRegionChange={setServerRegion}
@@ -72,6 +76,8 @@ const ResourcesView: React.FC = () => {
                 onMapChange={setSelectedMap}
                 maxedNodes={stats.maxedNodes}
                 totalGatherables={stats.totalGatherables}
+                explorationLevel={explorationLevel}
+                onExplorationLevelChange={setExplorationLevel}
             />
 
             <div className="resources-regions">
@@ -86,10 +92,19 @@ const ResourcesView: React.FC = () => {
                         onMaxNumberChange={setMaxNodeNumber}
                         onClearCurrentNumber={clearCurrentNodeNumber}
                         onToggleTracking={toggleNodeTracking}
-                        onOpenMapLocation={() => {}}
+                        onOpenMapLocation={(node) => setSelectedNodeForMap(node)}
+                        explorationLevel={explorationLevel}
                     />
                 ))}
             </div>
+
+            <MapLocationModal
+                isOpen={selectedNodeForMap !== null}
+                mapLocationImage={selectedNodeForMap?.mapLocationImage || ''}
+                nodeName={selectedNodeForMap?.name || ''}
+                onClose={() => setSelectedNodeForMap(null)}
+                containerRef={containerRef}
+            />
         </section>
     );
 };

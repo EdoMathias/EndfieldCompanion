@@ -11,7 +11,8 @@ interface RegionGroupProps {
     onMaxNumberChange: (nodeId: string, max: number) => void;
     onClearCurrentNumber: (nodeId: string) => void;
     onToggleTracking: (nodeId: string) => void;
-    onOpenMapLocation: () => void;
+    onOpenMapLocation: (node: ResourceNode) => void;
+    explorationLevel: number;
 }
 
 const RegionGroup: React.FC<RegionGroupProps> = ({
@@ -24,6 +25,7 @@ const RegionGroup: React.FC<RegionGroupProps> = ({
     onClearCurrentNumber,
     onToggleTracking,
     onOpenMapLocation,
+    explorationLevel,
 }) => {
     const maxedNodesCount = nodes.filter(node => node.current >= node.max && node.max > 0).length;
     const totalNodes = nodes.length;
@@ -69,7 +71,8 @@ const RegionGroup: React.FC<RegionGroupProps> = ({
                                 onMaxNumberChange={onMaxNumberChange}
                                 onClearCurrentNumber={onClearCurrentNumber}
                                 onToggleTracking={onToggleTracking}
-                                onOpenMapLocation={onOpenMapLocation}
+                                onOpenMapLocation={() => onOpenMapLocation(node)}
+                                explorationLevel={explorationLevel}
                             />
                         ))}
                     </div>

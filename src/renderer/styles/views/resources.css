@@ -16,6 +16,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
+  position: relative;
 }
 
 /* ------------------------------
@@ -109,6 +110,38 @@
   box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
   letter-spacing: 0.5px;
   font-variant-numeric: tabular-nums;
+}
+
+.resources-header-exploration-level {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resources-header-exploration-input {
+  padding: 6px 10px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-ark);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  width: 60px;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.resources-header-exploration-input:hover {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+}
+
+.resources-header-exploration-input:focus {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
 }
 
 .resources-header-chip {
@@ -616,6 +649,9 @@
 .resource-node-card-body-container {
   position: relative;
   background-color: var(--color-bg-primary);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: var(--radius);
   padding: 14px;
   min-height: 160px;
@@ -623,6 +659,25 @@
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
   gap: 12px;
+  overflow: hidden;
+}
+
+/* Overlay to ensure text readability over background image */
+.resource-node-card-body-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+  border-radius: var(--radius);
 }
 
 /* Counter - top right */
@@ -773,6 +828,7 @@
   display: flex;
   align-items: center;
   min-height: 24px;
+  z-index: 1;
 }
 
 .resource-node-card-body-refresh-status-growing {
@@ -981,4 +1037,116 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ------------------------------
+   Map Location Modal
+--------------------------------*/
+
+.map-location-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius);
+  animation: mapModalFadeIn 0.2s ease-out;
+}
+
+@keyframes mapModalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.map-location-modal-content {
+  background-color: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  animation: mapModalContentFadeIn 0.2s ease-out;
+  overflow: hidden;
+}
+
+@keyframes mapModalContentFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.map-location-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+}
+
+.map-location-modal-title {
+  font-family: var(--font-ark);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.map-location-modal-close {
+  background: none;
+  border: none;
+  color: var(--muted-foreground);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s ease-in-out;
+}
+
+.map-location-modal-close:hover {
+  background-color: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+  color: var(--color-accent-primary);
+}
+
+.map-location-modal-close:active {
+  transform: scale(0.95);
+}
+
+.map-location-modal-body {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  max-height: calc(90vh - 100px);
+}
+
+.map-location-modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: 700px;
+  height: 500px;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }

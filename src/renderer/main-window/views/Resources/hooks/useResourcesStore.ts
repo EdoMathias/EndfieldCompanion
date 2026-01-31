@@ -29,6 +29,11 @@ const STORAGE_LAST_RESET_KEY = 'endfield.resources.lastAppliedResetKey.v1';
  */
 const STORAGE_COLLAPSED_REGIONS = 'endfield.resources.collapsedRegions.v1';
 
+/**
+ * Local storage key for exploration level.
+ */
+const STORAGE_EXPLORATION_LEVEL = 'endfield.resources.explorationLevel.v1';
+
 
 const DEFAULT_NODES: ResourceNode[] = resources.resources.map(resource => ({
     id: resource.id,
@@ -119,11 +124,35 @@ function loadCollapsedRegions(): Set<string> {
     }
 }
 
+/**
+ * Loads the exploration level from the local storage.
+ * @returns The exploration level (1-7, default 1)
+ */
+function loadExplorationLevel(): number {
+    try {
+        const level = localStorage.getItem(STORAGE_EXPLORATION_LEVEL);
+        if (!level) {
+            return 1;
+        }
+
+        const parsed = parseInt(level, 10);
+        if (isNaN(parsed) || parsed < 1 || parsed > 7) {
+            return 1;
+        }
+
+        return parsed;
+    } catch (error) {
+        console.error('Error loading exploration level from local storage:', error);
+        return 1;
+    }
+}
+
 export function useResourcesStore() {
     const [nodes, setNodesState] = useState<ResourceNode[]>(loadNodes());
     const [serverRegion, setServerRegionState] = useState<ServerRegion>(loadServerRegion());
     const [selectedMap, setSelectedMapState] = useState<string>(loadSelectedMap());
     const [collapsedRegions, setCollapsedRegionsState] = useState<Set<string>>(loadCollapsedRegions());
+    const [explorationLevel, setExplorationLevelState] = useState<number>(loadExplorationLevel());
 
     // Persist the nodes to the local storage.
     useEffect(() => {
@@ -144,6 +173,11 @@ export function useResourcesStore() {
     useEffect(() => {
         localStorage.setItem(STORAGE_COLLAPSED_REGIONS, JSON.stringify(Array.from(collapsedRegions)));
     }, [collapsedRegions]);
+
+    // Persist the exploration level to the local storage.
+    useEffect(() => {
+        localStorage.setItem(STORAGE_EXPLORATION_LEVEL, explorationLevel.toString());
+    }, [explorationLevel]);
 
     /**
      * Toggles the tracking of a node and persists it to the local storage.
@@ -252,12 +286,16 @@ export function useResourcesStore() {
     const applyDailyIncrement = useCallback((days: number) => {
         if (days <= 0) return;
 
+        // If exploration level is 7, increment by 2 per day instead of 1
+        const incrementPerDay = explorationLevel === 7 ? 2 : 1;
+        const totalIncrement = days * incrementPerDay;
+
         setNodesState(prevNodes =>
             prevNodes.map(node => {
-                const nextCurrent = Math.min(node.current + days, node.max);
+                const nextCurrent = Math.min(node.current + totalIncrement, node.max);
                 return nextCurrent === node.current ? node : { ...node, current: nextCurrent };
             }))
-    }, []);
+    }, [explorationLevel]);
 
     // Daily reset checker (runs on mount and every minute)
     // Checking every minute is sufficient since resets happen daily at 04:00
@@ -285,7 +323,15 @@ export function useResourcesStore() {
         // Check every minute instead of every second for better performance
         const interval = setInterval(tick, 60_000);
         return () => clearInterval(interval);
-    }, [serverRegion, applyDailyIncrement]);
+    }, [serverRegion, applyDailyIncrement, explorationLevel]);
+
+    /**
+     * Sets the exploration level and persists it to the local storage.
+     */
+    const setExplorationLevel = useCallback((level: number) => {
+        const clampedLevel = Math.max(1, Math.min(7, level));
+        setExplorationLevelState(clampedLevel);
+    }, []);
 
     return {
         nodes,
@@ -299,5 +345,7 @@ export function useResourcesStore() {
         clearCurrentNodeNumber,
         toggleRegionCollapsed,
         isRegionCollapsed,
+        explorationLevel,
+        setExplorationLevel,
     };
 }
