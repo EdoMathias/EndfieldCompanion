@@ -23,9 +23,11 @@ const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServe
         <div className="resources-header">
             <div className="resources-header-main">
                 <h1 className="resources-header-title">Resources</h1>
-                <div className="resources-header-reset">
-                    Daily Reset in: <span className="resources-header-countdown">{formatCountdown(msLeft)}</span>
-                </div>
+            </div>
+
+            <div className="resources-header-reset">
+                <span className="resources-header-reset-label">Daily Reset in:</span>
+                <span className="resources-header-countdown">{formatCountdown(msLeft)}</span>
             </div>
 
             <div className="resources-header-controls">
