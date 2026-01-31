@@ -5,9 +5,11 @@ import { formatCountdown, getNextResetUtc } from '../utils/resetTime';
 interface ResourcesHeaderProps {
     serverRegion: ServerRegion;
     onServerRegionChange: (region: ServerRegion) => void;
+    selectedMap: string;
+    onMapChange: (map: string) => void;
 }
 
-const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServerRegionChange }) => {
+const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServerRegionChange, selectedMap, onMapChange }) => {
 
     const [now, setNow] = useState(() => Date.now());
 
@@ -25,9 +27,24 @@ const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServe
                 <h1 className="resources-header-title">Resources</h1>
             </div>
 
-            <div className="resources-header-reset">
-                <span className="resources-header-reset-label">Daily Reset in:</span>
-                <span className="resources-header-countdown">{formatCountdown(msLeft)}</span>
+            <div className="resources-header-center">
+                <div className="resources-header-reset">
+                    <span className="resources-header-reset-label">Daily Reset in:</span>
+                    <span className="resources-header-countdown">{formatCountdown(msLeft)}</span>
+                </div>
+                <div className="resources-header-map">
+                    <label className="resources-header-label">
+                        Map
+                        <select 
+                            className="resources-header-select"
+                            value={selectedMap} 
+                            onChange={(e) => onMapChange(e.target.value)}
+                        >
+                            <option value="Valley IV">Valley IV</option>
+                            <option value="Wuling">Wuling</option>
+                        </select>
+                    </label>
+                </div>
             </div>
 
             <div className="resources-header-controls">

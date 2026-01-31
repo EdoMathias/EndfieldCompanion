@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { ResourceNode, ServerRegion } from "../types/resources.types";
+import { ResourceNode, ResourceType, ServerRegion } from "../types/resources.types";
 import { diffDaysKeys, getMostRecentResetKey } from "../utils/resetTime";
+import resources from "../../../../../shared/data/resources.json";
 
 /**
  * Local storage keys for the resources store.
@@ -13,44 +14,31 @@ const STORAGE_NODES = 'endfield.resources.nodes.v1';
 const STORAGE_SERVER = 'endfield.resources.server.v1';
 
 /**
+ * Local storage key for the selected map.
+ */
+const STORAGE_MAP = 'endfield.resources.map.v1';
+
+/**
  * Local storage key for the last applied reset key.
  * Will help to determine how many items to increment by when the app launches.
  */
 const STORAGE_LAST_RESET_KEY = 'endfield.resources.lastAppliedResetKey.v1';
 
 
-// Demo nodes for testing.
-const demoNodes: ResourceNode[] = [
-    {
-        id: '1',
-        current: 0,
-        max: 8,
-        enabled: true,
-        order: 0,
-        name: 'Pink Bolete',
-        map: 'Valley IV',
-        region: 'The Hub',
-        tracked: false,
-        type: 'Rare Growth',
-        mapLocationImage: '',
-        nodeImage: '../items-img/pink_bolete.png',
-    },
-    {
-        id: '2',
-        current: 0,
-        max: 8,
-        enabled: true,
-        order: 0,
-        name: 'kalkonyx',
-        map: 'Valley IV',
-        region: 'The Hub',
-        tracked: false,
-        type: 'Rare Ores',
-        mapLocationImage: '',
-        nodeImage: '../items-img/kalkonyx.png',
-    },
-];
-// Demo nodes for testing.
+const DEFAULT_NODES: ResourceNode[] = resources.resources.map(resource => ({
+    id: resource.id,
+    name: resource.name,
+    type: resource.type as ResourceType,
+    map: resource.map,
+    region: resource.region,
+    mapLocationImage: resource.mapLocationImage,
+    nodeImage: resource.nodeImage,
+    max: resource.max,
+    current: resource.current,
+    enabled: resource.enabled,
+    tracked: resource.tracked,
+    order: resource.order,
+}));
 
 /**
  * Loads the nodes from the local storage.
@@ -60,18 +48,18 @@ function loadNodes(): ResourceNode[] {
     try {
         const nodes = localStorage.getItem(STORAGE_NODES);
         if (!nodes) {
-            return demoNodes;
+            return DEFAULT_NODES;
         }
 
         const parsedNodes = JSON.parse(nodes);
         if (!Array.isArray(parsedNodes) || parsedNodes.length === 0) {
-            return demoNodes;
+            return DEFAULT_NODES;
         }
 
-        return parsedNodes;
+        return parsedNodes as ResourceNode[];
     } catch (error) {
         console.error('Error loading nodes from local storage:', error);
-        return demoNodes;
+        return DEFAULT_NODES;
     }
 }
 
@@ -89,9 +77,24 @@ function loadServerRegion(): ServerRegion {
     return "AMER_EU_UTC_MINUS_5";
 }
 
+/**
+ * Loads the selected map from the local storage.
+ * @returns The selected map
+ */
+function loadSelectedMap(): string {
+    const map = localStorage.getItem(STORAGE_MAP);
+    
+    if (map === "Valley IV" || map === "Wuling") {
+        return map;
+    }
+
+    return "Valley IV"; // Default to Valley IV
+}
+
 export function useResourcesStore() {
     const [nodes, setNodesState] = useState<ResourceNode[]>(loadNodes());
     const [serverRegion, setServerRegionState] = useState<ServerRegion>(loadServerRegion());
+    const [selectedMap, setSelectedMapState] = useState<string>(loadSelectedMap());
 
     // Persist the nodes to the local storage.
     useEffect(() => {
@@ -102,6 +105,11 @@ export function useResourcesStore() {
     useEffect(() => {
         localStorage.setItem(STORAGE_SERVER, serverRegion);
     }, [serverRegion]);
+
+    // Persist the selected map to the local storage.
+    useEffect(() => {
+        localStorage.setItem(STORAGE_MAP, selectedMap);
+    }, [selectedMap]);
 
     /**
      * Toggles the tracking of a node and persists it to the local storage.
@@ -123,6 +131,13 @@ export function useResourcesStore() {
         // Use the new region value, not the old one
         const currentKey = getMostRecentResetKey(new Date(), region);
         localStorage.setItem(STORAGE_LAST_RESET_KEY, currentKey);
+    }, []);
+
+    /**
+     * Sets the selected map and persists it to the local storage.
+     */
+    const setSelectedMap = useCallback((map: string) => {
+        setSelectedMapState(map);
     }, []);
 
 
@@ -220,6 +235,8 @@ export function useResourcesStore() {
         nodes,
         serverRegion,
         setServerRegion,
+        selectedMap,
+        setSelectedMap,
         toggleNodeTracking,
         setCurrentNodeNumber,
         setMaxNodeNumber,
