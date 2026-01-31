@@ -24,6 +24,11 @@ const STORAGE_MAP = 'endfield.resources.map.v1';
  */
 const STORAGE_LAST_RESET_KEY = 'endfield.resources.lastAppliedResetKey.v1';
 
+/**
+ * Local storage key for collapsed region states.
+ */
+const STORAGE_COLLAPSED_REGIONS = 'endfield.resources.collapsedRegions.v1';
+
 
 const DEFAULT_NODES: ResourceNode[] = resources.resources.map(resource => ({
     id: resource.id,
@@ -91,10 +96,34 @@ function loadSelectedMap(): string {
     return "Valley IV"; // Default to Valley IV
 }
 
+/**
+ * Loads the collapsed regions from the local storage.
+ * @returns A Set of collapsed region names
+ */
+function loadCollapsedRegions(): Set<string> {
+    try {
+        const collapsed = localStorage.getItem(STORAGE_COLLAPSED_REGIONS);
+        if (!collapsed) {
+            return new Set<string>();
+        }
+
+        const parsed = JSON.parse(collapsed);
+        if (!Array.isArray(parsed)) {
+            return new Set<string>();
+        }
+
+        return new Set<string>(parsed);
+    } catch (error) {
+        console.error('Error loading collapsed regions from local storage:', error);
+        return new Set<string>();
+    }
+}
+
 export function useResourcesStore() {
     const [nodes, setNodesState] = useState<ResourceNode[]>(loadNodes());
     const [serverRegion, setServerRegionState] = useState<ServerRegion>(loadServerRegion());
     const [selectedMap, setSelectedMapState] = useState<string>(loadSelectedMap());
+    const [collapsedRegions, setCollapsedRegionsState] = useState<Set<string>>(loadCollapsedRegions());
 
     // Persist the nodes to the local storage.
     useEffect(() => {
@@ -110,6 +139,11 @@ export function useResourcesStore() {
     useEffect(() => {
         localStorage.setItem(STORAGE_MAP, selectedMap);
     }, [selectedMap]);
+
+    // Persist the collapsed regions to the local storage.
+    useEffect(() => {
+        localStorage.setItem(STORAGE_COLLAPSED_REGIONS, JSON.stringify(Array.from(collapsedRegions)));
+    }, [collapsedRegions]);
 
     /**
      * Toggles the tracking of a node and persists it to the local storage.
@@ -139,6 +173,28 @@ export function useResourcesStore() {
     const setSelectedMap = useCallback((map: string) => {
         setSelectedMapState(map);
     }, []);
+
+    /**
+     * Toggles the collapsed state of a region and persists it to the local storage.
+     */
+    const toggleRegionCollapsed = useCallback((region: string) => {
+        setCollapsedRegionsState(prev => {
+            const next = new Set(prev);
+            if (next.has(region)) {
+                next.delete(region);
+            } else {
+                next.add(region);
+            }
+            return next;
+        });
+    }, []);
+
+    /**
+     * Checks if a region is collapsed.
+     */
+    const isRegionCollapsed = useCallback((region: string): boolean => {
+        return collapsedRegions.has(region);
+    }, [collapsedRegions]);
 
 
     /**
@@ -241,5 +297,7 @@ export function useResourcesStore() {
         setCurrentNodeNumber,
         setMaxNodeNumber,
         clearCurrentNodeNumber,
+        toggleRegionCollapsed,
+        isRegionCollapsed,
     };
 }

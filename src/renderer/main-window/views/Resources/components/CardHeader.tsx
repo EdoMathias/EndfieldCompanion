@@ -24,7 +24,7 @@ const CardHeader: React.FC<CardHeaderProps> = ({ node, onToggleTracking, onClear
             </div>
             <div className="resource-node-controls">
                 <button type="button" className="resource-node-card-map-location" onClick={onOpenMapLocation}>
-                    📍 {node.map} • {node.region}
+                    📍 Show on Map
                 </button>
                 <button type="button" className="resource-node-card-toggle-tracking" onClick={() => onToggleTracking(node.id)}>
                     {node.tracked ? '❌ Un-Track' : '📌 Track'}

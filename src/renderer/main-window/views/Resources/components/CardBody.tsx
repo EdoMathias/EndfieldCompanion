@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResourceNode } from '../types/resources.types';
 
 interface CardBodyProps {
@@ -13,20 +13,47 @@ const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxN
     const tomorrowCount = Math.min(node.current + 1, node.max);
 
     const [isEditingMaxAmount, setIsEditingMaxAmount] = useState(false);
-    const [editValue, setEditValue] = useState(node.max.toString());
+    const [editMaxValue, setEditMaxValue] = useState(node.max.toString());
+    const [isEditingCurrentAmount, setIsEditingCurrentAmount] = useState(false);
+    const [editCurrentValue, setEditCurrentValue] = useState(node.current.toString());
 
+    // Sync edit values when node changes (only when not editing)
+    useEffect(() => {
+        if (!isEditingMaxAmount) {
+            setEditMaxValue(node.max.toString());
+        }
+    }, [node.max, isEditingMaxAmount]);
+
+    useEffect(() => {
+        if (!isEditingCurrentAmount) {
+            setEditCurrentValue(node.current.toString());
+        }
+    }, [node.current, isEditingCurrentAmount]);
 
     const handleMaxAmountClick = () => {
         setIsEditingMaxAmount(true);
-        setEditValue(node.max.toString());
+        setEditMaxValue(node.max.toString());
     };
 
     const handleMaxAmountBlur = () => {
-        const newValue = parseInt(editValue);
+        const newValue = parseInt(editMaxValue);
         if (!isNaN(newValue)) {
             onMaxNumberChange(node.id, newValue);
         }
         setIsEditingMaxAmount(false);
+    };
+
+    const handleCurrentAmountClick = () => {
+        setIsEditingCurrentAmount(true);
+        setEditCurrentValue(node.current.toString());
+    };
+
+    const handleCurrentAmountBlur = () => {
+        const newValue = parseInt(editCurrentValue);
+        if (!isNaN(newValue)) {
+            onCurrentNumberChange(node.id, newValue);
+        }
+        setIsEditingCurrentAmount(false);
     };
 
 
@@ -37,17 +64,31 @@ const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxN
             <div className="resource-node-card-body-container">
                 <div className="resource-node-card-body-counter">
                     {/* Current amount / max amount */}
-                    <span className="resource-node-card-body-counter-current">{node.current}</span>
+                    {isEditingCurrentAmount ?
+                        <input type="number"
+                            className="resource-node-card-body-counter-current-input"
+                            value={editCurrentValue}
+                            autoFocus
+                            min={0}
+                            max={node.max}
+                            onChange={(e) => setEditCurrentValue(e.target.value)}
+                            onBlur={handleCurrentAmountBlur}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === 'Escape') {
+                                    handleCurrentAmountBlur();
+                                }
+                            }}
+                        /> : <span className="resource-node-card-body-counter-current" onClick={handleCurrentAmountClick}>{node.current}</span>}
                     <span className="resource-node-card-body-counter-divider">/</span>
 
                     {isEditingMaxAmount ?
                         <input type="number"
                             className="resource-node-card-body-counter-max-input"
-                            value={editValue}
+                            value={editMaxValue}
                             autoFocus
                             min={1}
                             max={100}
-                            onChange={(e) => setEditValue(e.target.value)}
+                            onChange={(e) => setEditMaxValue(e.target.value)}
                             onBlur={handleMaxAmountBlur}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' || e.key === 'Escape') {
