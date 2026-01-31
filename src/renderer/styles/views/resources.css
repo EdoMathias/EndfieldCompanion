@@ -137,7 +137,7 @@
 
 .resources-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
   width: 100%;
 }
@@ -156,6 +156,7 @@
   flex-direction: column;
   gap: 12px;
   transition: all 0.2s ease;
+  max-width: 260px;
 }
 
 .resource-node-card:hover {
@@ -337,19 +338,19 @@
   position: relative;
   background-color: var(--color-bg-primary);
   border-radius: var(--radius);
-  padding: 20px;
-  min-height: 200px;
+  padding: 14px;
+  min-height: 160px;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
-  gap: 16px;
+  gap: 12px;
 }
 
 /* Counter - top right */
 .resource-node-card-body-counter {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 14px;
+  right: 14px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -399,8 +400,8 @@
 /* Status - below counter on right */
 .resource-node-card-body-status {
   position: absolute;
-  top: 40px;
-  right: 16px;
+  top: 36px;
+  right: 14px;
   z-index: 2;
 }
 
