@@ -13,7 +13,7 @@ const ResourcesView: React.FC = () => {
 
             <div className="resources-grid">
                 {nodes.map(node => (
-                    <ResourceNodeCard key={node.id} node={node} onCurrentNumberChange={setCurrentNodeNumber} onMaxNumberChange={setMaxNodeNumber} onClearCurrentNumber={clearCurrentNodeNumber} onToggleTracking={toggleNodeTracking} />
+                    <ResourceNodeCard key={node.id} node={node} onCurrentNumberChange={setCurrentNodeNumber} onMaxNumberChange={setMaxNodeNumber} onClearCurrentNumber={clearCurrentNodeNumber} onToggleTracking={toggleNodeTracking} onOpenMapLocation={() => {}} />
                 ))}
             </div>
         </section>

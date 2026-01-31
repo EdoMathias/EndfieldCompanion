@@ -1,5 +1,7 @@
 import React from 'react';
 import { ResourceNode } from '../types/resources.types';
+import CardHeader from './CardHeader';
+import CardBody from './CardBody';
 
 interface ResourceNodeCardProps {
     node: ResourceNode;
@@ -7,46 +9,21 @@ interface ResourceNodeCardProps {
     onMaxNumberChange: (nodeId: string, max: number) => void;
     onClearCurrentNumber: (nodeId: string) => void;
     onToggleTracking: (nodeId: string) => void;
+    onOpenMapLocation: () => void;
 }
 
-const ResourceNodeCard: React.FC<ResourceNodeCardProps> = ({ node, onCurrentNumberChange, onMaxNumberChange, onClearCurrentNumber, onToggleTracking }) => {
+const ResourceNodeCard: React.FC<ResourceNodeCardProps> = ({ node, onCurrentNumberChange, onMaxNumberChange, onClearCurrentNumber, onToggleTracking, onOpenMapLocation }) => {
 
-    const tomorrowCount = Math.min(node.current + 1, node.max);
+    // const tomorrowCount = Math.min(node.current + 1, node.max);
 
     return (
         <div className="resource-node-card">
-            <div className="resource-node-card-header">
-                <div className="resource-node-card-info">
-                    <div className="resource-node-card-name">
-                        {node.name}
-                    </div>
-                    <div className="resource-node-card-meta">
-                        {node.map} • {node.region}
-                    </div>
-                </div>
 
-                <div className="resource-node-card-header-buttons">
-                    <button
-                        type="button"
-                        className="resource-node-card-toggle-tracking"
-                        data-tracked={node.tracked}
-                        title={node.tracked ? "Untrack this resource" : "Track this resource"}
-                        onClick={() => onToggleTracking(node.id)}
-                    >
-                        {node.tracked ? '❌ Un-Track' : '📌 Track'}
-                    </button>
-                    <button
-                        type="button"
-                        className="resource-node-card-clear"
-                        onClick={() => onClearCurrentNumber(node.id)}
-                        title="Clear current (keep max)"
-                    >
-                        Clear
-                    </button>
-                </div>
-            </div>
+            <CardHeader node={node} onToggleTracking={onToggleTracking} onClearCurrentNumber={onClearCurrentNumber} onOpenMapLocation={onOpenMapLocation} />
 
-            <div className="resource-node-card-body">
+            <CardBody node={node} onCurrentNumberChange={onCurrentNumberChange} onMaxNumberChange={onMaxNumberChange} />
+
+            {/* <div className="resource-node-card-body">
                 <div className="resource-node-card-inputs">
                     <label className="resource-node-card-label">
                         Current
@@ -105,7 +82,7 @@ const ResourceNodeCard: React.FC<ResourceNodeCardProps> = ({ node, onCurrentNumb
                         </span>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

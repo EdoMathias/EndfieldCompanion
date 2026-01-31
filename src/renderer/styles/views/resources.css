@@ -166,16 +166,28 @@
 
 .resource-node-card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 12px;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(6, 182, 212, 0.15);
 }
 
-.resource-node-card-info {
-  min-width: 0;
-  flex: 1;
+.resource-node-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resource-node-card-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.resource-node-card-icon svg {
+  width: 30px;
+  height: 30px;
+  color: var(--foreground);
 }
 
 .resource-node-card-name {
@@ -188,7 +200,43 @@
   text-overflow: ellipsis;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  margin-bottom: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.resource-node-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.resource-node-card-map-location {
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background-color: transparent;
+  color: var(--muted-foreground);
+  font-family: var(--font-ark);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.resource-node-card-map-location:hover {
+  background-color: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: rgba(6, 182, 212, 1);
+  box-shadow: 0 0 6px rgba(6, 182, 212, 0.2);
+  transform: translateY(-1px);
+}
+
+.resource-node-card-map-location:active {
+  transform: scale(0.95);
 }
 
 .resource-node-card-meta {
