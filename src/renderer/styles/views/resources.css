@@ -328,9 +328,193 @@
 
 .resource-node-card-body {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Container - dark background with subtle patterns */
+.resource-node-card-body-container {
+  position: relative;
+  background-color: #1a1a1a;
+  border-radius: var(--radius);
+  padding: 20px;
+  min-height: 200px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
   gap: 16px;
+}
+
+/* Counter - top right */
+.resource-node-card-body-counter {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-ark);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+  z-index: 2;
+}
+
+.resource-node-card-body-counter-current {
+  color: var(--foreground);
+}
+
+.resource-node-card-body-counter-divider {
+  color: var(--foreground);
+  opacity: 0.6;
+}
+
+.resource-node-card-body-counter-max {
+  color: var(--foreground);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.resource-node-card-body-counter-max:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.resource-node-card-body-counter-max-input {
+  width: 50px;
+  padding: 2px 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  color: var(--foreground);
+  font-family: var(--font-ark);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+}
+
+/* Status - below counter on right */
+.resource-node-card-body-status {
+  position: absolute;
+  top: 40px;
+  right: 16px;
+  z-index: 2;
+}
+
+.resource-node-card-body-status-growing {
+  background-color: #22c55e;
+  color: var(--foreground);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: var(--font-ark);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 0 4px rgba(34, 197, 94, 0.3);
+}
+
+.resource-node-card-body-status-maxed-out {
+  background-color: #fbbf24;
+  color: var(--foreground);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: var(--font-ark);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 0 4px rgba(251, 191, 36, 0.3);
+}
+
+/* Image - centered with circular grey background */
+.resource-node-card-body-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-row: 2;
+  min-height: 90px;
+}
+
+.resource-node-card-body-image-container {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.resource-node-card-body-image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 12px;
+}
+
+.resource-node-card-body-image-name {
+  font-family: var(--font-ark);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  text-align: center;
+  padding: 12px;
+}
+
+/* Refresh status - bottom section */
+.resource-node-card-body-refresh-status {
+  grid-row: 3;
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.resource-node-card-body-refresh-status-growing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-family: var(--font-ark);
+  font-size: 13px;
+  color: var(--foreground);
+}
+
+.resource-node-card-body-refresh-status-growing-label {
+  color: var(--foreground);
+  font-weight: var(--font-weight-medium);
+}
+
+.resource-node-card-body-refresh-status-growing-counts {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.resource-node-card-body-refresh-status-growing-current-count {
+  color: var(--foreground);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.resource-node-card-body-refresh-status-growing-tomorrow-count {
+  color: #22c55e;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.resource-node-card-body-refresh-status-maxed-out {
+  margin-left: auto;
+  font-family: var(--font-ark);
+  font-size: 13px;
+  color: var(--foreground);
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .resource-node-card-inputs {

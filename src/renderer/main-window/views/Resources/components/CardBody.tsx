@@ -74,7 +74,10 @@ const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxN
                     {isMaxedOut && <div className="resource-node-card-body-refresh-status-maxed-out">Growth limit reached</div>}
                     {isGrowing && <div className="resource-node-card-body-refresh-status-growing">
                         <span className="resource-node-card-body-refresh-status-growing-label">Next Refresh:</span>
-                        <span className="resource-node-card-body-refresh-status-growing-count">{node.current} → {tomorrowCount}</span>
+                        <div className="resource-node-card-body-refresh-status-growing-counts">
+                            <span className="resource-node-card-body-refresh-status-growing-current-count">{node.current} → </span>
+                            <span className="resource-node-card-body-refresh-status-growing-tomorrow-count">{tomorrowCount}</span>
+                        </div>
                     </div>}
                 </div>
             </div>
