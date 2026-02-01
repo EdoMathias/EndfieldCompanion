@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type FTUEStep = 
+export type FTUEStep =
   | 'welcome'
-  | 'widgets_intro';
+  | 'resources_header'
+  | 'resources_map_card'
+  | 'resources_on_map_button';
 
 export type FTUEScreen = 'main';
 
@@ -14,12 +16,18 @@ interface FTUEContextType {
   shouldShowStep: (step: FTUEStep) => boolean;
 }
 
+interface FTUEProviderProps {
+  children: ReactNode;
+  /** Called when FTUE is reset (e.g. from settings). Use to close settings and switch to main view. */
+  onReset?: () => void;
+}
+
 const FTUEContext = createContext<FTUEContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'endfield_companion_ftue_completed';
 const STEPS_STORAGE_KEY = 'endfield_companion_ftue_steps';
 
-export const FTUEProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset }) => {
   const [isFTUEComplete, setIsFTUEComplete] = useState<boolean>(() => {
     try {
       return localStorage.getItem(STORAGE_KEY) === 'true';
@@ -65,6 +73,7 @@ export const FTUEProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch {
       // Ignore errors
     }
+    onReset?.();
   };
 
   const completeFTUE = () => {
@@ -83,7 +92,9 @@ export const FTUEProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Define the order of steps
     const steps: FTUEStep[] = [
       'welcome',
-      'widgets_intro'
+      'resources_header',
+      'resources_map_card',
+      'resources_on_map_button'
     ];
     
     for (const step of steps) {
@@ -108,7 +119,7 @@ export const FTUEProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Auto-complete FTUE when all steps are done
   useEffect(() => {
-    const allSteps: FTUEStep[] = ['welcome', 'widgets_intro'];
+    const allSteps: FTUEStep[] = ['welcome', 'resources_header', 'resources_map_card', 'resources_on_map_button'];
     
     const allComplete = allSteps.every(step => completedSteps.has(step));
     if (allComplete && !isFTUEComplete) {

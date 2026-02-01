@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '../styles/index.css';
 
 // Components
-import { AppHeader } from '../components';
+import { AppHeader, FTUEWelcomeModal } from '../components';
 import { AdContainer } from './components/AdContainer/AdContainer';
 import SideNav from './components/SideNav/SideNav';
 import { Settings } from './views/Settings';
@@ -62,17 +62,23 @@ const Main: React.FC = () => {
         icon: view.icon,
     }));
 
-    const [activeView, setActiveView] = React.useState(
-        viewsConfig.find(view => view.active)?.name ?? viewsConfig[0].name
-    );
+    const defaultViewName = viewsConfig.find(view => view.active)?.name ?? viewsConfig[0].name;
+    const [activeView, setActiveView] = React.useState(defaultViewName);
 
     const [navExpanded, setNavExpanded] = React.useState(false);
+
+    const handleFTUEReset = React.useCallback(() => {
+        setShowSettings(false);
+        setActiveView(defaultViewName);
+        setNavExpanded(false);
+    }, [defaultViewName]);
 
     // Get the active view component
     const activeViewConfig = viewsConfig.find(view => view.name === activeView);
     const ActiveViewComponent = activeViewConfig?.component;
 
     return (
+        <FTUEProvider onReset={handleFTUEReset}>
         <div className="app-layout">
 
             <div className="app-header-wrapper">
@@ -101,6 +107,7 @@ const Main: React.FC = () => {
                         />
                     )}
                     <div className="main-content-wrapper">
+                        <FTUEWelcomeModal />
                         <div className="main-content-container">
                             {showSettings ? (
                                 <div className="settings-wrapper">
@@ -130,6 +137,7 @@ const Main: React.FC = () => {
                 </aside>
             </div>
         </div>
+        </FTUEProvider>
     );
 };
 
@@ -141,11 +149,7 @@ const mountMain = () => {
     }
 
     const root = createRoot(container);
-    root.render(
-        <FTUEProvider>
-            <Main />
-        </FTUEProvider>
-    );
+    root.render(<Main />);
 };
 
 const bootstrap = async () => {

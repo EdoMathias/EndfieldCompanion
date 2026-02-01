@@ -8,9 +8,11 @@ interface CardHeaderProps {
     onToggleTracking: (nodeId: string) => void;
     onClearCurrentNumber: (nodeId: string) => void;
     onOpenMapLocation: () => void;
+    /** When true, marks the "Show on Map" button for FTUE walkthrough */
+    ftueOnMapButton?: boolean;
 }
 
-const CardHeader: React.FC<CardHeaderProps> = ({ node, onToggleTracking, onClearCurrentNumber, onOpenMapLocation }) => {
+const CardHeader: React.FC<CardHeaderProps> = ({ node, onToggleTracking, onClearCurrentNumber, onOpenMapLocation, ftueOnMapButton }) => {
 
     return (
         <div className="resource-node-card-header">
@@ -23,7 +25,12 @@ const CardHeader: React.FC<CardHeaderProps> = ({ node, onToggleTracking, onClear
                 </div>
             </div>
             <div className="resource-node-controls">
-                <button type="button" className="resource-node-card-map-location" onClick={onOpenMapLocation}>
+                <button
+                    type="button"
+                    className="resource-node-card-map-location"
+                    onClick={onOpenMapLocation}
+                    {...(ftueOnMapButton ? { 'data-ftue': 'resources-on-map-button' as const } : {})}
+                >
                     📍 Show on Map
                 </button>
 

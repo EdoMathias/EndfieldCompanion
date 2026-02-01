@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useFTUE } from '../contexts/FTUEContext';
-import { OWHotkeys } from '@overwolf/overwolf-api-ts';
-import { kHotkeys, kEndfieldClassId } from '../../shared/consts';
+import { kHotkeys } from '../../shared/consts';
+import { HotkeysAPI } from '../../shared/services/hotkeys';
 import Button from '../main-window/views/Settings/components/Button';
 import { createLogger } from '../../shared/services/Logger';
 
 const logger = createLogger('FTUEWelcomeModal');
+
+const DEFAULT_HOTKEYS = {
+  toggleMainIngameWindow: 'Ctrl+T',
+  toggleMainDesktopWindow: 'Ctrl+Shift+T',
+};
+
+function displayHotkey(binding: string | undefined, unassigned: boolean): string {
+  if (unassigned || !binding || binding === 'Unassigned' || binding.trim() === '') {
+    return '';
+  }
+  return binding;
+}
 
 export const FTUEWelcomeModal: React.FC = () => {
   const { shouldShowStep, markStepComplete } = useFTUE();
   const [hotkeys, setHotkeys] = useState<{
     toggleMainIngameWindow: string;
     toggleMainDesktopWindow: string;
-  }>({
-    toggleMainIngameWindow: 'Ctrl+G',
-    toggleMainDesktopWindow: 'Ctrl+Shift+G',
-  });
+  }>(DEFAULT_HOTKEYS);
 
   const show = shouldShowStep('welcome');
 
@@ -24,13 +34,21 @@ export const FTUEWelcomeModal: React.FC = () => {
 
     const loadHotkeys = async () => {
       try {
-        const [toggleMainIngameWindow, toggleMainDesktopWindow] = await Promise.all([
-          OWHotkeys.getHotkeyText(kHotkeys.toggleMainIngameWindow),
-          OWHotkeys.getHotkeyText(kHotkeys.toggleMainDesktopWindow),
-        ]);
+        const hotkeysMap = await HotkeysAPI.fetchAll();
+        const inGame = hotkeysMap.get(kHotkeys.toggleMainIngameWindow);
+        const desktop = hotkeysMap.get(kHotkeys.toggleMainDesktopWindow);
+
+        const toggleMainIngameWindow =
+          displayHotkey(inGame?.binding, inGame?.IsUnassigned ?? true) ||
+          DEFAULT_HOTKEYS.toggleMainIngameWindow;
+        const toggleMainDesktopWindow =
+          displayHotkey(desktop?.binding, desktop?.IsUnassigned ?? true) ||
+          DEFAULT_HOTKEYS.toggleMainDesktopWindow;
+
         setHotkeys({ toggleMainIngameWindow, toggleMainDesktopWindow });
       } catch (error) {
         logger.error('Error loading hotkeys:', error);
+        setHotkeys(DEFAULT_HOTKEYS);
       }
     };
 
@@ -43,7 +61,7 @@ export const FTUEWelcomeModal: React.FC = () => {
     markStepComplete('welcome');
   };
 
-  return (
+  const overlayContent = (
     <div className="ftue-overlay">
       <div className="ftue-welcome-modal">
         <div className="ftue-welcome-header">
@@ -59,10 +77,10 @@ export const FTUEWelcomeModal: React.FC = () => {
             <div className="ftue-feature-info">
               <h3>Window Management</h3>
               <p>Control your app windows with customizable hotkeys.</p>
-              <span>Show/Hide the window in-game with: </span>
+              <span>Show/Hide the in-game window with: </span>
               <div className="ftue-hotkey-badge">{hotkeys.toggleMainIngameWindow}</div>
               <br />
-              <span>Show/Hide the window on desktop with: </span>
+              <span>Show/Hide the desktop window with: </span>
               <div className="ftue-hotkey-badge">{hotkeys.toggleMainDesktopWindow}</div>
             </div>
           </div>
@@ -76,5 +94,8 @@ export const FTUEWelcomeModal: React.FC = () => {
       </div>
     </div>
   );
+
+  // Portal to document.body so overlay appears above sidenav and all other content
+  return createPortal(overlayContent, document.body);
 };
 

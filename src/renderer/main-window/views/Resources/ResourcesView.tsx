@@ -1,5 +1,7 @@
 import React, { useMemo, useState, useRef } from 'react';
 import { useResourcesStore } from './hooks/useResourcesStore';
+import { useFTUE } from '../../../contexts/FTUEContext';
+import { FTUETooltip } from '../../../components';
 import ResourcesHeader from './components/ResourcesHeader';
 import RegionGroup from './components/RegionGroup';
 import MapLocationModal from './components/MapLocationModal';
@@ -8,6 +10,11 @@ import { ResourceNode } from './types/resources.types';
 const ResourcesView: React.FC = () => {
 
     const { nodes, serverRegion, setServerRegion, selectedMap, setSelectedMap, toggleNodeTracking, setCurrentNodeNumber, setMaxNodeNumber, clearCurrentNodeNumber, toggleRegionCollapsed, isRegionCollapsed, explorationLevel, setExplorationLevel } = useResourcesStore();
+    const { shouldShowStep } = useFTUE();
+
+    const showMapCardStep = shouldShowStep('resources_map_card');
+    const showOnMapButtonStep = shouldShowStep('resources_on_map_button');
+    const forceFirstRegionExpanded = showMapCardStep || showOnMapButtonStep;
     
     const [selectedNodeForMap, setSelectedNodeForMap] = useState<ResourceNode | null>(null);
     const containerRef = useRef<HTMLElement>(null);
@@ -86,7 +93,7 @@ const ResourcesView: React.FC = () => {
                         key={region}
                         region={region}
                         nodes={nodesByRegion[region]}
-                        isExpanded={!isRegionCollapsed(region)}
+                        isExpanded={forceFirstRegionExpanded && region === sortedRegions[0] ? true : !isRegionCollapsed(region)}
                         onToggleExpanded={() => toggleRegionCollapsed(region)}
                         onCurrentNumberChange={setCurrentNodeNumber}
                         onMaxNumberChange={setMaxNodeNumber}
@@ -94,6 +101,7 @@ const ResourcesView: React.FC = () => {
                         onToggleTracking={toggleNodeTracking}
                         onOpenMapLocation={(node) => setSelectedNodeForMap(node)}
                         explorationLevel={explorationLevel}
+                        isFirstRegion={region === sortedRegions[0]}
                     />
                 ))}
             </div>
@@ -104,6 +112,28 @@ const ResourcesView: React.FC = () => {
                 nodeName={selectedNodeForMap?.name || ''}
                 onClose={() => setSelectedNodeForMap(null)}
                 containerRef={containerRef}
+            />
+
+            <FTUETooltip
+                step="resources_header"
+                title="Resources header"
+                message="This header shows daily reset time, map and server selection, exploration level, and your maxed nodes and total gatherables. Use it to switch maps and track your progress."
+                position="bottom"
+                targetSelector='[data-ftue="resources-header"]'
+            />
+            <FTUETooltip
+                step="resources_map_card"
+                title="Resource node card"
+                message="Each card shows a resource node. You can click the current or max number to edit them manually and keep track of your gathering progress. Please note that you'll need to manually edit the max amount since we currently don't support auto-tracking."
+                position="bottom"
+                targetSelector='[data-ftue="resources-map-card"]'
+            />
+            <FTUETooltip
+                step="resources_on_map_button"
+                title="Show on Map"
+                message="Click this button to open a map view with the node's location highlighted. Use it to find where to gather this resource in-game."
+                position="top"
+                targetSelector='[data-ftue="resources-on-map-button"]'
             />
         </section>
     );
