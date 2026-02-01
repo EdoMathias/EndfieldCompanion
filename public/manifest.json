@@ -7,7 +7,7 @@
     "version": "1.0.0",
     "minimum-overwolf-version": "0.160.0",
     "description": "An Overwolf app for Arknights: Endfield",
-    "dock_button_title": "Arknights Companion",
+    "dock_button_title": "ArknightsCompanion",
     "icon": "img/logo-dock.png",
     "icon_gray": "img/logo-dock-gray.png",
     "launcher_icon": "icons/launcher_icon.ico",
