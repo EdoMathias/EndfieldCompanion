@@ -75,17 +75,17 @@ input {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0c15;
+  background: var(--color-bg-primary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #34d399;
+  background: var(--color-accent-primary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+  background: var(--color-accent-secondary);
 }
 
 /* ------------------------------
@@ -98,17 +98,17 @@ input {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #0b0c15;
+  background: var(--color-bg-primary);
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #34d399;
+  background: var(--color-accent-primary);
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+  background: var(--color-accent-secondary);
 }
 
 /* ------------------------------
@@ -120,19 +120,19 @@ input {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #34d399;
+  background: var(--color-accent-primary);
   cursor: pointer;
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
 }
 
 .opacity-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #34d399;
+  background: var(--color-accent-primary);
   cursor: pointer;
   border: none;
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
 }
 
 /* ------------------------------
@@ -140,5 +140,5 @@ input {
 --------------------------------*/
 
 .cyber-glow {
-  text-shadow: 0 0 10px rgba(52, 211, 153, 0.8);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--color-accent-primary) 80%, transparent);
 }

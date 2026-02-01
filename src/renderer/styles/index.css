@@ -30,6 +30,7 @@
 @import './views/dashboard.css';
 @import './views/library.css';
 @import './views/widgets.css';
+@import './views/resources.css';
 
 /* 
  * CSS Modules Migration Guide:

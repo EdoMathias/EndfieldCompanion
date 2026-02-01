@@ -60,6 +60,8 @@ const Main: React.FC = () => {
         viewsConfig.find(view => view.active)?.name ?? viewsConfig[0].name
     );
 
+    const [navExpanded, setNavExpanded] = React.useState(false);
+
     // Get the active view component
     const activeViewConfig = viewsConfig.find(view => view.name === activeView);
     const ActiveViewComponent = activeViewConfig?.component;
@@ -81,14 +83,19 @@ const Main: React.FC = () => {
             </div>
 
             <div className="app-body">
-                <SideNav views={views} activeView={activeView} setActiveView={setActiveView} />
+                <SideNav views={views} activeView={activeView} setActiveView={setActiveView} navExpanded={navExpanded} setNavExpanded={setNavExpanded} />
 
                 <main className="main-content">
+                    {navExpanded && (
+                        <button
+                            type="button"
+                            className="side-nav-overlay"
+                            onClick={() => setNavExpanded(false)}
+                            aria-label="Close menu"
+                        />
+                    )}
                     <div className="main-content-wrapper">
                         <div className="main-content-container">
-                            <div className="main-content-header">
-                                <h1>{activeView}</h1>
-                            </div>
                             {ActiveViewComponent && <ActiveViewComponent />}
                         </div>
                     </div>
