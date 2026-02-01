@@ -70,7 +70,7 @@ module.exports = env => ({
             chunks: ['main_ingame']
         }),
         new HtmlWebpackPlugin({
-            template: './src/renderer/tracker/uninstall.html',
+            template: './src/renderer/uninstall-window/uninstall.html',
             filename: path.resolve(__dirname, './dist/uninstall.html'),
             chunks: []
         }),

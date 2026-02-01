@@ -33,9 +33,9 @@ const Main: React.FC = () => {
 
     const handleSubmissionFormClick = () => {
         console.log('Submission form clicked');
-        // overwolf.utils.openUrlInDefaultBrowser(
-        //     'https://forms.gle/SJdNDZWE5cbNiXLL8'
-        // );
+        overwolf.utils.openUrlInDefaultBrowser(
+            'https://forms.gle/sNW48XMehCALrYAq9'
+        );
     };
 
     const headerActionButtons: Array<{
