@@ -26,9 +26,11 @@ const CardHeader: React.FC<CardHeaderProps> = ({ node, onToggleTracking, onClear
                 <button type="button" className="resource-node-card-map-location" onClick={onOpenMapLocation}>
                     📍 Show on Map
                 </button>
-                <button type="button" className="resource-node-card-toggle-tracking" onClick={() => onToggleTracking(node.id)}>
+
+                {/* Uncomment this for now since I don't want the first version to have tracking functionality */}
+                {/* <button type="button" className="resource-node-card-toggle-tracking" onClick={() => onToggleTracking(node.id)}>
                     {node.tracked ? '❌ Un-Track' : '📌 Track'}
-                </button>
+                </button> */}
                 <button type="button" className="resource-node-card-clear" onClick={() => onClearCurrentNumber(node.id)}>Clear</button>
             </div>
         </div>
