@@ -31,6 +31,7 @@
 @import './views/library.css';
 @import './views/widgets.css';
 @import './views/resources.css';
+@import './views/rotations.css';
 
 /* 
  * CSS Modules Migration Guide:

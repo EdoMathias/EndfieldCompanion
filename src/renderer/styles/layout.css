@@ -29,6 +29,7 @@
   width: 56px;
   flex-shrink: 0;
   position: relative;
+  overflow: visible;
 }
 
 .side-nav-overlay {
@@ -61,7 +62,7 @@
   position: relative;
   z-index: 2;
   transition: width 0.2s ease, box-shadow 0.2s ease;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .side-nav--expanded {
@@ -72,6 +73,37 @@
   width: 240px;
   z-index: 20;
   box-shadow: 4px 0 16px rgba(0, 0, 0, 0.4);
+}
+
+.side-nav-button-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.side-nav-button-tooltip {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 12px;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-family: var(--font-ark);
+  font-size: 13px;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 0 8px color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 100;
+}
+
+.side-nav-button-wrap:hover .side-nav-button-tooltip {
+  opacity: 1;
+  visibility: visible;
 }
 
 .side-nav-button {
