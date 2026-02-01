@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from './Button';
+import Button from '../main-window/views/Settings/components/Button';
 
 interface UnassignedHotkeyModalProps {
   unassignedHotkeys: string[];

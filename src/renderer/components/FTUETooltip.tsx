@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useFTUE } from '../contexts/FTUEContext';
 import { FTUEStep } from '../contexts/FTUEContext';
 
@@ -23,6 +24,7 @@ export const FTUETooltip: React.FC<FTUETooltipProps> = ({
 }) => {
   const { shouldShowStep, markStepComplete } = useFTUE();
   const [positionStyle, setPositionStyle] = useState<React.CSSProperties>({});
+  const [effectivePosition, setEffectivePosition] = useState<typeof position>(position);
   const [spotlightStyle, setSpotlightStyle] = useState<{
     top: React.CSSProperties;
     bottom: React.CSSProperties;
@@ -37,19 +39,43 @@ export const FTUETooltip: React.FC<FTUETooltipProps> = ({
   useEffect(() => {
     if (!show || !targetSelector) return;
 
+    setEffectivePosition(position);
+
+    const spacing = 12;
+    const padding = 8;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
     const updatePosition = () => {
       const target = document.querySelector(targetSelector);
       if (!target || !tooltipRef.current) return;
 
       const targetRect = target.getBoundingClientRect();
       const tooltipRect = tooltipRef.current.getBoundingClientRect();
-      const spacing = 12;
-      const padding = 8; // Padding around target for spotlight cutout
+
+      // Choose position that fits: prefer requested, fallback if tooltip would be cut off
+      let effectivePosition = position;
+      const spaceAbove = targetRect.top;
+      const spaceBelow = viewportHeight - targetRect.bottom;
+      const spaceLeft = targetRect.left;
+      const spaceRight = viewportWidth - targetRect.right;
+      const tooltipH = tooltipRect.height + spacing;
+      const tooltipW = tooltipRect.width + spacing;
+
+      if (position === 'top' && spaceAbove < tooltipH && spaceBelow >= tooltipH) {
+        effectivePosition = 'bottom';
+      } else if (position === 'bottom' && spaceBelow < tooltipH && spaceAbove >= tooltipH) {
+        effectivePosition = 'top';
+      } else if (position === 'left' && spaceLeft < tooltipW && spaceRight >= tooltipW) {
+        effectivePosition = 'right';
+      } else if (position === 'right' && spaceRight < tooltipW && spaceLeft >= tooltipW) {
+        effectivePosition = 'left';
+      }
 
       let top = 0;
       let left = 0;
 
-      switch (position) {
+      switch (effectivePosition) {
         case 'top':
           top = targetRect.top - tooltipRect.height - spacing;
           left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
@@ -68,22 +94,17 @@ export const FTUETooltip: React.FC<FTUETooltipProps> = ({
           break;
       }
 
-      // Keep tooltip within viewport
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
+      // Clamp strictly to viewport so tooltip is never cut
+      const minLeft = spacing;
+      const maxLeft = viewportWidth - tooltipRect.width - spacing;
+      const minTop = spacing;
+      const maxTop = viewportHeight - tooltipRect.height - spacing;
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+      top = Math.max(minTop, Math.min(maxTop, top));
 
-      if (left < 0) left = spacing;
-      if (left + tooltipRect.width > viewportWidth) {
-        left = viewportWidth - tooltipRect.width - spacing;
-      }
-      if (top < 0) top = spacing;
-      if (top + tooltipRect.height > viewportHeight) {
-        top = viewportHeight - tooltipRect.height - spacing;
-      }
-
+      setEffectivePosition(effectivePosition);
       setPositionStyle({ top: `${top}px`, left: `${left}px` });
 
-      // Calculate spotlight cutout (4 overlays: top, bottom, left, right)
       const cutoutTop = targetRect.top - padding;
       const cutoutBottom = targetRect.bottom + padding;
       const cutoutLeft = targetRect.left - padding;
@@ -137,16 +158,23 @@ export const FTUETooltip: React.FC<FTUETooltipProps> = ({
       });
     };
 
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition);
+    const runUpdate = () => {
+      updatePosition();
+      requestAnimationFrame(() => updatePosition());
+    };
 
-    // Small delay to ensure DOM is ready
-    setTimeout(updatePosition, 100);
+    runUpdate();
+    window.addEventListener('resize', runUpdate);
+    window.addEventListener('scroll', runUpdate, true);
+
+    const t1 = setTimeout(runUpdate, 50);
+    const t2 = setTimeout(runUpdate, 200);
 
     return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition);
+      window.removeEventListener('resize', runUpdate);
+      window.removeEventListener('scroll', runUpdate, true);
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
   }, [show, targetSelector, position]);
 
@@ -181,7 +209,7 @@ export const FTUETooltip: React.FC<FTUETooltipProps> = ({
     completeStep();
   };
 
-  return (
+  const tooltipContent = (
     <>
       {spotlightStyle && (
         <>
@@ -193,7 +221,7 @@ export const FTUETooltip: React.FC<FTUETooltipProps> = ({
       )}
       <div
         ref={tooltipRef}
-        className={`ftue-tooltip ftue-tooltip-${position}`}
+        className={`ftue-tooltip ftue-tooltip-${effectivePosition}`}
         style={positionStyle}
       >
         <div className="ftue-tooltip-header">
@@ -217,5 +245,8 @@ export const FTUETooltip: React.FC<FTUETooltipProps> = ({
       </div>
     </>
   );
+
+  // Portal to document.body so tooltip is never clipped by parent overflow/transform
+  return createPortal(tooltipContent, document.body);
 };
 

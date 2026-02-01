@@ -70,6 +70,7 @@ const MapLocationModal: React.FC<MapLocationModalProps> = ({
             src={mapLocationImage} 
             alt={`Map location for ${nodeName}`}
             className="map-location-modal-image"
+            draggable={false}
           />
         </div>
       </div>

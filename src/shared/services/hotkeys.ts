@@ -11,9 +11,11 @@ export const HotkeysAPI = {
           reject(result.error);
           return;
         }
+        console.log('result', result);
         const gameHotkeys = result.games?.[kEndfieldClassId] ?? [];
         const map = new Map<string, overwolf.settings.hotkeys.IHotkey>();
         gameHotkeys.forEach(h => map.set(h.name, h));
+        console.log('gameHotkeys', gameHotkeys);
         resolve(map);
       });
     });

@@ -11,14 +11,26 @@ interface ResourceNodeCardProps {
     onToggleTracking: (nodeId: string) => void;
     onOpenMapLocation: () => void;
     explorationLevel: number;
+    /** When true, marks this card for FTUE "map card" walkthrough */
+    ftueMapCard?: boolean;
+    /** When true, marks the "Show on Map" button for FTUE walkthrough */
+    ftueOnMapButton?: boolean;
 }
 
-const ResourceNodeCard: React.FC<ResourceNodeCardProps> = ({ node, onCurrentNumberChange, onMaxNumberChange, onClearCurrentNumber, onToggleTracking, onOpenMapLocation, explorationLevel }) => {
+const ResourceNodeCard: React.FC<ResourceNodeCardProps> = ({ node, onCurrentNumberChange, onMaxNumberChange, onClearCurrentNumber, onToggleTracking, onOpenMapLocation, explorationLevel, ftueMapCard, ftueOnMapButton }) => {
 
     return (
-        <div className="resource-node-card">
-
-            <CardHeader node={node} onToggleTracking={onToggleTracking} onClearCurrentNumber={onClearCurrentNumber} onOpenMapLocation={onOpenMapLocation} />
+        <div
+            className="resource-node-card"
+            {...(ftueMapCard ? { 'data-ftue': 'resources-map-card' as const } : {})}
+        >
+            <CardHeader
+                node={node}
+                onToggleTracking={onToggleTracking}
+                onClearCurrentNumber={onClearCurrentNumber}
+                onOpenMapLocation={onOpenMapLocation}
+                ftueOnMapButton={ftueOnMapButton}
+            />
 
             <CardBody node={node} onCurrentNumberChange={onCurrentNumberChange} onMaxNumberChange={onMaxNumberChange} explorationLevel={explorationLevel} />
         </div>

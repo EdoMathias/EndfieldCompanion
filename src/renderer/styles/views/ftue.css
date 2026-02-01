@@ -1,5 +1,6 @@
 /* ============================================
    FTUE (First Time User Experience) Styles
+   Aligned with app design (variables.css)
    ============================================ */
 
 .ftue-overlay {
@@ -8,7 +9,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,15 +28,15 @@
 }
 
 .ftue-welcome-modal {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 32px;
   max-width: 600px;
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   animation: ftue-slide-up 0.3s ease-out;
 }
 
@@ -57,15 +58,16 @@
 }
 
 .ftue-welcome-header h2 {
-  color: #fff;
-  font-size: 28px;
+  color: var(--foreground);
+  font-size: 24px;
   margin: 0 0 12px 0;
   font-weight: 600;
   letter-spacing: 0.5px;
+  font-family: var(--font-ark);
 }
 
 .ftue-welcome-subtitle {
-  color: #aaa;
+  color: var(--muted-foreground);
   font-size: 16px;
   margin: 0;
   line-height: 1.5;
@@ -83,9 +85,9 @@
   gap: 16px;
   align-items: flex-start;
   padding: 16px;
-  background: #252525;
-  border-radius: 8px;
-  border: 1px solid #333;
+  background: var(--muted);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
 }
 
 .ftue-feature-icon {
@@ -98,15 +100,16 @@
 }
 
 .ftue-feature-info h3 {
-  color: #fff;
-  font-size: 18px;
+  color: var(--foreground);
+  font-size: 16px;
   margin: 0 0 12px 0;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  font-family: var(--font-ark);
 }
 
 .ftue-feature-info p {
-  color: #aaa;
+  color: var(--muted-foreground);
   font-size: 14px;
   margin: 0 0 12px 0;
   line-height: 1.5;
@@ -114,33 +117,36 @@
 
 .ftue-hotkey-badge {
   display: inline-block;
-  padding: 4px 12px;
-  background: #06b6d4;
-  color: #fff;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--primary) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+  color: var(--primary);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
 }
 
 /* ------------------------------
-   FTUE Tooltip
+   FTUE Tooltip (portal to body for correct positioning)
 --------------------------------*/
 
 .ftue-tooltip {
   position: fixed;
-  background: #1a1a1a;
-  border: 2px solid #06b6d4;
-  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 16px;
-  max-width: 300px;
+  max-width: 320px;
+  min-width: 260px;
   z-index: 9999;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   animation: ftue-tooltip-appear 0.3s ease-out;
 }
 
 @keyframes ftue-tooltip-appear {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
 
   to {
@@ -161,69 +167,74 @@
   bottom: -16px;
   left: 50%;
   transform: translateX(-50%);
-  border-top-color: #06b6d4;
+  border-top-color: var(--border);
 }
 
 .ftue-tooltip-bottom::before {
   top: -16px;
   left: 50%;
   transform: translateX(-50%);
-  border-bottom-color: #06b6d4;
+  border-bottom-color: var(--border);
 }
 
 .ftue-tooltip-left::before {
   right: -16px;
   top: 50%;
   transform: translateY(-50%);
-  border-left-color: #06b6d4;
+  border-left-color: var(--border);
 }
 
 .ftue-tooltip-right::before {
   left: -16px;
   top: 50%;
   transform: translateY(-50%);
-  border-right-color: #06b6d4;
+  border-right-color: var(--border);
 }
 
 .ftue-tooltip-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 8px;
   margin-bottom: 8px;
 }
 
 .ftue-tooltip-title {
-  color: #fff;
-  font-size: 16px;
+  color: var(--foreground);
+  font-size: 15px;
   font-weight: 600;
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  font-family: var(--font-ark);
+  flex: 1;
+  min-width: 0;
 }
 
 .ftue-tooltip-close {
   background: none;
   border: none;
-  color: #aaa;
-  font-size: 24px;
+  color: var(--muted-foreground);
+  font-size: 22px;
   line-height: 1;
   cursor: pointer;
   padding: 0;
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
 }
 
 .ftue-tooltip-close:hover {
-  background: #333;
-  color: #fff;
+  background: var(--muted);
+  color: var(--foreground);
 }
 
 .ftue-tooltip-message {
-  color: #aaa;
+  color: var(--muted-foreground);
   font-size: 14px;
   line-height: 1.5;
   margin: 0 0 12px 0;
@@ -235,19 +246,23 @@
 }
 
 .ftue-tooltip-button {
-  background: #06b6d4;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 16px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+  border-radius: var(--radius-sm);
+  padding: 8px 18px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: var(--font-ark);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .ftue-tooltip-button:hover {
-  background: #0891b2;
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 60%, transparent);
 }
 
 .ftue-search-wrapper {
@@ -380,8 +395,8 @@
 }
 
 .ftue-level-btn.selected {
-  background: rgba(6, 182, 212, 0.2);
-  border-color: rgba(6, 182, 212, 0.5);
-  color: rgba(6, 182, 212, 1);
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.2);
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  color: var(--primary);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--primary) 20%, transparent);
 }

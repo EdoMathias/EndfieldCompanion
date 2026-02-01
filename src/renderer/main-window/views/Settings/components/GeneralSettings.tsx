@@ -12,6 +12,9 @@ const GeneralSettings: React.FC = () => {
   return (
     <div className="settings-section">
       <h3 className="settings-section-title">Tutorial</h3>
+      <p className="settings-section-description">
+        Reset the first-time user experience to see the welcome and feature tips again.
+      </p>
       <Button variant="secondary" onClick={handleResetFTUE}>
         Reset Tutorial
       </Button>

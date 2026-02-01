@@ -8,8 +8,8 @@ export const kWindowNames = {
 };
 
 export const kHotkeys = {
-  toggleMainIngameWindow: 'Toggle In-Game Main',
-  toggleMainDesktopWindow: 'Toggle Desktop Main',
+  toggleMainIngameWindow: 'ToggleInGameMain',
+  toggleMainDesktopWindow: 'ToggleDesktopMain',
 };
 
 export type HotkeyData = {

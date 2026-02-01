@@ -26,7 +26,7 @@ const ResourcesHeader: React.FC<ResourcesHeaderProps> = ({ serverRegion, onServe
     const msLeft = nextReset.getTime() - now;
 
     return (
-        <div className="resources-header">
+        <div className="resources-header" data-ftue="resources-header">
             {/* Row 1: Page name */}
             <div className="resources-header-row-1">
                 <h1 className="resources-header-title">Resources</h1>

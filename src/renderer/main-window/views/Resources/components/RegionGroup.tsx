@@ -13,6 +13,8 @@ interface RegionGroupProps {
     onToggleTracking: (nodeId: string) => void;
     onOpenMapLocation: (node: ResourceNode) => void;
     explorationLevel: number;
+    /** When true, this is the first region (used for FTUE walkthrough targets) */
+    isFirstRegion?: boolean;
 }
 
 const RegionGroup: React.FC<RegionGroupProps> = ({
@@ -26,6 +28,7 @@ const RegionGroup: React.FC<RegionGroupProps> = ({
     onToggleTracking,
     onOpenMapLocation,
     explorationLevel,
+    isFirstRegion = false,
 }) => {
     const maxedNodesCount = nodes.filter(node => node.current >= node.max && node.max > 0).length;
     const totalNodes = nodes.length;
@@ -63,7 +66,7 @@ const RegionGroup: React.FC<RegionGroupProps> = ({
             {isExpanded && (
                 <div className="region-group-content">
                     <div className="resources-grid">
-                        {nodes.map(node => (
+                        {nodes.map((node, index) => (
                             <ResourceNodeCard
                                 key={node.id}
                                 node={node}
@@ -73,6 +76,8 @@ const RegionGroup: React.FC<RegionGroupProps> = ({
                                 onToggleTracking={onToggleTracking}
                                 onOpenMapLocation={() => onOpenMapLocation(node)}
                                 explorationLevel={explorationLevel}
+                                ftueMapCard={isFirstRegion && index === 0}
+                                ftueOnMapButton={isFirstRegion && index === 0}
                             />
                         ))}
                     </div>

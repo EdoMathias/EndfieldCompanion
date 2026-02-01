@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SettingsInfoProps {
-  tab: 'general' | 'hotkeys' | 'data' | 'about';
+  tab: 'general' | 'hotkeys' | 'about';
 }
 
 const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
@@ -16,7 +16,7 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
             <h4>Tutorial</h4>
             <p>
               Resetting the tutorial will re-enable the first-time user experience walkthrough.
-              Use this if you want to review the app's features and how to use them.
+              Use this if you want to review the app&apos;s features and how to use them.
             </p>
           </>
         );
@@ -38,26 +38,6 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
             </p>
           </>
         );
-      case 'data':
-        return (
-          <>
-            <h3>Data Management</h3>
-            <p>Manage your saved data and statistics.</p>
-
-            <h4>Reset Game Time Stats</h4>
-            <p>
-              This will reset all game time statistics, including:
-            </p>
-            <ul>
-              <li>Time spent in maps</li>
-              <li>Time spent in lobby</li>
-              <li>Total sessions counter</li>
-            </ul>
-            <p className="warning-text">
-              <strong>Warning:</strong> This action cannot be undone.
-            </p>
-          </>
-        );
       case 'about':
         return (
           <>
@@ -66,8 +46,8 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
 
             <h4>Disclaimer</h4>
             <p>
-              This application is a community-made fan project and is not affiliated with, endorsed, or sponsored
-              by Epic Games, Inc. or the developers of Fortnite.
+              This application is a community-made fan project and is not affiliated with,
+              endorsed, or sponsored by the game developers.
             </p>
           </>
         );
