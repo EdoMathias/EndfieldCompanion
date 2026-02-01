@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFTUE } from '../contexts/FTUEContext';
 import { OWHotkeys } from '@overwolf/overwolf-api-ts';
 import { kHotkeys, kEndfieldClassId } from '../../shared/consts';
-import { Button } from './Button';
+import Button from '../main-window/views/Settings/components/Button';
 import { createLogger } from '../../shared/services/Logger';
 
 const logger = createLogger('FTUEWelcomeModal');
@@ -47,7 +47,7 @@ export const FTUEWelcomeModal: React.FC = () => {
     <div className="ftue-overlay">
       <div className="ftue-welcome-modal">
         <div className="ftue-welcome-header">
-          <h2>Welcome to Endfield Companion!</h2>
+          <h2>Welcome to Arknights Companion!</h2>
           <p className="ftue-welcome-subtitle">
             Your companion app for Arknights Endfield.
           </p>

@@ -2,12 +2,12 @@
   "manifest_version": 1,
   "type": "WebApp",
   "meta": {
-    "name": "Endfield Companion",
+    "name": "Arknights Companion",
     "author": "KofimBadam",
     "version": "1.0.0",
     "minimum-overwolf-version": "0.160.0",
-    "description": "An Overwolf app for Arknights Endfield",
-    "dock_button_title": "Endfield Companion",
+    "description": "An Overwolf app for Arknights: Endfield",
+    "dock_button_title": "Arknights Companion",
     "icon": "img/logo-dock.png",
     "icon_gray": "img/logo-dock-gray.png",
     "launcher_icon": "icons/launcher_icon.ico",
@@ -93,20 +93,18 @@
     "game_targeting": {
       "type": "dedicated",
       "game_ids": [
-        21216,
-        1136
+        27724
       ]
     },
     "game_events": [
-      21216
+      27724
     ],
     "launch_events": [
       {
         "event": "GameLaunch",
         "event_data": {
           "game_ids": [
-            21216,
-            1136
+            27724
           ]
         },
         "start_minimized": true

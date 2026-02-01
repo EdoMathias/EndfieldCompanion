@@ -1,5 +1,5 @@
 export { Modal } from './Modal';
-export { Button } from './Button';
+export { default as Button } from '../main-window/views/Settings/components/Button';
 export { AppHeader } from './AppHeader';
 export { LaunchingOverlay } from './LaunchingOverlay';
 export * from './FTUEWelcomeModal';

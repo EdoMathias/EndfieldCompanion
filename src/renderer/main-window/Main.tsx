@@ -6,6 +6,10 @@ import '../styles/index.css';
 import { AppHeader } from '../components';
 import { AdContainer } from './components/AdContainer/AdContainer';
 import SideNav from './components/SideNav/SideNav';
+import { Settings } from './views/Settings';
+
+// Contexts
+import { FTUEProvider } from '../contexts/FTUEContext';
 
 // Custom hooks
 import { useWindowInfo } from '../hooks/useWindowInfo';
@@ -18,11 +22,13 @@ const Main: React.FC = () => {
     const { isIngameWindow } = useWindowInfo();
     const appVersion = useAppVersion();
 
+    const [showSettings, setShowSettings] = React.useState(false);
+    const [settingsInitialTab, setSettingsInitialTab] = React.useState<'general' | 'hotkeys' | 'about'>('general');
+
     //------------------------HEADER ACTION BUTTONS-----------------------------
     const handleSettingsClick = () => {
-        console.log('Settings clicked');
-        // setSettingsInitialTab('general');
-        // setShowSettings(true);
+        setSettingsInitialTab('general');
+        setShowSettings(true);
     };
 
     const handleSubmissionFormClick = () => {
@@ -73,8 +79,8 @@ const Main: React.FC = () => {
                 <AppHeader
                     title={
                         isIngameWindow ?
-                            'Endfield Companion • In-Game' :
-                            'Endfield Companion • Desktop'
+                            'Arknights Companion • In-Game' :
+                            'Arknights Companion • Desktop'
                     }
                     appVersion={appVersion ?? undefined}
                     showHotkey={isIngameWindow}
@@ -96,7 +102,16 @@ const Main: React.FC = () => {
                     )}
                     <div className="main-content-wrapper">
                         <div className="main-content-container">
-                            {ActiveViewComponent && <ActiveViewComponent />}
+                            {showSettings ? (
+                                <div className="settings-wrapper">
+                                    <Settings
+                                        initialTab={settingsInitialTab}
+                                        onClose={() => setShowSettings(false)}
+                                    />
+                                </div>
+                            ) : (
+                                ActiveViewComponent && <ActiveViewComponent />
+                            )}
                         </div>
                     </div>
                 </main>
@@ -127,7 +142,9 @@ const mountMain = () => {
 
     const root = createRoot(container);
     root.render(
-        <Main />
+        <FTUEProvider>
+            <Main />
+        </FTUEProvider>
     );
 };
 
