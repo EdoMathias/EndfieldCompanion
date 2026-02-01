@@ -32,6 +32,8 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
         topMost: true,
         takeOverAction: 'ReleaseOnHidden',
         takeOverReleaseHotkey: 'ToggleInGameMain',
+        resizable: true,
+        showMaximize: true,
         autoDpi: true
     }
 }
@@ -143,6 +145,7 @@ export class WindowsService {
                 logger.log(`Window ${window.Id()} docked to ${dockTo}`);
             }
 
+            await window.restore();
             await window.bringToFront();
             logger.log(`Window ${window.Id()} brought to front`);
         } catch (error) {
@@ -170,6 +173,8 @@ export class WindowsService {
                 logger.log('Hiding window by hotkey');
             } else {
                 await window.restore();
+                await window.bringToFront();
+                await window.center();
                 logger.log('Showing window by hotkey');
             }
         }

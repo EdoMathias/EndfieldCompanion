@@ -1,5 +1,7 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { Windows, WindowBase } from '@overwolf/odk-ts';
+import React, { useCallback } from 'react';
+import { Windows } from '@overwolf/odk-ts';
+import { kWindowNames } from '../../shared/consts';
+import { useWindowInfo } from '../hooks/useWindowInfo';
 
 interface AppHeaderProps {
   title: string;
@@ -24,6 +26,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   showHotkey = true,
   actionButtons = []
 }) => {
+  const { windowName } = useWindowInfo();
   const hasBothHotkeys = hotkeyTextInGame != null && hotkeyTextDesktop != null;
   const hotkeyDisplay = hasBothHotkeys
     ? { inGame: hotkeyTextInGame, desktop: hotkeyTextDesktop }
@@ -50,6 +53,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const handleRestore = useCallback(async () => {
     if (await Windows.Self()) {
       const windowState = await (await Windows.Self()).getWindowState();
+      console.log('windowState', windowState);
       if (windowState === 'maximized') {
         await (await Windows.Self()).restore();
       } else {
@@ -59,12 +63,19 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   }, []);
 
   const handleClose = useCallback(async () => {
-    if (await Windows.Self()) {
-      (await Windows.Self()).close().catch((error) => {
-        console.error('Error closing window:', error);
-      });
+    const self = await Windows.Self();
+    if (!self) return;
+    try {
+      // In-game window: hide (user can show again via hotkey). Desktop: close.
+      if (windowName === kWindowNames.mainIngame) {
+        await self.hide();
+      } else {
+        await self.close();
+      }
+    } catch (error) {
+      console.error('Error closing/hiding window:', error);
     }
-  }, []);
+  }, [windowName]);
 
   return (
     <header id="header" className="app-header" onMouseDown={handleDragStart}>
