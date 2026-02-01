@@ -86,7 +86,7 @@ const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxN
                                     handleCurrentAmountBlur();
                                 }
                             }}
-                        /> : <span className="resource-node-card-body-counter-current" onClick={handleCurrentAmountClick}>{node.current}</span>}
+                        /> : <span className="resource-node-card-body-counter-current" role="button" tabIndex={0} onClick={handleCurrentAmountClick} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCurrentAmountClick(); } }}>{node.current}</span>}
                     <span className="resource-node-card-body-counter-divider">/</span>
 
                     {isEditingMaxAmount ?
@@ -103,7 +103,7 @@ const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxN
                                     handleMaxAmountBlur();
                                 }
                             }}
-                        /> : <span className="resource-node-card-body-counter-max" onClick={handleMaxAmountClick}>{node.max}</span>}
+                        /> : <span className="resource-node-card-body-counter-max" role="button" tabIndex={0} onClick={handleMaxAmountClick} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleMaxAmountClick(); } }}>{node.max}</span>}
                 </div>
                 <div className="resource-node-card-body-status">
                     {/* Growing / Maxed out */}

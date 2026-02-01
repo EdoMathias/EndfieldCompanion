@@ -694,32 +694,54 @@
   color: var(--foreground);
   font-variant-numeric: tabular-nums;
   z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1px 2px;
+  border-radius: 4px;
 }
 
 .resource-node-card-body-counter-current {
   color: var(--foreground);
   cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
-  transition: background-color 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px dashed color-mix(in srgb, var(--color-text-primary) 30%, transparent);
+  background-color: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
 }
 
 .resource-node-card-body-counter-current:hover {
-  background-color: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  background-color: color-mix(in srgb, var(--color-text-primary) 15%, transparent);
+  border-color: color-mix(in srgb, var(--color-text-primary) 50%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+}
+
+.resource-node-card-body-counter-current:active {
+  background-color: color-mix(in srgb, var(--color-text-primary) 25%, transparent);
+}
+
+.resource-node-card-body-counter-current:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 2px;
 }
 
 .resource-node-card-body-counter-current-input {
   width: 50px;
-  padding: 2px 4px;
-  background-color: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 20%, transparent);
-  border-radius: 2px;
+  padding: 4px 8px;
+  background-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+  border-radius: 4px;
   color: var(--color-text-primary);
   font-family: var(--font-ark);
   font-size: 16px;
   font-weight: 700;
   text-align: center;
   outline: none;
+}
+
+.resource-node-card-body-counter-current-input:focus {
+  border-color: var(--color-text-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-text-primary) 25%, transparent);
 }
 
 .resource-node-card-body-counter-divider {
@@ -730,21 +752,35 @@
 .resource-node-card-body-counter-max {
   color: var(--foreground);
   cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
-  transition: background-color 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px dashed color-mix(in srgb, var(--color-text-primary) 30%, transparent);
+  background-color: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
 }
 
 .resource-node-card-body-counter-max:hover {
-  background-color: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  background-color: color-mix(in srgb, var(--color-text-primary) 15%, transparent);
+  border-color: color-mix(in srgb, var(--color-text-primary) 50%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+}
+
+.resource-node-card-body-counter-max:active {
+  background-color: color-mix(in srgb, var(--color-text-primary) 25%, transparent);
+}
+
+.resource-node-card-body-counter-max:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 2px;
 }
 
 .resource-node-card-body-counter-max-input {
   width: 50px;
-  padding: 2px 4px;
-  background-color: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 20%, transparent);
-  border-radius: 2px;
+  padding: 4px 8px;
+  background-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+  border-radius: 4px;
   color: var(--color-text-primary);
   font-family: var(--font-ark);
   font-size: 16px;
@@ -753,10 +789,15 @@
   outline: none;
 }
 
+.resource-node-card-body-counter-max-input:focus {
+  border-color: var(--color-text-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-text-primary) 25%, transparent);
+}
+
 /* Status - below counter on right */
 .resource-node-card-body-status {
   position: absolute;
-  top: 36px;
+  top: 45px;
   right: 14px;
   z-index: 2;
 }
@@ -829,6 +870,9 @@
   align-items: center;
   min-height: 24px;
   z-index: 1;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 .resource-node-card-body-refresh-status-growing {
