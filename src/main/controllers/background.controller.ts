@@ -58,7 +58,7 @@ export class BackgroundController {
       this._isGameRunning = true;
     } else {
       // Change later to primary
-      await this._windowsController.showMainDesktopWindow('secondary');
+      await this._windowsController.showMainDesktopWindow('primary');
       this._isGameRunning = false;
     }
   }
@@ -72,7 +72,7 @@ export class BackgroundController {
       this._isGameRunning = true;
     } else {
       // Change later to primary
-      await this._windowsController.showMainDesktopWindow('secondary');
+      await this._windowsController.showMainDesktopWindow('primary');
       this._isGameRunning = false;
     }
   }
@@ -109,7 +109,7 @@ export class BackgroundController {
       await this._windowsController.onGameLaunch();
     } else {
       // Change later to primary
-      await this._windowsController.showMainDesktopWindow('secondary');
+      await this._windowsController.showMainDesktopWindow('primary');
     }
   }
 

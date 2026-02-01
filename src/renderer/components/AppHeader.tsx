@@ -5,6 +5,8 @@ interface AppHeaderProps {
   title: string;
   appVersion?: string;
   hotkeyText?: string;
+  hotkeyTextInGame?: string;
+  hotkeyTextDesktop?: string;
   showHotkey?: boolean;
   actionButtons?: Array<{
     icon: string;
@@ -17,9 +19,17 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   title,
   appVersion,
   hotkeyText,
+  hotkeyTextInGame,
+  hotkeyTextDesktop,
   showHotkey = true,
   actionButtons = []
 }) => {
+  const hasBothHotkeys = hotkeyTextInGame != null && hotkeyTextDesktop != null;
+  const hotkeyDisplay = hasBothHotkeys
+    ? { inGame: hotkeyTextInGame, desktop: hotkeyTextDesktop }
+    : hotkeyText
+      ? { single: hotkeyText }
+      : null;
 
   const handleDragStart = useCallback(async () => {
     if (await Windows.Self()) {
@@ -58,16 +68,24 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
     <header id="header" className="app-header" onMouseDown={handleDragStart}>
-      <img src="../../img/logo-window.png" alt="Header icon" />
+      <img src="../../img/logo-window.png" alt="Header icon" draggable={false} />
       <h1>
         {title}
         {appVersion && (
           <span className="app-version-tag">v{appVersion}</span>
         )}
       </h1>
-      {showHotkey && hotkeyText && (
+      {showHotkey && hotkeyDisplay && (
         <h1 className="hotkey-text">
-          Show/Hide: <kbd id="hotkey">{hotkeyText}</kbd>
+          {hotkeyDisplay.single != null ? (
+            <>Show/Hide: <kbd id="hotkey">{hotkeyDisplay.single}</kbd></>
+          ) : (
+            <>
+              Show/Hide: In-Game <kbd>{hotkeyDisplay.inGame}</kbd>
+              {' · '}
+              Desktop <kbd>{hotkeyDisplay.desktop}</kbd>
+            </>
+          )}
         </h1>
       )}
       <div className='header-drag-handle'></div>

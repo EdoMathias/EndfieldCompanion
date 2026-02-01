@@ -23,12 +23,12 @@
   "data": {
     "start_window": "background",
     "hotkeys": {
-      "Toggle In-Game Main": {
+      "ToggleInGameMain": {
         "title": "Toggle In-Game Main",
         "action-type": "custom",
         "default": "Ctrl+T"
       },
-      "Toggle Desktop Main": {
+      "ToggleDesktopMain": {
         "title": "Toggle Desktop Main",
         "action-type": "custom",
         "default": "Ctrl+Shift+T"
@@ -75,8 +75,6 @@
         "transparent": true,
         "override_on_update": true,
         "grab_keyboard_focus": true,
-        "focus_game_takeover": "ReleaseOnHidden",
-        "focus_game_takeover_release_hotkey": "Toggle In-Game Main",
         "size": {
           "width": 1600,
           "height": 800

@@ -19,6 +19,7 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
         height: 800,
         minHeight: 800,
         resizable: true,
+        autoDpi: true
     },
     'main_ingame': {
         id: 'main_ingame',
@@ -28,7 +29,10 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
         minWidth: 1600,
         minHeight: 800,
         type: OSRType.InGameOnly,
-        topMost: true
+        topMost: true,
+        takeOverAction: 'ReleaseOnHidden',
+        takeOverReleaseHotkey: 'ToggleInGameMain',
+        autoDpi: true
     }
 }
 
@@ -165,7 +169,7 @@ export class WindowsService {
                 await window.hide();
                 logger.log('Hiding window by hotkey');
             } else {
-                await window.show();
+                await window.restore();
                 logger.log('Showing window by hotkey');
             }
         }

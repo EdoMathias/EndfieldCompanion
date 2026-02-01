@@ -113,7 +113,7 @@ const CardBody: React.FC<CardBodyProps> = ({ node, onCurrentNumberChange, onMaxN
                 <div className="resource-node-card-body-image">
                     {/* Node's image - inside circular border, if no image, show node's name */}
                     <div className="resource-node-card-body-image-container">
-                        {node.nodeImage ? <img src={node.nodeImage} alt={node.name} className="resource-node-card-body-image-img" /> : <span className="resource-node-card-body-image-name">{node.name}</span>}
+                        {node.nodeImage ? <img src={node.nodeImage} alt={node.name} className="resource-node-card-body-image-img" draggable={false} /> : <span className="resource-node-card-body-image-name">{node.name}</span>}
                     </div>
                 </div>
                 <div className="resource-node-card-body-refresh-status">

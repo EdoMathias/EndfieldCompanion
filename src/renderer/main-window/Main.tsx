@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../styles/index.css';
 
@@ -17,6 +17,20 @@ import { useAppVersion } from '../hooks/useAppVersion';
 
 // Config
 import { viewsConfig } from './config/views.config';
+import { kHotkeys } from '../../shared/consts';
+import { HotkeysAPI } from '../../shared/services/hotkeys';
+
+const DEFAULT_HOTKEYS = {
+    toggleMainIngameWindow: 'Ctrl+T',
+    toggleMainDesktopWindow: 'Ctrl+Shift+T',
+};
+
+function displayHotkey(binding: string | undefined, unassigned: boolean): string {
+    if (unassigned || !binding || binding === 'Unassigned' || binding.trim() === '') {
+        return '';
+    }
+    return binding;
+}
 
 const Main: React.FC = () => {
     const { isIngameWindow } = useWindowInfo();
@@ -24,6 +38,40 @@ const Main: React.FC = () => {
 
     const [showSettings, setShowSettings] = React.useState(false);
     const [settingsInitialTab, setSettingsInitialTab] = React.useState<'general' | 'hotkeys' | 'about'>('general');
+    const [toggleHotkeys, setToggleHotkeys] = useState<{ inGame: string; desktop: string }>({
+        inGame: DEFAULT_HOTKEYS.toggleMainIngameWindow,
+        desktop: DEFAULT_HOTKEYS.toggleMainDesktopWindow,
+    });
+
+    const loadHotkeys = React.useCallback(async () => {
+        try {
+            const hotkeysMap = await HotkeysAPI.fetchAll();
+            const inGame = hotkeysMap.get(kHotkeys.toggleMainIngameWindow);
+            const desktop = hotkeysMap.get(kHotkeys.toggleMainDesktopWindow);
+            setToggleHotkeys({
+                inGame:
+                    displayHotkey(inGame?.binding, inGame?.IsUnassigned ?? true) ||
+                    DEFAULT_HOTKEYS.toggleMainIngameWindow,
+                desktop:
+                    displayHotkey(desktop?.binding, desktop?.IsUnassigned ?? true) ||
+                    DEFAULT_HOTKEYS.toggleMainDesktopWindow,
+            });
+        } catch {
+            setToggleHotkeys({
+                inGame: DEFAULT_HOTKEYS.toggleMainIngameWindow,
+                desktop: DEFAULT_HOTKEYS.toggleMainDesktopWindow,
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        loadHotkeys();
+        const onHotkeysChanged = () => loadHotkeys();
+        overwolf.settings.hotkeys.onChanged.addListener(onHotkeysChanged);
+        return () => {
+            overwolf.settings.hotkeys.onChanged.removeListener(onHotkeysChanged);
+        };
+    }, [loadHotkeys]);
 
     //------------------------HEADER ACTION BUTTONS-----------------------------
     const handleSettingsClick = () => {
@@ -89,7 +137,9 @@ const Main: React.FC = () => {
                             'Arknights Companion • Desktop'
                     }
                     appVersion={appVersion ?? undefined}
-                    showHotkey={isIngameWindow}
+                    showHotkey={true}
+                    hotkeyTextInGame={toggleHotkeys.inGame}
+                    hotkeyTextDesktop={toggleHotkeys.desktop}
                     actionButtons={headerActionButtons}
                 />
             </div>
