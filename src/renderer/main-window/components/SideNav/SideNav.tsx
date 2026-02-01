@@ -6,15 +6,15 @@ import SideNavToggle from './SideNavToggle';
 interface SideNavProps {
     views: Array<{
         name: string;
-        icon: string;
+        icon: React.ComponentType;
     }>;
     activeView: string;
     setActiveView: (view: string) => void;
+    navExpanded: boolean;
+    setNavExpanded: (expanded: boolean) => void;
 }
 
-const SideNav: React.FC<SideNavProps> = ({ views, activeView, setActiveView }) => {
-    const [navExpanded, setNavExpanded] = React.useState(false);
-
+const SideNav: React.FC<SideNavProps> = ({ views, activeView, setActiveView, navExpanded, setNavExpanded }) => {
     const handleViewClick = (view: string) => {
         setActiveView(view);
         setNavExpanded(false);

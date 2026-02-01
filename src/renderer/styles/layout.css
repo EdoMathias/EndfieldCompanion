@@ -31,6 +31,25 @@
   position: relative;
 }
 
+.side-nav-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  cursor: default;
+  z-index: 100;
+  animation: side-nav-overlay-fade-in 0.2s ease;
+}
+
+@keyframes side-nav-overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .side-nav {
   width: 56px;
   height: 100%;

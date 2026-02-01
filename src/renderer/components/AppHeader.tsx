@@ -58,7 +58,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
     <header id="header" className="app-header" onMouseDown={handleDragStart}>
-      <img src="../../img/logo-icon.png" alt="Header icon" />
+      <img src="../../img/logo-window.png" alt="Header icon" />
       <h1>
         {title}
         {appVersion && (
