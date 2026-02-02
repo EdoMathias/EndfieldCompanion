@@ -91,9 +91,14 @@ export const AdContainer: React.FC<AdContainerProps> = ({ width, height, classNa
             adContainerRef.current.style.width = '100%';
             adContainerRef.current.style.height = '100%';
 
-          // Find the parent ad zone (tracker-ad-sidebar)
+          // Find the parent ad zone (ad-sidebar)
           const parentAdZone = adContainerRef.current.parentElement;
           if (!parentAdZone) return;
+
+          // Remove sidebar padding so high-impact ad can use full space
+          if (parentAdZone.classList.contains('ad-sidebar')) {
+            parentAdZone.classList.add('ad-sidebar--high-impact');
+          }
 
           // Store and hide all sibling containers except the current one
           hiddenElementsRef.current = [];
@@ -122,6 +127,12 @@ export const AdContainer: React.FC<AdContainerProps> = ({ width, height, classNa
             element.style.display = '';
           });
           hiddenElementsRef.current = [];
+
+          // Restore sidebar padding
+          const parentAdZone = adContainerRef.current.parentElement;
+          if (parentAdZone?.classList.contains('ad-sidebar')) {
+            parentAdZone.classList.remove('ad-sidebar--high-impact');
+          }
         };
 
         // Add event listeners for high impact ad events
@@ -162,12 +173,16 @@ export const AdContainer: React.FC<AdContainerProps> = ({ width, height, classNa
     return () => {
       isMounted = false;
       
-      // Restore hidden elements on cleanup
+      // Restore hidden elements and sidebar padding on cleanup
       if (hiddenElementsRef.current.length > 0 && adContainerRef.current) {
         hiddenElementsRef.current.forEach((element) => {
           element.style.display = '';
         });
         hiddenElementsRef.current = [];
+      }
+      const parentAdZone = adContainerRef.current?.parentElement;
+      if (parentAdZone?.classList.contains('ad-sidebar')) {
+        parentAdZone.classList.remove('ad-sidebar--high-impact');
       }
 
       if (owAdInstance) {

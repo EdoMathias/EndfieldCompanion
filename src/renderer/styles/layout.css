@@ -199,6 +199,7 @@
   padding: 20px;
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
 }
 
 .main-content-wrapper {
@@ -231,6 +232,12 @@
   width: 440px;
   height: 100%;
   align-items: center;
+  box-sizing: border-box;
+}
+
+.ad-sidebar--high-impact {
+  padding: 0;
+  gap: 0;
 }
 
 .ad-container-base {
