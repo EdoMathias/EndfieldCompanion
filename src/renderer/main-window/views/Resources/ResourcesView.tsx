@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useResourcesStore } from './hooks/useResourcesStore';
 import { useFTUE } from '../../../contexts/FTUEContext';
 import { FTUETooltip } from '../../../components';
@@ -9,7 +9,7 @@ import { ResourceNode } from './types/resources.types';
 
 const ResourcesView: React.FC = () => {
 
-    const { nodes, serverRegion, setServerRegion, selectedMap, setSelectedMap, toggleNodeTracking, setCurrentNodeNumber, setMaxNodeNumber, clearCurrentNodeNumber, toggleRegionCollapsed, isRegionCollapsed, explorationLevel, setExplorationLevel } = useResourcesStore();
+    const { nodes, serverRegion, setServerRegion, selectedMap, setSelectedMap, toggleNodeTracking, setCurrentNodeNumber, setMaxNodeNumber, clearCurrentNodeNumber, toggleRegionCollapsed, isRegionCollapsed, explorationLevel, setExplorationLevel, runTestDailyIncrement } = useResourcesStore();
     const { shouldShowStep } = useFTUE();
 
     const showMapCardStep = shouldShowStep('resources_map_card');
@@ -73,6 +73,14 @@ const ResourcesView: React.FC = () => {
         const totalGatherables = filteredNodes.reduce((sum, node) => sum + node.current, 0);
         return { maxedNodes, totalGatherables };
     }, [filteredNodes]);
+
+    // Expose test daily increment for dev tools: call window.testDailyIncrement() from the console
+    useEffect(() => {
+        (window as unknown as { testDailyIncrement?: () => void }).testDailyIncrement = runTestDailyIncrement;
+        return () => {
+            delete (window as unknown as { testDailyIncrement?: () => void }).testDailyIncrement;
+        };
+    }, [runTestDailyIncrement]);
 
     return (
         <section className="resources-container" ref={containerRef}>

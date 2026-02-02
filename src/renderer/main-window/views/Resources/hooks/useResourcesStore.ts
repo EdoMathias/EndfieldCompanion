@@ -297,8 +297,8 @@ export function useResourcesStore() {
             }))
     }, [explorationLevel]);
 
-    // Daily reset checker (runs on mount and every minute)
-    // Checking every minute is sufficient since resets happen daily at 04:00
+    // Daily reset checker (runs on mount and every second)
+    // Runs every second so that when the countdown reaches 0, nodes update in real time
     useEffect(() => {
         const tick = () => {
             const now = new Date();
@@ -320,10 +320,19 @@ export function useResourcesStore() {
         };
 
         tick();
-        // Check every minute instead of every second for better performance
-        const interval = setInterval(tick, 60_000);
+        const interval = setInterval(tick, 1000);
         return () => clearInterval(interval);
     }, [serverRegion, applyDailyIncrement, explorationLevel]);
+
+    /**
+     * Applies one daily increment for testing (e.g. to verify UI without waiting 24h).
+     * Also updates the last reset key so the next real reset does not double-apply.
+     */
+    const runTestDailyIncrement = useCallback(() => {
+        applyDailyIncrement(1);
+        const currentKey = getMostRecentResetKey(new Date(), serverRegion);
+        localStorage.setItem(STORAGE_LAST_RESET_KEY, currentKey);
+    }, [serverRegion, applyDailyIncrement]);
 
     /**
      * Sets the exploration level and persists it to the local storage.
@@ -347,5 +356,6 @@ export function useResourcesStore() {
         isRegionCollapsed,
         explorationLevel,
         setExplorationLevel,
+        runTestDailyIncrement,
     };
 }
