@@ -1,0 +1,180 @@
+{
+    "version": 1,
+    "characters": [
+        {
+            "id": "yvonne",
+            "name": "Yvonne",
+            "image": "",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Exuberant Trigger",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Brr-Brr-Bomb β",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Flashfreezer υ37",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Cryoblasting Pistolier",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "laevatain",
+            "name": "Laevatain",
+            "image": "",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Flaming Cinders",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Smouldering Fire",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Seethe",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Twilight",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "pogranichnik",
+            "name": "Pogranichnik",
+            "image": "",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "All-Out Offensive",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "The Pulverizing Front",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Full Moon Slash",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Shieldguard Banner, Forward",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "last_rite",
+            "name": "Last Rite",
+            "image": "",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Dance of Rime",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Esoteric Legacy of Seš'qa",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Winter's Devourer",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Vigil Services",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "ember",
+            "name": "Ember",
+            "image": "",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Sword Art of Assault",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Forward March",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Frontline Support",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Re-ignited Oath",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        }
+    ]
+}
