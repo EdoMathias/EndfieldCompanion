@@ -2,7 +2,7 @@ import { GameStateService } from '../services/game-state.service';
 import { HotkeysService } from '../services/hotkeys.service';
 import { AppLaunchService } from '../services/app-launch.service';
 import { MessageChannel, MessageType } from '../services/MessageChannel';
-import { kHotkeys, kWindowNames } from '../../shared/consts';
+import { kEndfieldClassId, kHotkeys, kWindowNames } from '../../shared/consts';
 import { createLogger } from '../../shared/services/Logger';
 import { WindowsController } from './windows.controller';
 
@@ -54,10 +54,11 @@ export class BackgroundController {
     // Determine which window to show based on game state
     const shouldShowInGame = await this._gameStateService.isSupportedGameRunning();
     if (shouldShowInGame) {
+      logger.log('Game is Endfield, showing in-game window');
       await this._windowsController.onGameLaunch();
       this._isGameRunning = true;
     } else {
-      // Change later to primary
+      logger.log('No game running, showing primary desktop window');
       await this._windowsController.showMainDesktopWindow('primary');
       this._isGameRunning = false;
     }
@@ -66,14 +67,22 @@ export class BackgroundController {
   /**
    * Handles game state changes (game launched/terminated).
    */
-  private async handleGameStateChange(isRunning: boolean, gameInfo?: overwolf.games.RunningGameInfo): Promise<void> {
-    if (isRunning) {
+  private async handleGameStateChange(isEndfieldRunning: boolean, gameInfo?: overwolf.games.RunningGameInfo): Promise<void> {
+    if (isEndfieldRunning) {
       await this._windowsController.onGameLaunch();
       this._isGameRunning = true;
     } else {
-      // Change later to primary
-      await this._windowsController.showMainDesktopWindow('primary');
-      this._isGameRunning = false;
+      // If the game is Endfield, show the main desktop window
+      if (gameInfo?.classId === kEndfieldClassId) {
+        logger.log('Game was Endfield, showing main desktop window');
+        await this._windowsController.onGameExit();
+        this._isGameRunning = false;
+      }
+      // If the game is not Endfield, don't do anything
+      else {
+        logger.log('Game was not Endfield, not showing main desktop window');
+        return;
+      }
     }
   }
 
@@ -106,9 +115,10 @@ export class BackgroundController {
    */
   private async handleAppLaunch(): Promise<void> {
     if (this._isGameRunning) {
+      logger.log('Game is running, showing in-game window');
       await this._windowsController.onGameLaunch();
     } else {
-      // Change later to primary
+      logger.log('No game running, showing primary desktop window');
       await this._windowsController.showMainDesktopWindow('primary');
     }
   }
