@@ -17,6 +17,11 @@ const STORAGE_ROTATIONS_PRESETS = 'endfield.rotations.presets.v1';
  */
 const STORAGE_CHARACTERS = 'endfield.characters.v1';
 
+/**
+ * Local storage key for the squad.
+ */
+const STORAGE_CURRENT_SQUAD = 'endfield.current.squad.v1';
+
 const DEFAULT_CHARACTERS: Character[] = characters.characters.map(character => ({
     id: character.id,
     name: character.name,
@@ -96,10 +101,29 @@ function loadRotationsPresets(): Rotation[] {
     }
 }
 
+/**
+ * Loads the current squad from the local storage.
+ * @returns The current squad
+ */
+function loadSquad(): Character[] {
+    try {
+        const squad = localStorage.getItem(STORAGE_CURRENT_SQUAD);
+        if (!squad) return [];
+        const parsed = JSON.parse(squad);
+        if (!Array.isArray(parsed)) return [];
+        return parsed as Character[];
+    }
+    catch (error) {
+        console.error('Error loading squad from local storage:', error);
+        return [];
+    }
+}
+
 export function useRotationsStore() {
     const [characters, setCharactersState] = useState<Character[]>(loadCharactersData());
     const [currentRotation, setCurrentRotationState] = useState<Rotation | null>(loadCurrentRotation());
     const [rotationsPresets, setRotationsPresetsState] = useState<Rotation[]>(loadRotationsPresets());
+    const [squad, setSquadState] = useState<Character[]>(() => loadSquad());
 
     // Persist the characters to the local storage.
     useEffect(() => {
@@ -116,25 +140,29 @@ export function useRotationsStore() {
         localStorage.setItem(STORAGE_ROTATIONS_PRESETS, JSON.stringify(rotationsPresets));
     }, [rotationsPresets]);
 
+    // Persist the squad to the local storage.
+    useEffect(() => {
+        localStorage.setItem(STORAGE_CURRENT_SQUAD, JSON.stringify(squad));
+    }, [squad]);
+
     /**
-     * Adds a character to the rotation.
+     * Adds a character to the squad.
      * Characters are stored in an array of objects
      */
-    const addCharacterToRotation = useCallback((character: Character) => {
-        if (characters.length === 4) {
-            return;
-        }
-        setCharactersState(prevCharacters =>
-            [...prevCharacters, character]
-        );
+    const addCharacterToSquad = useCallback((character: Character) => {
+        setSquadState(prevSquad => {
+            if (prevSquad.length >= 4) return prevSquad;
+            if (prevSquad.some(c => c.id === character.id)) return prevSquad;
+            return [...prevSquad, character];
+        });
     }, []);
 
     /**
-     * Removes a character from the rotation.
+     * Removes a character from the squad.
      */
-    const removeCharacterFromRotation = useCallback((characterId: string) => {
-        setCharactersState(prevCharacters =>
-            prevCharacters.filter(character => character.id !== characterId)
+    const removeCharacterFromSquad = useCallback((characterId: string) => {
+        setSquadState(prevSquad =>
+            prevSquad.filter(character => character.id !== characterId)
         );
     }, []);
 
@@ -147,10 +175,11 @@ export function useRotationsStore() {
 
     return {
         characters,
+        squad,
         currentRotation,
         rotationsPresets,
-        addCharacterToRotation,
-        removeCharacterFromRotation,
+        addCharacterToSquad,
+        removeCharacterFromSquad,
         setCurrentRotation,
     };
 }
