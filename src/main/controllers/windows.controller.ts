@@ -14,11 +14,15 @@ export class WindowsController {
 
     constructor(messageChannel: MessageChannel) {
         this._messageChannel = messageChannel;
-        this._windowsService = new WindowsService();
         this._monitorsService = new MonitorsService();
+        this._windowsService = new WindowsService();
     }
 
     public async onGameLaunch(): Promise<void> {
+        // Ensure the monitors map is ready - fixes a bug where the map was not ready,
+        // and users with a second monitor would not see the main desktop window.
+        await this._monitorsService.ensureMonitorsMapReady();
+
         // if has second monitor, show the main desktop window on the second monitor
         if (this._monitorsService.hasSecondMonitor()) {
             await this._windowsService.showMainDesktopWindow('secondary');
@@ -51,6 +55,19 @@ export class WindowsController {
 
     public async toggleMainIngameWindow(): Promise<void> {
         await this._windowsService.toggleMainIngameWindow();
+    }
+
+    public async closeAllWindows(): Promise<void> {
+        try {
+        await this._windowsService.closeMainDesktopWindow();
+        } catch (error) {
+            logger.error('Error closing main desktop window:', error);
+        }
+        try {
+        await this._windowsService.closeMainIngameWindow();
+        } catch (error) {
+            logger.error('Error closing main in-game window:', error);
+        }
     }
 }
 

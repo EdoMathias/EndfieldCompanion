@@ -154,9 +154,15 @@ export class WindowsService {
     }
 
     private async closeWindow(window: WindowTypes): Promise<void> {
+        if (!window || (await window.isOpen()) === false) {
+            logger.error('Window might not be open, skipping close');
+            return;
+        }
+
         try {
+            const windowId = window.Id();
             await window.close();
-            logger.log(`Window ${window.Id()} closed`);
+            logger.log(`Window ${windowId} closed`);
         } catch (error) {
             logger.error('Error closing window:', error);
         }

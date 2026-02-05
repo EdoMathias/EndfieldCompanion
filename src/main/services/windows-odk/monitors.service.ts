@@ -11,9 +11,11 @@ export class MonitorsService {
     private _monitorsMap: Map<string, MonitorInfo> = new Map();
     private _hasSecondMonitor: boolean = false;
     private _secondMonitor: overwolf.utils.Display | undefined;
+    private _monitorsMapReady: Promise<boolean>;
+
 
     constructor() {
-        this.mapMonitors();
+        this._monitorsMapReady = this.mapMonitors().then(() => true).catch(() => false);
     }
 
     /**
@@ -49,38 +51,58 @@ export class MonitorsService {
     }
 
     /**
+     * Ensures the monitors map is ready.
+     * @returns Whether the monitors map is ready.
+     */
+    public async ensureMonitorsMapReady(): Promise<boolean> {
+        if (await this._monitorsMapReady) {
+            logger.log('Monitors map already ready');
+            return true;
+        } else {
+            logger.log('Monitors map not ready, mapping monitors');
+            await this.mapMonitors();
+            this._monitorsMapReady = Promise.resolve(true);
+            return true;
+        }
+    }
+
+    /**
      * Maps all user monitors and records whether each is primary or not.
      * Also updates the second monitor reference for backward compatibility.
      */
-    private mapMonitors(): void {
-        overwolf.utils.getMonitorsList((result) => {
-            if (result.success) {
-                // Clear existing map
-                this._monitorsMap.clear();
+    private mapMonitors(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            overwolf.utils.getMonitorsList((result) => {
+                if (result.success) {
+                    // Clear existing map
+                    this._monitorsMap.clear();
 
-                // Map all monitors with their primary status
-                result.displays.forEach((display) => {
-                    this._monitorsMap.set(display.id, {
-                        display: display,
-                        isPrimary: display.is_primary === true
+                    // Map all monitors with their primary status
+                    result.displays.forEach((display) => {
+                        this._monitorsMap.set(display.id, {
+                            display: display,
+                            isPrimary: display.is_primary === true
+                        });
                     });
-                });
 
-                // Update second monitor reference for backward compatibility
-                this._hasSecondMonitor = result.displays.length > 1;
-                if (this._hasSecondMonitor) {
-                    this._secondMonitor = result.displays.find(display => display.is_primary === false);
+                    // Update second monitor reference for backward compatibility
+                    this._hasSecondMonitor = result.displays.length > 1;
+                    if (this._hasSecondMonitor) {
+                        this._secondMonitor = result.displays.find(display => display.is_primary === false);
+                    } else {
+                        this._secondMonitor = undefined;
+                    }
+
+                    logger.log(`Mapped ${this._monitorsMap.size} monitor(s)`, {
+                        primary: Array.from(this._monitorsMap.values()).find(m => m.isPrimary)?.display.id,
+                        secondary: Array.from(this._monitorsMap.values()).find(m => !m.isPrimary)?.display.id
+                    });
+                    resolve();
                 } else {
-                    this._secondMonitor = undefined;
+                    logger.error('Failed to get monitors list:', result.error);
+                    reject(result.error);
                 }
-
-                logger.log(`Mapped ${this._monitorsMap.size} monitor(s)`, {
-                    primary: Array.from(this._monitorsMap.values()).find(m => m.isPrimary)?.display.id,
-                    secondary: Array.from(this._monitorsMap.values()).find(m => !m.isPrimary)?.display.id
-                });
-            } else {
-                logger.error('Failed to get monitors list:', result.error);
-            }
+            });
         });
     }
 }

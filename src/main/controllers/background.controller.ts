@@ -5,6 +5,8 @@ import { MessageChannel, MessageType } from '../services/MessageChannel';
 import { kEndfieldClassId, kHotkeys, kWindowNames } from '../../shared/consts';
 import { createLogger } from '../../shared/services/Logger';
 import { WindowsController } from './windows.controller';
+import { TrayIconService } from '../services/tray-icon.service';
+import onMenuItemClickedEvent = overwolf.os.tray.onMenuItemClickedEvent;
 
 const logger = createLogger('BackgroundController');
 
@@ -21,6 +23,7 @@ export class BackgroundController {
   private _gameStateService: GameStateService;
   private _hotkeysService: HotkeysService;
   private _appLaunchService: AppLaunchService;
+  private _trayIconService: TrayIconService;
 
   private _isGameRunning: boolean = false;
 
@@ -29,6 +32,7 @@ export class BackgroundController {
     this._messageChannel = new MessageChannel();
     this._hotkeysService = new HotkeysService();
     this._appLaunchService = new AppLaunchService(() => this.handleAppLaunch());
+    this._trayIconService = new TrayIconService(() => this.handleTrayIconClick(), (event: onMenuItemClickedEvent) => this.handleTrayMenuItemClick(event), () => this.handleTrayIconDoubleClick());
     this._gameStateService = new GameStateService(
       this._messageChannel,
       (isRunning, gameInfo) => this.handleGameStateChange(isRunning, gameInfo)
@@ -122,6 +126,39 @@ export class BackgroundController {
       await this._windowsController.showMainDesktopWindow('primary');
     }
   }
+
+  //---------------------------------TRAY ICON HANDLERS-------------------------
+  private async handleTrayIconClick(): Promise<void> {
+    logger.log('Tray icon clicked, showing primary desktop window');
+    await this._windowsController.showMainDesktopWindow('primary');
+  }
+
+  private async handleTrayIconDoubleClick(): Promise<void> {
+    logger.log('Tray icon double clicked, showing primary desktop window');
+    await this._windowsController.showMainDesktopWindow('primary');
+  }
+
+  private async handleTrayMenuItemClick(event: onMenuItemClickedEvent): Promise<void> {
+    logger.log('Tray menu item clicked:', event);
+    switch (event.item) {
+      case 'show-window':
+        if (this._isGameRunning) {
+          await this._windowsController.showMainDesktopWindow('secondary');
+          await this._windowsController.showMainIngameWindow();
+        } else {
+          await this._windowsController.showMainDesktopWindow('primary');
+        }
+        break;
+      case 'close-app':
+        await this._windowsController.closeAllWindows();
+        break;
+      default:
+        logger.error('Unknown tray menu item clicked:', event.item);
+        break;
+    }
+  }
+  
+  //---------------------------------TRAY ICON HANDLERS-------------------------
 
   /**
    * Sets up message handlers for window-related messages
