@@ -13,11 +13,18 @@ interface RotationStepNodeProps {
 const RotationStepNode: React.FC<RotationStepNodeProps> = ({ step, index, isEditing, onClick, onRemove }) => {
 
     const isEmpty = !step.action;
+    const typeConfig = step.action ? ACTION_TYPE_CONFIG[step.action.type] : null;
+    const borderColor = !isEmpty && !isEditing && typeConfig ? typeConfig.color : undefined;
 
     return (
         <div className="rotation-step-node">
             <div className="rotation-step-node-circle">
-                <button type='button' className={`rotation-step-node-circle-button ${isEmpty ? 'rotation-step-node-circle-button--empty' : ''} ${isEditing ? 'rotation-step-node-circle-button--editing' : ''}`} onClick={onClick}>
+                <button
+                    type='button'
+                    className={`rotation-step-node-circle-button ${isEmpty ? 'rotation-step-node-circle-button--empty' : ''} ${isEditing ? 'rotation-step-node-circle-button--editing' : ''}`}
+                    style={borderColor != null ? { borderColor } : undefined}
+                    onClick={onClick}
+                >
                     {isEmpty ? (
                         <>
                             <span className="rotation-step-node-circle-empty">+</span>

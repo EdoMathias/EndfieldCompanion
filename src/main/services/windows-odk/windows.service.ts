@@ -8,6 +8,8 @@ import { DesktopWindowOptions } from "@overwolf/odk-ts/window/options/desktop_wi
 
 const logger = createLogger('WindowsManagerService');
 
+const ROTATION_INGAME_WINDOW_LOCATION_KEY = 'rotation_ingame_window_location';
+
 type WindowTypes = DesktopWindow | OSRWindow;
 
 const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = {
@@ -40,9 +42,9 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
         id: 'rotation_ingame',
         url: 'rotation_ingame.html',
         width: 1600,
-        height: 400,
+        height: 300,
         minWidth: 1600,
-        minHeight: 400,
+        minHeight: 300,
         type: OSRType.InGameOnly,
         resizable: false,
         transparent: true,
@@ -136,10 +138,33 @@ export class WindowsService {
     public async createRotationIngameWindow(): Promise<void> {
         if (this._rotationIngameWindow && await this._rotationIngameWindow.isOpen()) {
             return;
-        } else {
-            this._rotationIngameWindow = new OSRWindow(windowsConfigs['rotation_ingame']);
-            logger.log('Rotation in-game window created');
         }
+        const config = { ...windowsConfigs['rotation_ingame'] } as OSRWindowOptions;
+        if (typeof localStorage !== 'undefined') {
+            try {
+                const saved = localStorage.getItem(ROTATION_INGAME_WINDOW_LOCATION_KEY);
+                if (saved) {
+                    const position = JSON.parse(saved) as { x: number; y: number };
+                    if (typeof position.x === 'number' && typeof position.y === 'number') {
+                        config.x = position.x;
+                        config.y = position.y;
+                    }
+                }
+            } catch (e) {
+                logger.error('Failed to read rotation window position from storage', e);
+            }
+        }
+        this._rotationIngameWindow = new OSRWindow(config);
+        this._rotationIngameWindow.on('moved', (_event, position) => {
+            if (typeof localStorage !== 'undefined' && position && typeof position.x === 'number' && typeof position.y === 'number') {
+                try {
+                    localStorage.setItem(ROTATION_INGAME_WINDOW_LOCATION_KEY, JSON.stringify({ x: position.x, y: position.y }));
+                } catch (e) {
+                    logger.error('Failed to save rotation window position', e);
+                }
+            }
+        });
+        logger.log('Rotation in-game window created');
     }
 
     public async showRotationIngameWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
@@ -156,6 +181,18 @@ export class WindowsService {
 
     public async toggleRotationIngameWindow(): Promise<void> {
         await this.toggleWindow(this._rotationIngameWindow, false);
+    }
+
+    public async setRotationIngameWindowSize(width: number, height: number): Promise<void> {
+        if (!this._rotationIngameWindow || !(await this._rotationIngameWindow.isOpen())) {
+            return;
+        }
+        try {
+            await this._rotationIngameWindow.setSize({ width, height });
+            logger.log(`Rotation in-game window resized to ${width}x${height}`);
+        } catch (error) {
+            logger.error('Error resizing rotation in-game window:', error);
+        }
     }
 
     //--------------------------------------------------------------------------

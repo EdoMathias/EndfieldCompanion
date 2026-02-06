@@ -1002,13 +1002,14 @@
   background-color: transparent;
 }
 
-.rotation-window-buttons {
+.rotation-window-controls {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-start;
+  gap: 8px;
   flex-shrink: 0;
-  margin-right: 8px;
+  margin-bottom: 8px;
 }
 
 .rotation-window-drag-handle {
@@ -1039,13 +1040,120 @@
 
 .rotation-window-hotkey-reminder {
   font-family: var(--font-ark);
-  font-size: 9px;
-  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
   text-align: center;
-  max-width: 48px;
-  line-height: 1.2;
+  max-width: 56px;
+  line-height: 1.25;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
   -webkit-app-region: no-drag;
   app-region: no-drag;
+}
+
+.rotation-window-settings-button {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 80%, transparent);
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.rotation-window-settings-button:hover {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent-primary) 12%, transparent);
+}
+
+.rotation-window-settings-panel {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.rotation-window-settings-panel-inner {
+  background-color: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: var(--radius);
+  padding: 16px;
+  min-width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.rotation-window-settings-title {
+  font-family: var(--font-ark);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rotation-window-settings-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  font-family: var(--font-ark);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.rotation-window-settings-input {
+  padding: 6px 8px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-ark);
+  font-size: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rotation-window-settings-slider {
+  width: 100%;
+  accent-color: var(--color-accent-primary);
+}
+
+.rotation-window-settings-close {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  background-color: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-ark);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.rotation-window-settings-close:hover {
+  background-color: color-mix(in srgb, var(--color-accent-primary) 12%, transparent);
 }
 
 .rotation-window-empty {
@@ -1068,16 +1176,31 @@
 }
 
 .rotation-window-content {
-  overflow-x: auto;
-  overflow-y: visible;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   padding-bottom: 8px;
+}
+
+.rotation-window-steps-outer {
+  display: flex;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.rotation-window-steps {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 88px;
+  transform-origin: top left;
 }
 
 .rotation-window-timeline {
   display: flex;
   align-items: center;
   gap: 0;
-  min-height: 120px;
+  flex-shrink: 0;
 }
 
 .rotation-window-step-wrapper {
@@ -1130,7 +1253,7 @@
   font-size: 16px;
 }
 
-.rotation-window .rotation-window-timeline {
+.rotation-window .rotation-window-steps {
   min-height: 88px;
 }
 

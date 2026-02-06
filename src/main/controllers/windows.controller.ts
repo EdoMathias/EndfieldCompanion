@@ -71,6 +71,10 @@ export class WindowsController {
         await this._windowsService.toggleRotationIngameWindow();
     }
 
+    public async setRotationIngameWindowSize(width: number, height: number): Promise<void> {
+        await this._windowsService.setRotationIngameWindowSize(width, height);
+    }
+
     public async closeAllWindows(): Promise<void> {
         try {
             await this._windowsService.closeMainDesktopWindow();
