@@ -1,7 +1,7 @@
 import { GameStateService } from '../services/game-state.service';
 import { HotkeysService } from '../services/hotkeys.service';
 import { AppLaunchService } from '../services/app-launch.service';
-import { MessageChannel, MessageType } from '../services/MessageChannel';
+import { MessageChannel, MessagePayload, MessageType } from '../services/MessageChannel';
 import { kEndfieldClassId, kHotkeys, kWindowNames } from '../../shared/consts';
 import { createLogger } from '../../shared/services/Logger';
 import { WindowsController } from './windows.controller';
@@ -112,6 +112,14 @@ export class BackgroundController {
       }
     });
 
+    // Show/Hide In-Game Rotation Window
+    this._hotkeysService.on(kHotkeys.toggleRotationIngameWindow, async () => {
+      try {
+        await this._windowsController.toggleRotationIngameWindow();
+      } catch (error) {
+        logger.error('Error toggling in-game rotation window:', error);
+      }
+    });
   }
 
   /** 
@@ -157,13 +165,16 @@ export class BackgroundController {
         break;
     }
   }
-  
+
   //---------------------------------TRAY ICON HANDLERS-------------------------
 
   /**
    * Sets up message handlers for window-related messages
    */
   private setupMessageHandlers(): void {
+    overwolf.windows.onMessageReceived.addListener((message: overwolf.windows.MessageReceivedEvent) => {
+      logger.log('Message received:', message);
+    });
   }
 
 }

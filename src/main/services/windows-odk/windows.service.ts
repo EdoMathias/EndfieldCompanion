@@ -35,12 +35,26 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
         resizable: true,
         showMaximize: true,
         autoDpi: true
+    },
+    'rotation_ingame': {
+        id: 'rotation_ingame',
+        url: 'rotation_ingame.html',
+        width: 1600,
+        height: 400,
+        minWidth: 1600,
+        minHeight: 400,
+        type: OSRType.InGameOnly,
+        resizable: false,
+        transparent: true,
+        keepWindowLocation: true,
+        autoDpi: true
     }
 }
 
 export class WindowsService {
     private _mainDesktopWindow: DesktopWindow | undefined;
     private _mainIngameWindow: OSRWindow | undefined;
+    private _rotationIngameWindow: OSRWindow | undefined;
 
     private _monitorsService: MonitorsService;
 
@@ -88,7 +102,7 @@ export class WindowsService {
     }
 
     public async toggleMainDesktopWindow(): Promise<void> {
-        await this.toggleWindow(this._mainDesktopWindow);
+        await this.toggleWindow(this._mainDesktopWindow, true);
     }
 
     //--------------------------------------------------------------------------
@@ -115,7 +129,33 @@ export class WindowsService {
     }
 
     public async toggleMainIngameWindow(): Promise<void> {
-        await this.toggleWindow(this._mainIngameWindow);
+        await this.toggleWindow(this._mainIngameWindow, true);
+    }
+    //--------------------------------------------------------------------------
+    // Rotation Ingame Window
+    public async createRotationIngameWindow(): Promise<void> {
+        if (this._rotationIngameWindow && await this._rotationIngameWindow.isOpen()) {
+            return;
+        } else {
+            this._rotationIngameWindow = new OSRWindow(windowsConfigs['rotation_ingame']);
+            logger.log('Rotation in-game window created');
+        }
+    }
+
+    public async showRotationIngameWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        if (!this._rotationIngameWindow || !(await this._rotationIngameWindow.isOpen())) {
+            await this.createRotationIngameWindow();
+        }
+
+        await this.showWindow(this._rotationIngameWindow, centerOnMonitor, dockTo);
+    }
+
+    public async closeRotationIngameWindow(): Promise<void> {
+        await this.closeWindow(this._rotationIngameWindow);
+    }
+
+    public async toggleRotationIngameWindow(): Promise<void> {
+        await this.toggleWindow(this._rotationIngameWindow, false);
     }
 
     //--------------------------------------------------------------------------
@@ -168,7 +208,7 @@ export class WindowsService {
         }
     }
 
-    private async toggleWindow(window: WindowTypes): Promise<void> {
+    private async toggleWindow(window: WindowTypes, center?: boolean): Promise<void> {
         if (window) {
             const windowState = await window.getWindowState();
             const isVisible = windowState === overwolf.windows.WindowStateEx.NORMAL ||
@@ -180,10 +220,12 @@ export class WindowsService {
             } else {
                 await window.restore();
                 await window.bringToFront();
-                await window.center();
+
+                if (center) {
+                    await window.center();
+                }
                 logger.log('Showing window by hotkey');
             }
         }
     }
 }
-

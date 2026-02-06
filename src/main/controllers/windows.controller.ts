@@ -31,11 +31,17 @@ export class WindowsController {
 
         // Create the main in-game window but don't show it yet
         await this._windowsService.createMainIngameWindow();
+
+        // Create the rotation in-game window but don't show it yet
+        await this._windowsService.createRotationIngameWindow();
     }
 
     public async onGameExit(): Promise<void> {
         // Close the main in-game window
         await this._windowsService.closeMainIngameWindow();
+
+        // Close the rotation in-game window
+        await this._windowsService.closeRotationIngameWindow();
 
         // Move the main desktop window to the center of the main monitor
         await this._windowsService.showMainDesktopWindow('primary');
@@ -49,6 +55,10 @@ export class WindowsController {
         await this._windowsService.showMainIngameWindow(centerOnMonitor, dockTo);
     }
 
+    public async showRotationIngameWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        await this._windowsService.showRotationIngameWindow(centerOnMonitor, dockTo);
+    }
+
     public async toggleMainDesktopWindow(): Promise<void> {
         await this._windowsService.toggleMainDesktopWindow();
     }
@@ -57,16 +67,25 @@ export class WindowsController {
         await this._windowsService.toggleMainIngameWindow();
     }
 
+    public async toggleRotationIngameWindow(): Promise<void> {
+        await this._windowsService.toggleRotationIngameWindow();
+    }
+
     public async closeAllWindows(): Promise<void> {
         try {
-        await this._windowsService.closeMainDesktopWindow();
+            await this._windowsService.closeMainDesktopWindow();
         } catch (error) {
             logger.error('Error closing main desktop window:', error);
         }
         try {
-        await this._windowsService.closeMainIngameWindow();
+            await this._windowsService.closeMainIngameWindow();
         } catch (error) {
             logger.error('Error closing main in-game window:', error);
+        }
+        try {
+            await this._windowsService.closeRotationIngameWindow();
+        } catch (error) {
+            logger.error('Error closing rotation in-game window:', error);
         }
     }
 }

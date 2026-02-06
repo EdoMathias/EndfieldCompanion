@@ -973,3 +973,168 @@
   letter-spacing: 0.3px;
   flex-shrink: 0;
 }
+
+/* Read-only step node (in-game rotation window) */
+.rotation-step-node-circle-button--readonly {
+  cursor: default;
+  pointer-events: none;
+}
+
+.rotation-step-node-circle-button--readonly:hover {
+  transform: none;
+}
+
+/* ------------------------------
+   Rotation In-Game Window
+--------------------------------*/
+
+.rotation-window {
+  padding: 16px;
+  min-height: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  position: relative;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.rotation-window-body {
+  background-color: transparent;
+}
+
+.rotation-window-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.rotation-window-drag-handle {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  -webkit-app-region: drag;
+  app-region: drag;
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 80%, transparent);
+}
+
+.rotation-window-drag-handle::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='8' cy='6' r='1.5' fill='%23666'/%3E%3Ccircle cx='16' cy='6' r='1.5' fill='%23666'/%3E%3Ccircle cx='8' cy='12' r='1.5' fill='%23666'/%3E%3Ccircle cx='16' cy='12' r='1.5' fill='%23666'/%3E%3Ccircle cx='8' cy='18' r='1.5' fill='%23666'/%3E%3Ccircle cx='16' cy='18' r='1.5' fill='%23666'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.7;
+}
+
+.rotation-window-hotkey-reminder {
+  font-family: var(--font-ark);
+  font-size: 9px;
+  color: var(--color-text-muted);
+  text-align: center;
+  max-width: 48px;
+  line-height: 1.2;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.rotation-window-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88px;
+  padding: 24px;
+  text-align: center;
+  background-color: transparent;
+  flex: 1;
+  min-width: 0;
+}
+
+.rotation-window-empty p {
+  font-family: var(--font-ark);
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.rotation-window-content {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 8px;
+}
+
+.rotation-window-timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-height: 120px;
+}
+
+.rotation-window-step-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.rotation-window-step {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.rotation-window-arrow {
+  font-size: 20px;
+  color: var(--color-text-muted);
+  margin: 0 8px;
+  flex-shrink: 0;
+  user-select: none;
+  opacity: 0.6;
+}
+
+/* Smaller circles in rotation window */
+.rotation-window .rotation-step-node {
+  gap: 4px;
+}
+
+.rotation-window .rotation-step-node-circle-button {
+  width: 56px;
+  height: 56px;
+  padding: 4px;
+  border-width: 2px;
+  gap: 1px;
+}
+
+.rotation-window .rotation-step-node-ability {
+  font-size: 9px;
+}
+
+.rotation-window .rotation-step-node-action-type {
+  font-size: 10px;
+}
+
+.rotation-window .rotation-step-node-number {
+  font-size: 9px;
+}
+
+.rotation-window .rotation-step-node-circle-empty {
+  font-size: 16px;
+}
+
+.rotation-window .rotation-window-timeline {
+  min-height: 88px;
+}
+
+.rotation-window .rotation-window-arrow {
+  font-size: 14px;
+  margin: 0 4px;
+}

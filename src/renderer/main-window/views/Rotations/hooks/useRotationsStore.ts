@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Character, CharacterAction, Rotation, RotationActionType, RotationStep } from "../types/rotations.types";
+import { STORAGE_CURRENT_ROTATION } from "../consts/rotations.consts";
 import characters from "../../../../../shared/data/characters.json";
-
-/**
- * Local storage key for the current rotation.
- */
-const STORAGE_CURRENT_ROTATION = 'endfield.rotations.current.v1';
 
 /**
  * Local storage key for the rotations presets.
