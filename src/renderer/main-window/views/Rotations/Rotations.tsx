@@ -2,10 +2,27 @@ import React, { useRef, useState } from 'react';
 import { useRotationsStore } from './hooks/useRotationsStore';
 import RotationsHeader from './components/RotationsHeader';
 import SquadSelectionModal from './components/SquadSelectionModal';
+import RotationsEditor from './components/RotationsEditor';
 
 const Rotations: React.FC = () => {
 
-    const { characters, squad, currentRotation, rotationsPresets, addCharacterToSquad, removeCharacterFromSquad, setCurrentRotation } = useRotationsStore();
+    const { characters,
+        squad,
+        currentRotation,
+        rotationsPresets,
+        selectedPresetId,
+        addCharacterToSquad,
+        removeCharacterFromSquad,
+        setCurrentRotation,
+        clearCurrentRotation,
+        saveCurrentRotationAsPreset,
+        removePreset,
+        loadPreset,
+        setSelectedPresetId,
+        addStepToCurrentRotation,
+        removeStepFromCurrentRotation,
+        setStepAction,
+    } = useRotationsStore();
     const [isSquadSelectionModalOpen, setIsSquadSelectionModalOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -19,7 +36,14 @@ const Rotations: React.FC = () => {
                 currentRotation={currentRotation}
                 onCurrentRotationChange={setCurrentRotation}
                 rotationsPresets={rotationsPresets}
-                onEditSquad={() => setIsSquadSelectionModalOpen(true)} />
+                selectedPresetId={selectedPresetId}
+                onSelectedPresetIdChange={setSelectedPresetId}
+                onSavePreset={saveCurrentRotationAsPreset}
+                onRemovePreset={removePreset}
+                onLoadPreset={loadPreset}
+                onEditSquad={() => setIsSquadSelectionModalOpen(true)}
+                containerRef={containerRef}
+            />
 
             <SquadSelectionModal
                 isOpen={isSquadSelectionModalOpen}
@@ -29,6 +53,15 @@ const Rotations: React.FC = () => {
                 onAddCharacterToSquad={addCharacterToSquad}
                 onRemoveCharacterFromSquad={removeCharacterFromSquad}
                 containerRef={containerRef}
+            />
+
+            <RotationsEditor
+                squad={squad}
+                currentRotation={currentRotation}
+                onAddRotationStep={addStepToCurrentRotation}
+                onRemoveRotationStep={removeStepFromCurrentRotation}
+                onSetRotationStepAction={setStepAction}
+                onClearCurrentRotation={clearCurrentRotation}
             />
         </section>
     );

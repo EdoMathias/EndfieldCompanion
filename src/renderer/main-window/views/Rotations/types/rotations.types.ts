@@ -30,7 +30,8 @@ export interface Character {
 export interface RotationStep {
     id: string;
     orderIndex: number;
-    character: Character;
+    character?: Character;
+    action?: CharacterAction;
 }
 
 /**

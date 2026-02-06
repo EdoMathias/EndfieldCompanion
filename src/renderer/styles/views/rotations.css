@@ -91,6 +91,19 @@
   transform: scale(0.95);
 }
 
+.rotations-header-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.rotations-header-button--danger:hover {
+  background-color: color-mix(in srgb, var(--color-destructive, #ef4444) 15%, transparent);
+  border-color: color-mix(in srgb, var(--color-destructive, #ef4444) 40%, transparent);
+  color: var(--color-destructive, #ef4444);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--color-destructive, #ef4444) 20%, transparent);
+}
+
 .rotations-header-label {
   display: flex;
   flex-direction: row;
@@ -135,6 +148,37 @@
   background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
   padding: 8px;
+}
+
+.rotations-header-preset-input {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-ark);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.rotations-header-preset-input:hover {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+}
+
+.rotations-header-preset-input:focus {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+}
+
+.rotations-header-preset-input::placeholder {
+  color: var(--color-text-muted);
 }
 
 /* ------------------------------
@@ -346,6 +390,25 @@
    Squad Selection Modal
 --------------------------------*/
 
+/* ------------------------------
+   Rotations Scoped Modal Overlay
+--------------------------------*/
+
+.rotations-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius);
+  animation: squadModalFadeIn 0.2s ease-out;
+}
+
+/* ------------------------------
+   Squad Selection Modal
+--------------------------------*/
+
 .squad-selection-modal-overlay {
   background-color: rgba(0, 0, 0, 0.8);
   display: flex;
@@ -458,4 +521,455 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* ------------------------------
+   Rotations Editor
+--------------------------------*/
+
+.rotations-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  border-radius: var(--radius);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+}
+
+.rotations-editor-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rotations-editor-title {
+  font-family: var(--font-ark);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rotations-editor-description {
+  font-family: var(--font-ark);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.rotations-editor-body {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 8px;
+}
+
+
+.rotations-editor-timeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-height: 120px;
+}
+
+.rotations-editor-step-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.rotations-editor-step {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.rotations-editor-arrow {
+  font-size: 20px;
+  color: var(--color-text-muted);
+  margin: 0 8px;
+  flex-shrink: 0;
+  user-select: none;
+  opacity: 0.6;
+}
+
+/* Add step circle button */
+.rotations-editor-add-step {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px dashed color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+}
+
+.rotations-editor-add-step:hover {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
+}
+
+.rotations-editor-add-step:active {
+  transform: scale(0.95);
+}
+
+.rotations-editor-add-step-icon {
+  font-family: var(--font-ark);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--color-text-muted);
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.rotations-editor-add-step:hover .rotations-editor-add-step-icon {
+  color: var(--color-accent-primary);
+}
+
+/* ------------------------------
+   Rotation Step Node
+--------------------------------*/
+
+.rotation-step-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.rotation-step-node-circle {
+  position: relative;
+}
+
+.rotation-step-node-circle-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  background-color: var(--color-bg-secondary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px;
+  transition: all 0.2s ease;
+}
+
+.rotation-step-node-circle-button:hover {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+}
+
+.rotation-step-node-circle-button--empty {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+  background-color: transparent;
+}
+
+.rotation-step-node-circle-button--empty:hover {
+  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
+  background-color: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+}
+
+.rotation-step-node-circle-button--editing {
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+}
+
+.rotation-step-node-circle-empty {
+  font-family: var(--font-ark);
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.rotation-step-node-circle-empty-text {
+  font-family: var(--font-ark);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.rotation-step-node-ability {
+  font-family: var(--font-ark);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rotation-step-node-action-type {
+  font-family: var(--font-ark);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+/* Delete step button */
+.rotation-step-node-delete-button {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--color-destructive, #ef4444) 20%, transparent);
+  color: var(--color-destructive, #ef4444);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.15s ease;
+  z-index: 5;
+}
+
+.rotation-step-node-circle:hover .rotation-step-node-delete-button {
+  opacity: 1;
+}
+
+.rotation-step-node-delete-button:hover {
+  background-color: color-mix(in srgb, var(--color-destructive, #ef4444) 40%, transparent);
+  transform: scale(1.1);
+}
+
+.rotation-step-node-delete-button:active {
+  transform: scale(0.95);
+}
+
+.rotation-step-node-delete-button-icon {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Step number */
+.rotation-step-node-number {
+  font-family: var(--font-ark);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+/* ------------------------------
+   Ability Picker Dropdown
+--------------------------------*/
+
+.ability-picker {
+  position: fixed;
+  transform: translateY(-50%);
+  display: flex;
+  z-index: 1000;
+  animation: abilityPickerFadeIn 0.15s ease-out;
+}
+
+.ability-picker--left {
+  flex-direction: row-reverse;
+  animation-name: abilityPickerFadeInLeft;
+}
+
+@keyframes abilityPickerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@keyframes abilityPickerFadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.ability-picker-characters {
+  width: 180px;
+  background-color: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-radius: var(--radius) 0 0 var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ability-picker--left .ability-picker-characters {
+  border-radius: 0 var(--radius) var(--radius) 0;
+  border-left: none;
+  border-right: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+}
+
+.ability-picker-panel-header {
+  font-family: var(--font-ark);
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 10px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
+  background-color: var(--color-bg-secondary);
+}
+
+.ability-picker-characters-list {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.ability-picker-character-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.ability-picker-character-item:hover,
+.ability-picker-character-item--active {
+  background-color: var(--color-bg-secondary);
+  border-left-color: var(--color-accent-primary);
+}
+
+.ability-picker-character-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ability-picker-character-name {
+  font-family: var(--font-ark);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ability-picker-character-chevron {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  margin-left: 8px;
+  line-height: 1;
+}
+
+/* Ability picker - actions panel */
+.ability-picker-actions {
+  width: 200px;
+  background-color: var(--color-bg-card);
+  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-left: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: abilityPickerActionsFadeIn 0.1s ease-out;
+}
+
+.ability-picker--left .ability-picker-actions {
+  border-radius: var(--radius) 0 0 var(--radius);
+  border-left: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border-right: none;
+}
+
+@keyframes abilityPickerActionsFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.ability-picker-actions-list {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.ability-picker-action-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.ability-picker-action-item:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.ability-picker-action-item:active {
+  background-color: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+}
+
+.ability-picker-action-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ability-picker-action-name {
+  font-family: var(--font-ark);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ability-picker-action-type {
+  font-family: var(--font-ark);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
 }
