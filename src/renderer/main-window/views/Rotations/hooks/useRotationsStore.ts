@@ -230,15 +230,30 @@ export function useRotationsStore() {
     }, []);
 
     /**
-     * Loads a preset into the current rotation.
+     * Loads a preset into the current rotation and sets the squad to the characters used in that preset.
      * @param presetId The id of the preset to load
      */
     const loadPreset = useCallback((presetId: string) => {
-        setCurrentRotationState(prevRotation => {
-            const preset = rotationsPresets.find(preset => preset.id === presetId);
-            if (!preset) return { id: '', name: '', steps: [] };
-            return { ...preset, steps: preset.steps.map(step => ({ ...step, action: step.action, character: step.character ?? undefined })) };
+        const preset = rotationsPresets.find(p => p.id === presetId);
+        if (!preset) {
+            setCurrentRotationState({ id: '', name: '', steps: [] });
+            return;
+        }
+        setCurrentRotationState({
+            ...preset,
+            steps: preset.steps.map(step => ({ ...step, action: step.action, character: step.character ?? undefined })),
         });
+        // Set squad from characters used in the preset (unique, order of first appearance, max 4)
+        const squadFromPreset: Character[] = [];
+        const seen = new Set<string>();
+        for (const step of preset.steps) {
+            if (step.character && !seen.has(step.character.id)) {
+                seen.add(step.character.id);
+                squadFromPreset.push(step.character);
+                if (squadFromPreset.length >= 4) break;
+            }
+        }
+        setSquadState(squadFromPreset);
     }, [rotationsPresets]);
 
     /**
