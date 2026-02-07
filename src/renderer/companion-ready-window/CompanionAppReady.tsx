@@ -31,14 +31,14 @@ const CompanionAppReady: React.FC = () => {
 
                 const entries: HotkeyInfo[] = [
                     {
-                        label: 'Toggle Main Window',
+                        label: 'Toggle In-Game Main Window',
                         binding: displayHotkey(
                             hotkeysMap.get(kHotkeys.toggleMainIngameWindow)?.binding,
                             hotkeysMap.get(kHotkeys.toggleMainIngameWindow)?.IsUnassigned ?? true
                         ),
                     },
                     {
-                        label: 'Toggle Rotation',
+                        label: 'Toggle In-Game Rotation Window',
                         binding: displayHotkey(
                             hotkeysMap.get(kHotkeys.toggleRotationIngameWindow)?.binding,
                             hotkeysMap.get(kHotkeys.toggleRotationIngameWindow)?.IsUnassigned ?? true
@@ -50,8 +50,8 @@ const CompanionAppReady: React.FC = () => {
             } catch {
                 if (!cancelled) {
                     setHotkeys([
-                        { label: 'Toggle Main Window', binding: 'Not set' },
-                        { label: 'Toggle Rotation', binding: 'Not set' },
+                        { label: 'Toggle In-Game Main Window', binding: 'Not set' },
+                        { label: 'Toggle In-Game Rotation Window', binding: 'Not set' },
                     ]);
                 }
             }

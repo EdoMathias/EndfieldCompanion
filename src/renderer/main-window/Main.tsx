@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '../styles/index.css';
 
 // Components
-import { AppHeader, FTUEWelcomeModal } from '../components';
+import { AppHeader, FTUEWelcomeModal, ReleaseNotesModal } from '../components';
 import { AdContainer } from './components/AdContainer/AdContainer';
 import SideNav from './components/SideNav/SideNav';
 import { Settings } from './views/Settings';
@@ -14,6 +14,7 @@ import { FTUEProvider } from '../contexts/FTUEContext';
 // Custom hooks
 import { useWindowInfo } from '../hooks/useWindowInfo';
 import { useAppVersion } from '../hooks/useAppVersion';
+import { useReleaseNotes } from '../hooks/useReleaseNotes';
 
 // Config
 import { viewsConfig } from './config/views.config';
@@ -35,6 +36,7 @@ function displayHotkey(binding: string | undefined, unassigned: boolean): string
 const Main: React.FC = () => {
     const { isIngameWindow } = useWindowInfo();
     const appVersion = useAppVersion();
+    const { releaseNote, isOpen: isReleaseNotesOpen, dismiss: dismissReleaseNotes } = useReleaseNotes(appVersion);
 
     const [showSettings, setShowSettings] = React.useState(false);
     const [settingsInitialTab, setSettingsInitialTab] = React.useState<'general' | 'hotkeys' | 'about'>('general');
@@ -158,6 +160,11 @@ const Main: React.FC = () => {
                     )}
                     <div className="main-content-wrapper">
                         <FTUEWelcomeModal />
+                        <ReleaseNotesModal
+                            isOpen={isReleaseNotesOpen}
+                            note={releaseNote}
+                            onClose={dismissReleaseNotes}
+                        />
                         <div className="main-content-container">
                             {showSettings ? (
                                 <div className="settings-wrapper">
