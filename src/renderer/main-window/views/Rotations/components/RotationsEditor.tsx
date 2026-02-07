@@ -49,7 +49,7 @@ const RotationsEditor: React.FC<RotationsEditorProps> = ({ squad, currentRotatio
     };
 
     return (
-        <div className="rotations-editor">
+        <div className="rotations-editor" data-ftue="rotations-editor">
             <div className="rotations-editor-header">
                 <div className="rotations-editor-header-top">
                     <h2 className="rotations-editor-title">Rotation Editor</h2>

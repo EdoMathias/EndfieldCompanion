@@ -78,7 +78,7 @@ const RotationsHeader: React.FC<RotationsHeaderProps> = ({ squad, currentRotatio
     const selectedPreset = rotationsPresets.find(p => p.id === selectedPresetId);
 
     return (
-        <div className="rotations-header">
+        <div className="rotations-header" data-ftue="rotations-header">
             {/* Row 1: Title */}
             <div className="rotations-header-row-1">
                 <h1 className="rotations-header-title">Rotations</h1>

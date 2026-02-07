@@ -1,12 +1,28 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 export type FTUEStep =
   | 'welcome'
   | 'resources_header'
   | 'resources_map_card'
-  | 'resources_on_map_button';
+  | 'resources_on_map_button'
+  | 'rotations_header'
+  | 'rotations_editor';
 
-export type FTUEScreen = 'main';
+export type FTUEScreen = 'main' | 'rotations';
+
+/** Steps that belong to the main (resources) FTUE flow */
+const MAIN_STEPS: FTUEStep[] = [
+  'welcome',
+  'resources_header',
+  'resources_map_card',
+  'resources_on_map_button',
+];
+
+/** Steps that belong to the rotations FTUE flow */
+const ROTATIONS_STEPS: FTUEStep[] = [
+  'rotations_header',
+  'rotations_editor',
+];
 
 interface FTUEContextType {
   isFTUEComplete: boolean;
@@ -14,6 +30,14 @@ interface FTUEContextType {
   markStepComplete: (step: FTUEStep) => void;
   resetFTUE: () => void;
   shouldShowStep: (step: FTUEStep) => boolean;
+  /** Call when the user navigates to the Rotations view to kick off its FTUE. */
+  startRotationsFTUE: () => void;
+  /**
+   * Returns true when a view has an FTUE the user hasn't seen yet.
+   * Use this to show a "New" badge on sidebar items, cards, etc.
+   * To support a new feature, add a case inside the provider.
+   */
+  hasUnseenFTUE: (viewName: string) => boolean;
 }
 
 interface FTUEProviderProps {
@@ -26,8 +50,10 @@ const FTUEContext = createContext<FTUEContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'endfield_companion_ftue_completed';
 const STEPS_STORAGE_KEY = 'endfield_companion_ftue_steps';
+const ROTATIONS_FTUE_STORAGE_KEY = 'endfield_companion_rotations_ftue_completed';
 
 export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset }) => {
+  // ── Main FTUE ──────────────────────────────────────────────
   const [isFTUEComplete, setIsFTUEComplete] = useState<boolean>(() => {
     try {
       return localStorage.getItem(STORAGE_KEY) === 'true';
@@ -36,6 +62,19 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
     }
   });
 
+  // ── Rotations FTUE ────────────────────────────────────────
+  const [isRotationsFTUEComplete, setIsRotationsFTUEComplete] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(ROTATIONS_FTUE_STORAGE_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  /** Runtime flag – true while the rotations FTUE is being presented. */
+  const [isRotationsFTUEActive, setIsRotationsFTUEActive] = useState(false);
+
+  // ── Shared completed-steps set ────────────────────────────
   const [completedSteps, setCompletedSteps] = useState<Set<FTUEStep>>(() => {
     try {
       const stored = localStorage.getItem(STEPS_STORAGE_KEY);
@@ -66,17 +105,21 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
 
   const resetFTUE = () => {
     setIsFTUEComplete(false);
+    setIsRotationsFTUEComplete(false);
+    setIsRotationsFTUEActive(false);
     setCompletedSteps(new Set());
     try {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STEPS_STORAGE_KEY);
+      localStorage.removeItem(ROTATIONS_FTUE_STORAGE_KEY);
     } catch {
       // Ignore errors
     }
     onReset?.();
   };
 
-  const completeFTUE = () => {
+  // ── Completion helpers ────────────────────────────────────
+  const completeMainFTUE = () => {
     setIsFTUEComplete(true);
     try {
       localStorage.setItem(STORAGE_KEY, 'true');
@@ -85,47 +128,72 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
     }
   };
 
-  // Get the next step that should be shown in sequence
-  const getNextStep = (): FTUEStep | null => {
-    if (isFTUEComplete) return null;
-    
-    // Define the order of steps
-    const steps: FTUEStep[] = [
-      'welcome',
-      'resources_header',
-      'resources_map_card',
-      'resources_on_map_button'
-    ];
-    
-    for (const step of steps) {
-      if (!completedSteps.has(step)) {
-        return step;
-      }
+  const completeRotationsFTUE = () => {
+    setIsRotationsFTUEComplete(true);
+    setIsRotationsFTUEActive(false);
+    try {
+      localStorage.setItem(ROTATIONS_FTUE_STORAGE_KEY, 'true');
+    } catch {
+      // Ignore errors
     }
-    
-    return null;
   };
 
-  const shouldShowStep = (step: FTUEStep): boolean => {
-    if (isFTUEComplete) return false;
-    
-    // Check if step is already completed
+  // ── Step sequencing ───────────────────────────────────────
+  const shouldShowStep = useCallback((step: FTUEStep): boolean => {
     if (completedSteps.has(step)) return false;
-    
-    // Only show the next step in sequence
-    const nextStep = getNextStep();
-    return nextStep === step;
-  };
 
-  // Auto-complete FTUE when all steps are done
+    // Main FTUE flow
+    if (MAIN_STEPS.includes(step)) {
+      if (isFTUEComplete) return false;
+      const nextMainStep = MAIN_STEPS.find(s => !completedSteps.has(s));
+      return nextMainStep === step;
+    }
+
+    // Rotations FTUE flow
+    if (ROTATIONS_STEPS.includes(step)) {
+      if (isRotationsFTUEComplete || !isRotationsFTUEActive) return false;
+      const nextRotationsStep = ROTATIONS_STEPS.find(s => !completedSteps.has(s));
+      return nextRotationsStep === step;
+    }
+
+    return false;
+  }, [completedSteps, isFTUEComplete, isRotationsFTUEComplete, isRotationsFTUEActive]);
+
+  /** Activate the rotations FTUE (no-op if already completed). */
+  const startRotationsFTUE = useCallback(() => {
+    if (!isRotationsFTUEComplete) {
+      setIsRotationsFTUEActive(true);
+    }
+  }, [isRotationsFTUEComplete]);
+
+  /**
+   * Generic check: does this view have an unseen FTUE?
+   * Add a case for each new feature that has its own FTUE flow.
+   */
+  const hasUnseenFTUE = useCallback((viewName: string): boolean => {
+    switch (viewName) {
+      case 'Rotations':
+        return !isRotationsFTUEComplete;
+      // Future features: add cases here
+      default:
+        return false;
+    }
+  }, [isRotationsFTUEComplete]);
+
+  // ── Auto-complete when all steps in a group are done ──────
   useEffect(() => {
-    const allSteps: FTUEStep[] = ['welcome', 'resources_header', 'resources_map_card', 'resources_on_map_button'];
-    
-    const allComplete = allSteps.every(step => completedSteps.has(step));
-    if (allComplete && !isFTUEComplete) {
-      completeFTUE();
+    const allMainComplete = MAIN_STEPS.every(step => completedSteps.has(step));
+    if (allMainComplete && !isFTUEComplete) {
+      completeMainFTUE();
     }
   }, [completedSteps, isFTUEComplete]);
+
+  useEffect(() => {
+    const allRotationsComplete = ROTATIONS_STEPS.every(step => completedSteps.has(step));
+    if (allRotationsComplete && !isRotationsFTUEComplete) {
+      completeRotationsFTUE();
+    }
+  }, [completedSteps, isRotationsFTUEComplete]);
 
   return (
     <FTUEContext.Provider
@@ -134,7 +202,9 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
         completedSteps,
         markStepComplete,
         resetFTUE,
-        shouldShowStep
+        shouldShowStep,
+        startRotationsFTUE,
+        hasUnseenFTUE,
       }}
     >
       {children}
