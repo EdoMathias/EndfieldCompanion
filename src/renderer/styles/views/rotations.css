@@ -1083,9 +1083,10 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   text-align: center;
-  max-width: 56px;
+  white-space: nowrap;
+  min-width: 0;
+  padding: 4px 8px;
   line-height: 1.25;
-  padding: 4px 6px;
   border-radius: var(--radius-sm);
   background-color: color-mix(in srgb, var(--color-bg-secondary) 90%, transparent);
   border: 1px solid color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
@@ -1114,8 +1115,8 @@
 }
 
 .rotation-window-settings-button:hover {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 12%, transparent);
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-bg-secondary);
 }
 
 .rotation-window-settings-panel {

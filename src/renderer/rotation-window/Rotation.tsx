@@ -154,9 +154,6 @@ const RotationWindow: React.FC = () => {
             <div className="rotation-window-content">
                 <div className="rotation-window-controls">
                     <div className="rotation-window-drag-handle"/>
-                    <span className="rotation-window-hotkey-reminder">
-                        {hotkeyText}
-                    </span>
                     <button
                         ref={settingsButtonRef}
                         type="button"
@@ -165,6 +162,9 @@ const RotationWindow: React.FC = () => {
                     >
                         &#9881;
                     </button>
+                    <span className="rotation-window-hotkey-reminder">
+                        {hotkeyText}
+                    </span>
                     {showSettings && (
                         <div
                             ref={settingsPanelRef}
