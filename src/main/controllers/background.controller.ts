@@ -8,6 +8,7 @@ import { createLogger } from '../../shared/services/Logger';
 import { WindowsController } from './windows.controller';
 import { TrayIconService } from '../services/tray-icon.service';
 import onMenuItemClickedEvent = overwolf.os.tray.onMenuItemClickedEvent;
+import AppLaunchTriggeredEvent = overwolf.extensions.AppLaunchTriggeredEvent;
 
 const logger = createLogger('BackgroundController');
 
@@ -33,7 +34,7 @@ export class BackgroundController {
     // Initialize MessageChannel first (used by other services)
     this._messageChannel = new MessageChannel();
     this._hotkeysService = new HotkeysService();
-    this._appLaunchService = new AppLaunchService(() => this.handleAppLaunch());
+    this._appLaunchService = new AppLaunchService((event: AppLaunchTriggeredEvent) => this.handleAppLaunch(event));
     this._trayIconService = new TrayIconService(() => this.handleTrayIconClick(), (event: onMenuItemClickedEvent) => this.handleTrayMenuItemClick(event), () => this.handleTrayIconDoubleClick());
     this._gameStateService = new GameStateService(
       this._messageChannel,
@@ -128,13 +129,27 @@ export class BackgroundController {
   /** 
    * Handles user-initiated app launches (clicking the app icon). 
    */
-  private async handleAppLaunch(): Promise<void> {
-    if (this._isGameRunning) {
-      logger.log('Game is running, showing in-game window');
-      await this._windowsController.onGameLaunch();
+  private async handleAppLaunch(event: AppLaunchTriggeredEvent): Promise<void> {
+
+    // If the launch event is from the dock
+    if (event.origin?.includes('dock')) {
+      // If the game is running, show the in-game window
+      if (this._isGameRunning) {
+        logger.log('showing in-game window from dock');
+        await this._windowsController.showMainIngameWindow();
+      } else {
+        logger.log('showing primary desktop window from dock');
+        await this._windowsController.showMainDesktopWindow('primary');
+      }
     } else {
-      logger.log('No game running, showing primary desktop window');
-      await this._windowsController.showMainDesktopWindow('primary');
+      // If the launch event is not from the dock
+      if (this._isGameRunning) {
+        logger.log('Game is running, showing in-game window');
+        await this._windowsController.onGameLaunch();
+      } else {
+        logger.log('No game running, showing primary desktop window');
+        await this._windowsController.showMainDesktopWindow('primary');
+      }
     }
   }
 

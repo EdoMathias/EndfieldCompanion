@@ -9,7 +9,7 @@ const logger = createLogger('AppLaunchService');
  */
 export class AppLaunchService {
 
-  constructor(private onLaunchCallback: () => Promise<void>) {
+  constructor(private onLaunchCallback: (event: AppLaunchTriggeredEvent) => Promise<void>) {
     // Callback to be executed when the app is manually launched.
     overwolf.extensions.onAppLaunchTriggered.addListener(
       (event: AppLaunchTriggeredEvent) => this.handleLaunchEvent(event)
@@ -38,7 +38,7 @@ export class AppLaunchService {
     }
 
     try {
-      await this.onLaunchCallback();
+      await this.onLaunchCallback(event);
     } catch (error) {
       logger.error('Error handling app launch event:', error);
     }
