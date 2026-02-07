@@ -2,6 +2,7 @@ import { GameStateService } from '../services/game-state.service';
 import { HotkeysService } from '../services/hotkeys.service';
 import { AppLaunchService } from '../services/app-launch.service';
 import { MessageChannel, MessagePayload, MessageType } from '../services/MessageChannel';
+import { Edge } from '@overwolf/odk-ts/window/enums/edge';
 import { kEndfieldClassId, kHotkeys, kWindowNames } from '../../shared/consts';
 import { createLogger } from '../../shared/services/Logger';
 import { WindowsController } from './windows.controller';
@@ -26,6 +27,7 @@ export class BackgroundController {
   private _trayIconService: TrayIconService;
 
   private _isGameRunning: boolean = false;
+  private _companionReadyDismissTimer: ReturnType<typeof setTimeout> | null = null;
 
   private constructor() {
     // Initialize MessageChannel first (used by other services)
@@ -75,6 +77,7 @@ export class BackgroundController {
     if (isEndfieldRunning) {
       await this._windowsController.onGameLaunch();
       this._isGameRunning = true;
+      await this.showCompanionReadyNotification();
     } else {
       // If the game is Endfield, show the main desktop window
       if (gameInfo?.classId === kEndfieldClassId) {
@@ -132,6 +135,36 @@ export class BackgroundController {
     } else {
       logger.log('No game running, showing primary desktop window');
       await this._windowsController.showMainDesktopWindow('primary');
+    }
+  }
+
+  /**
+   * Shows the companion app ready notification window anchored to top-center.
+   * Auto-dismisses after 10 seconds.
+   */
+  private async showCompanionReadyNotification(): Promise<void> {
+    // Clear any existing dismiss timer
+    if (this._companionReadyDismissTimer) {
+      clearTimeout(this._companionReadyDismissTimer);
+      this._companionReadyDismissTimer = null;
+    }
+
+    try {
+      await this._windowsController.showCompanionAppReadyWindow('primary', Edge.Top);
+      logger.log('Companion app ready notification shown');
+
+      // Auto-dismiss after 10 seconds
+      this._companionReadyDismissTimer = setTimeout(async () => {
+        try {
+          await this._windowsController.closeCompanionAppReadyWindow();
+          logger.log('Companion app ready notification auto-dismissed');
+        } catch (error) {
+          logger.error('Error auto-dismissing companion ready window:', error);
+        }
+        this._companionReadyDismissTimer = null;
+      }, 10_000);
+    } catch (error) {
+      logger.error('Error showing companion ready notification:', error);
     }
   }
 

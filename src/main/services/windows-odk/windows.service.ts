@@ -49,6 +49,16 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
         transparent: true,
         keepWindowLocation: true,
         autoDpi: true
+    },
+    'companion_app_ready': {
+        id: 'companion_app_ready',
+        url: 'companion_app_ready.html',
+        width: 450,
+        height: 220,
+        type: OSRType.InGameOnly,
+        resizable: false,
+        transparent: true,
+        autoDpi: true
     }
 }
 
@@ -56,6 +66,7 @@ export class WindowsService {
     private _mainDesktopWindow: DesktopWindow | undefined;
     private _mainIngameWindow: OSRWindow | undefined;
     private _rotationIngameWindow: OSRWindow | undefined;
+    private _companionAppReadyWindow: OSRWindow | undefined;
 
     private _monitorsService: MonitorsService;
 
@@ -192,6 +203,28 @@ export class WindowsService {
         } catch (error) {
             logger.error('Error resizing rotation in-game window:', error);
         }
+    }
+
+    //--------------------------------------------------------------------------
+    // Companion App Ready Window
+    public async createCompanionAppReadyWindow(): Promise<void> {
+        if (this._companionAppReadyWindow && await this._companionAppReadyWindow.isOpen()) {
+            return;
+        }
+        this._companionAppReadyWindow = new OSRWindow(windowsConfigs['companion_app_ready']);
+        logger.log('Companion app ready window created');
+    }
+
+    public async showCompanionAppReadyWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        if (!this._companionAppReadyWindow || !(await this._companionAppReadyWindow.isOpen())) {
+            await this.createCompanionAppReadyWindow();
+        }
+
+        await this.showWindow(this._companionAppReadyWindow, centerOnMonitor, dockTo);
+    }
+
+    public async closeCompanionAppReadyWindow(): Promise<void> {
+        await this.closeWindow(this._companionAppReadyWindow);
     }
 
     //--------------------------------------------------------------------------

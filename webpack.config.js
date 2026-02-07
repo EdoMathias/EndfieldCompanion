@@ -10,7 +10,8 @@ module.exports = env => ({
         background: './src/main/background.ts',
         main_desktop: './src/renderer/main-window/Main.tsx',
         main_ingame: './src/renderer/main-window/Main.tsx',
-        rotation_ingame: './src/renderer/rotation-window/Rotation.tsx'
+        rotation_ingame: './src/renderer/rotation-window/Rotation.tsx',
+        companion_app_ready: './src/renderer/companion-ready-window/CompanionAppReady.tsx'
     },
     devtool: 'inline-source-map',
     module: {
@@ -74,6 +75,11 @@ module.exports = env => ({
             template: './src/renderer/rotation-window/rotation_ingame.html',
             filename: path.resolve(__dirname, './dist/rotation_ingame.html'),
             chunks: ['rotation_ingame']
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/renderer/companion-ready-window/companion_app_ready.html',
+            filename: path.resolve(__dirname, './dist/companion_app_ready.html'),
+            chunks: ['companion_app_ready']
         }),
         new HtmlWebpackPlugin({
             template: './src/renderer/uninstall-window/uninstall.html',

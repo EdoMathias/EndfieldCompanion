@@ -29,6 +29,9 @@ export class WindowsController {
             logger.log('Moving main desktop window to secondary monitor');
         }
 
+        // Show the companion app ready window
+        await this._windowsService.showCompanionAppReadyWindow('primary', Edge.Top);
+
         // Create the main in-game window but don't show it yet
         await this._windowsService.createMainIngameWindow();
 
@@ -42,6 +45,9 @@ export class WindowsController {
 
         // Close the rotation in-game window
         await this._windowsService.closeRotationIngameWindow();
+
+        // Close the companion app ready window if still visible
+        await this._windowsService.closeCompanionAppReadyWindow();
 
         // Move the main desktop window to the center of the main monitor
         await this._windowsService.showMainDesktopWindow('primary');
@@ -75,6 +81,14 @@ export class WindowsController {
         await this._windowsService.setRotationIngameWindowSize(width, height);
     }
 
+    public async showCompanionAppReadyWindow(centerOnMonitor?: 'primary' | 'secondary', dockTo?: Edge): Promise<void> {
+        await this._windowsService.showCompanionAppReadyWindow(centerOnMonitor, dockTo);
+    }
+
+    public async closeCompanionAppReadyWindow(): Promise<void> {
+        await this._windowsService.closeCompanionAppReadyWindow();
+    }
+
     public async closeAllWindows(): Promise<void> {
         try {
             await this._windowsService.closeMainDesktopWindow();
@@ -90,6 +104,11 @@ export class WindowsController {
             await this._windowsService.closeRotationIngameWindow();
         } catch (error) {
             logger.error('Error closing rotation in-game window:', error);
+        }
+        try {
+            await this._windowsService.closeCompanionAppReadyWindow();
+        } catch (error) {
+            logger.error('Error closing companion app ready window:', error);
         }
     }
 }
