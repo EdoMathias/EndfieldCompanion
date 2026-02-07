@@ -17,12 +17,21 @@ interface UseReleaseNotesResult {
 
 /**
  * Fetches the release note for the given app version and manages viewed/dismissed state.
- * Automatically opens the modal when there is an unviewed release note.
+ * Automatically opens the modal when there is an unviewed release note **and**
+ * `shouldAutoOpen` is `true`.  When `shouldAutoOpen` is `false` (e.g. FTUE is
+ * still in progress), the modal open is deferred until `shouldAutoOpen` becomes
+ * `true`.
  */
-export const useReleaseNotes = (appVersion: string | null): UseReleaseNotesResult => {
+export const useReleaseNotes = (
+  appVersion: string | null,
+  shouldAutoOpen: boolean = true,
+): UseReleaseNotesResult => {
   const [releaseNote, setReleaseNote] = useState<ReleaseNoteEntry | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  /** True when we fetched an unviewed note but auto-open was deferred. */
+  const [pendingAutoOpen, setPendingAutoOpen] = useState(false);
 
+  // Fetch release note for the current version
   useEffect(() => {
     if (!appVersion) return;
 
@@ -37,7 +46,11 @@ export const useReleaseNotes = (appVersion: string | null): UseReleaseNotesResul
         setReleaseNote(entry);
 
         if (entry && !releaseNotesService.hasViewedReleaseNote(entry)) {
-          setIsOpen(true);
+          if (shouldAutoOpen) {
+            setIsOpen(true);
+          } else {
+            setPendingAutoOpen(true);
+          }
         }
       } catch (error) {
         logger.error('Failed to load release notes', error);
@@ -49,7 +62,17 @@ export const useReleaseNotes = (appVersion: string | null): UseReleaseNotesResul
     return () => {
       cancelled = true;
     };
+    // shouldAutoOpen is intentionally excluded — transitions are handled below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appVersion]);
+
+  // When shouldAutoOpen becomes true and we have a pending unviewed note, open it
+  useEffect(() => {
+    if (shouldAutoOpen && pendingAutoOpen) {
+      setIsOpen(true);
+      setPendingAutoOpen(false);
+    }
+  }, [shouldAutoOpen, pendingAutoOpen]);
 
   const open = useCallback(() => {
     if (releaseNote) {
