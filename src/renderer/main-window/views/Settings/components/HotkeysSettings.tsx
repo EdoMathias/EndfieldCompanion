@@ -220,6 +220,15 @@ const HotkeysSettings: React.FC = () => {
       }
     };
     loadHotkeys();
+
+    const onHotkeyChanged = () => {
+      logger.log('Hotkey changed externally, reloading...');
+      loadHotkeys();
+    };
+    overwolf.settings.hotkeys.onChanged.addListener(onHotkeyChanged);
+    return () => {
+      overwolf.settings.hotkeys.onChanged.removeListener(onHotkeyChanged);
+    };
   }, []);
 
   return (
@@ -228,7 +237,7 @@ const HotkeysSettings: React.FC = () => {
 
       <div className="hotkeys-list">
         {hotkeys.map((hotkey) => (
-          <div key={hotkey.name} className="hotkey-item">
+          <div key={`${hotkey.name}-${hotkey.binding}`} className="hotkey-item">
             <AnyTypeInput
               id={hotkey.name}
               className="hotkey-input"

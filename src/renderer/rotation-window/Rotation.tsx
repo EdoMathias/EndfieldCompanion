@@ -128,16 +128,14 @@ const RotationWindow: React.FC = () => {
         <div className="rotation-window">
             <div className="rotation-window-content">
                 <div className="rotation-window-controls">
-                    <div className="rotation-window-drag-handle" title="Drag to move window" aria-label="Drag to move window" />
-                    <span className="rotation-window-hotkey-reminder" title="Toggle window visibility">
+                    <div className="rotation-window-drag-handle"/>
+                    <span className="rotation-window-hotkey-reminder">
                         {hotkeyText}
                     </span>
                     <button
                         type="button"
                         className="rotation-window-settings-button"
                         onClick={() => setShowSettings((v) => !v)}
-                        title="Step size & opacity"
-                        aria-label="Settings"
                     >
                         &#9881;
                     </button>
