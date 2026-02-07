@@ -79,16 +79,19 @@ const SquadSelectionModal: React.FC<SquadSelectionModalProps> = ({
                 </div>
                 <div className="squad-selection-modal-body">
                     <div className="squad-selection-modal-cards">
-                        {characters.map((character) => (
-                            <RotationsOperatorCard
-                                key={character.id}
-                                character={character}
-                                selected={squadIds.has(character.id)}
-                                onAdd={onAddCharacterToSquad}
-                                onRemove={onRemoveCharacterFromSquad}
-                                disabled={!canAddMore}
-                            />
-                        ))}
+                        {characters.map((character) => {
+                            const isSelected = squadIds.has(character.id);
+                            return (
+                                <RotationsOperatorCard
+                                    key={character.id}
+                                    character={character}
+                                    selected={isSelected}
+                                    onAdd={onAddCharacterToSquad}
+                                    onRemove={onRemoveCharacterFromSquad}
+                                    disabled={!canAddMore && !isSelected}
+                                />
+                            );
+                        })}
                     </div>
                 </div>
             </div>
