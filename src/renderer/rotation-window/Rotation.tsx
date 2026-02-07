@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../styles/index.css';
 import { useCurrentRotationFromStorage } from '../main-window/views/Rotations/hooks/useCurrentRotationFromStorage';
@@ -10,22 +10,24 @@ import { kHotkeys, kWindowNames } from '../../shared/consts';
 import { ROTATION_WINDOW_SETTINGS_KEY } from '../main-window/views/Rotations/consts/rotations.consts';
 const DEFAULT_STEP_SIZE = 1;
 const DEFAULT_OPACITY = 1;
+const DEFAULT_BG_OPACITY = 0;
 const DEFAULT_SHOW_SQUAD_INDEX = false;
 
-export type RotationWindowSettings = { stepSize: number; opacity: number; showSquadIndex: boolean };
+export type RotationWindowSettings = { stepSize: number; opacity: number; bgOpacity: number; showSquadIndex: boolean };
 
 function loadRotationWindowSettings(): RotationWindowSettings {
     try {
         const raw = localStorage.getItem(ROTATION_WINDOW_SETTINGS_KEY);
-        if (!raw) return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY, showSquadIndex: DEFAULT_SHOW_SQUAD_INDEX };
-        const parsed = JSON.parse(raw) as { stepSize?: number; opacity?: number; showSquadIndex?: boolean };
+        if (!raw) return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY, bgOpacity: DEFAULT_BG_OPACITY, showSquadIndex: DEFAULT_SHOW_SQUAD_INDEX };
+        const parsed = JSON.parse(raw) as { stepSize?: number; opacity?: number; bgOpacity?: number; showSquadIndex?: boolean };
         return {
             stepSize: typeof parsed.stepSize === 'number' ? Math.max(0.6, Math.min(1.4, parsed.stepSize)) : DEFAULT_STEP_SIZE,
             opacity: typeof parsed.opacity === 'number' ? Math.max(0.2, Math.min(1, parsed.opacity)) : DEFAULT_OPACITY,
+            bgOpacity: typeof parsed.bgOpacity === 'number' ? Math.max(0, Math.min(1, parsed.bgOpacity)) : DEFAULT_BG_OPACITY,
             showSquadIndex: typeof parsed.showSquadIndex === 'boolean' ? parsed.showSquadIndex : DEFAULT_SHOW_SQUAD_INDEX,
         };
     } catch {
-        return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY, showSquadIndex: DEFAULT_SHOW_SQUAD_INDEX };
+        return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY, bgOpacity: DEFAULT_BG_OPACITY, showSquadIndex: DEFAULT_SHOW_SQUAD_INDEX };
     }
 }
 
@@ -78,6 +80,8 @@ const RotationWindow: React.FC = () => {
     const [hotkeyText, setHotkeyText] = useState<string>('');
     const [showSettings, setShowSettings] = useState(false);
     const [settings, setSettings] = useState(loadRotationWindowSettings);
+    const settingsButtonRef = useRef<HTMLButtonElement>(null);
+    const settingsPanelRef = useRef<HTMLDivElement>(null);
 
     const getCharacterLabel = useCallback(
         (characterId: string | undefined) => {
@@ -92,6 +96,27 @@ const RotationWindow: React.FC = () => {
         saveRotationWindowSettings(next);
         setSettings(next);
     }, []);
+
+    const toggleSettings = useCallback(() => {
+        setShowSettings((prev) => !prev);
+    }, []);
+
+    // Click-outside handler to close settings panel
+    useEffect(() => {
+        if (!showSettings) return;
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                settingsPanelRef.current &&
+                !settingsPanelRef.current.contains(e.target as Node) &&
+                settingsButtonRef.current &&
+                !settingsButtonRef.current.contains(e.target as Node)
+            ) {
+                setShowSettings(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showSettings]);
 
     useEffect(() => {
         const handleStorage = (e: StorageEvent) => {
@@ -133,12 +158,76 @@ const RotationWindow: React.FC = () => {
                         {hotkeyText}
                     </span>
                     <button
+                        ref={settingsButtonRef}
                         type="button"
                         className="rotation-window-settings-button"
-                        onClick={() => setShowSettings((v) => !v)}
+                        onClick={toggleSettings}
                     >
                         &#9881;
                     </button>
+                    {showSettings && (
+                        <div
+                            ref={settingsPanelRef}
+                            className="rotation-window-settings-panel"
+                        >
+                            <div className="rotation-window-settings-panel-inner">
+                                <label className="rotation-window-settings-label">
+                                    Step size {Math.round(settings.stepSize * 100)}%
+                                    <input
+                                        type="range"
+                                        min={60}
+                                        max={140}
+                                        value={Math.round(settings.stepSize * 100)}
+                                        onChange={(e) => {
+                                            const stepSize = Math.max(0.6, Math.min(1.4, Number(e.target.value) / 100));
+                                            applySettings({ ...settings, stepSize });
+                                        }}
+                                        className="rotation-window-settings-slider"
+                                    />
+                                </label>
+                                <label className="rotation-window-settings-label">
+                                    Steps opacity {Math.round(settings.opacity * 100)}%
+                                    <input
+                                        type="range"
+                                        min={20}
+                                        max={100}
+                                        value={Math.round(settings.opacity * 100)}
+                                        onChange={(e) => {
+                                            const opacity = Math.max(0.2, Math.min(1, Number(e.target.value) / 100));
+                                            applySettings({ ...settings, opacity });
+                                        }}
+                                        className="rotation-window-settings-slider"
+                                    />
+                                </label>
+                                <label className="rotation-window-settings-label">
+                                    Background opacity {Math.round(settings.bgOpacity * 100)}%
+                                    <input
+                                        type="range"
+                                        min={0}
+                                        max={100}
+                                        value={Math.round(settings.bgOpacity * 100)}
+                                        onChange={(e) => {
+                                            const bgOpacity = Math.max(0, Math.min(1, Number(e.target.value) / 100));
+                                            applySettings({ ...settings, bgOpacity });
+                                        }}
+                                        className="rotation-window-settings-slider"
+                                    />
+                                </label>
+                                <label className="rotation-window-settings-label rotation-window-settings-label--checkbox">
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.showSquadIndex}
+                                        onChange={(e) => applySettings({ ...settings, showSquadIndex: e.target.checked })}
+                                        className="rotation-window-settings-checkbox"
+                                    />
+                                    <span>Show squad index instead of name</span>
+                                </label>
+                                <button type="button" className="rotation-window-settings-close" onClick={() => setShowSettings(false)}>
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div
                     className="rotation-window-steps-outer"
@@ -149,6 +238,7 @@ const RotationWindow: React.FC = () => {
                         style={{
                             opacity: settings.opacity,
                             transform: `scale(${settings.stepSize})`,
+                            backgroundColor: `rgba(0, 0, 0, ${settings.bgOpacity})`,
                         }}
                     >
                         {isEmpty ? (
@@ -176,53 +266,6 @@ const RotationWindow: React.FC = () => {
                     </div>
                 </div>
             </div>
-            {showSettings && (
-                <div className="rotation-window-settings-panel">
-                    <div className="rotation-window-settings-panel-inner">
-                        <h4 className="rotation-window-settings-title">Rotation steps</h4>
-                        <label className="rotation-window-settings-label">
-                            Step size {Math.round(settings.stepSize * 100)}%
-                            <input
-                                type="range"
-                                min={60}
-                                max={140}
-                                value={Math.round(settings.stepSize * 100)}
-                                onChange={(e) => {
-                                    const stepSize = Math.max(0.6, Math.min(1.4, Number(e.target.value) / 100));
-                                    applySettings({ ...settings, stepSize });
-                                }}
-                                className="rotation-window-settings-slider"
-                            />
-                        </label>
-                        <label className="rotation-window-settings-label">
-                            Steps opacity {Math.round(settings.opacity * 100)}%
-                            <input
-                                type="range"
-                                min={20}
-                                max={100}
-                                value={Math.round(settings.opacity * 100)}
-                                onChange={(e) => {
-                                    const opacity = Math.max(0.2, Math.min(1, Number(e.target.value) / 100));
-                                    applySettings({ ...settings, opacity });
-                                }}
-                                className="rotation-window-settings-slider"
-                            />
-                        </label>
-                        <label className="rotation-window-settings-label rotation-window-settings-label--checkbox">
-                            <input
-                                type="checkbox"
-                                checked={settings.showSquadIndex}
-                                onChange={(e) => applySettings({ ...settings, showSquadIndex: e.target.checked })}
-                                className="rotation-window-settings-checkbox"
-                            />
-                            <span>Show squad index instead of name</span>
-                        </label>
-                        <button type="button" className="rotation-window-settings-close" onClick={() => setShowSettings(false)}>
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

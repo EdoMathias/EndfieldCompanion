@@ -55,11 +55,6 @@ const RotationStepNode: React.FC<RotationStepNodeProps> = ({ step, index, isEdit
                     <span className="rotation-step-node-delete-button-icon">×</span>
                 </button>
             </div>
-
-            {/* Step number below */}
-            <div className="rotation-step-node-number">
-                #{index + 1}
-            </div>
         </div>
     );
 };
