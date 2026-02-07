@@ -43,7 +43,6 @@ const windowsConfigs: Record<string, OSRWindowOptions | DesktopWindowOptions> = 
         url: 'rotation_ingame.html',
         width: 1600,
         height: 300,
-        minWidth: 1600,
         minHeight: 300,
         type: OSRType.InGameOnly,
         resizable: false,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Character, CharacterAction, Rotation, RotationActionType, RotationStep } from "../types/rotations.types";
-import { STORAGE_CURRENT_ROTATION } from "../consts/rotations.consts";
+import { STORAGE_CURRENT_ROTATION, STORAGE_CURRENT_SQUAD } from "../consts/rotations.consts";
 import characters from "../../../../../shared/data/characters.json";
 
 /**
@@ -17,11 +17,6 @@ const STORAGE_SELECTED_PRESET = 'endfield.rotations.selectedPreset.v1';
  * Local storage key for the characters data.
  */
 const STORAGE_CHARACTERS = 'endfield.characters.v1';
-
-/**
- * Local storage key for the squad.
- */
-const STORAGE_CURRENT_SQUAD = 'endfield.current.squad.v1';
 
 const DEFAULT_CHARACTERS: Character[] = characters.characters.map(character => ({
     id: character.id,

@@ -2,28 +2,30 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../styles/index.css';
 import { useCurrentRotationFromStorage } from '../main-window/views/Rotations/hooks/useCurrentRotationFromStorage';
+import { useSquadFromStorage } from '../main-window/views/Rotations/hooks/useSquadFromStorage';
 import { ACTION_TYPE_CONFIG } from '../main-window/views/Rotations/consts/rotations.consts';
 import type { RotationStep } from '../main-window/views/Rotations/types/rotations.types';
 import { HotkeysAPI } from '../../shared/services/hotkeys';
-import { kHotkeys } from '../../shared/consts';
-
-const ROTATION_WINDOW_SETTINGS_KEY = 'rotation_ingame_window_settings';
+import { kHotkeys, kWindowNames } from '../../shared/consts';
+import { ROTATION_WINDOW_SETTINGS_KEY } from '../main-window/views/Rotations/consts/rotations.consts';
 const DEFAULT_STEP_SIZE = 1;
 const DEFAULT_OPACITY = 1;
+const DEFAULT_SHOW_SQUAD_INDEX = false;
 
-export type RotationWindowSettings = { stepSize: number; opacity: number };
+export type RotationWindowSettings = { stepSize: number; opacity: number; showSquadIndex: boolean };
 
 function loadRotationWindowSettings(): RotationWindowSettings {
     try {
         const raw = localStorage.getItem(ROTATION_WINDOW_SETTINGS_KEY);
-        if (!raw) return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY };
-        const parsed = JSON.parse(raw) as { stepSize?: number; opacity?: number };
+        if (!raw) return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY, showSquadIndex: DEFAULT_SHOW_SQUAD_INDEX };
+        const parsed = JSON.parse(raw) as { stepSize?: number; opacity?: number; showSquadIndex?: boolean };
         return {
             stepSize: typeof parsed.stepSize === 'number' ? Math.max(0.6, Math.min(1.4, parsed.stepSize)) : DEFAULT_STEP_SIZE,
             opacity: typeof parsed.opacity === 'number' ? Math.max(0.2, Math.min(1, parsed.opacity)) : DEFAULT_OPACITY,
+            showSquadIndex: typeof parsed.showSquadIndex === 'boolean' ? parsed.showSquadIndex : DEFAULT_SHOW_SQUAD_INDEX,
         };
     } catch {
-        return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY };
+        return { stepSize: DEFAULT_STEP_SIZE, opacity: DEFAULT_OPACITY, showSquadIndex: DEFAULT_SHOW_SQUAD_INDEX };
     }
 }
 
@@ -35,10 +37,11 @@ function saveRotationWindowSettings(settings: RotationWindowSettings) {
     }
 }
 
-function RotationStepNodeReadOnly({ step, index }: { step: RotationStep; index: number }) {
+function RotationStepNodeReadOnly({ step, index, characterLabel }: { step: RotationStep; index: number; characterLabel?: string }) {
     const hasAction = step.action != null;
     const typeConfig = step.action ? ACTION_TYPE_CONFIG[step.action.type] : null;
     const borderColor = hasAction && typeConfig ? typeConfig.color : undefined;
+    const nameOrIndex = characterLabel ?? step.character?.name ?? '—';
     return (
         <div className="rotation-step-node">
             <div className="rotation-step-node-circle">
@@ -50,7 +53,7 @@ function RotationStepNodeReadOnly({ step, index }: { step: RotationStep; index: 
                         <span className="rotation-step-node-circle-empty">?</span>
                     ) : (
                         <>
-                            <div className="rotation-step-node-ability">{step.character?.name ?? '—'}</div>
+                            <div className="rotation-step-node-ability">{nameOrIndex}</div>
                             <div className="rotation-step-node-action-type">{typeConfig?.shortLabel ?? step.action?.name ?? '—'}</div>
                         </>
                     )}
@@ -69,15 +72,35 @@ function displayHotkey(binding: string | undefined, isUnassigned: boolean): stri
 
 const RotationWindow: React.FC = () => {
     const currentRotation = useCurrentRotationFromStorage();
+    const squad = useSquadFromStorage();
     const isEmpty = !currentRotation || currentRotation.steps.length === 0;
     const steps = currentRotation?.steps ?? [];
     const [hotkeyText, setHotkeyText] = useState<string>('');
     const [showSettings, setShowSettings] = useState(false);
     const [settings, setSettings] = useState(loadRotationWindowSettings);
 
+    const getCharacterLabel = useCallback(
+        (characterId: string | undefined) => {
+            if (!settings.showSquadIndex || !characterId) return undefined;
+            const idx = squad.findIndex((c) => c.id === characterId);
+            return idx >= 0 ? String(idx + 1) : undefined;
+        },
+        [squad, settings.showSquadIndex]
+    );
+
     const applySettings = useCallback((next: RotationWindowSettings) => {
         saveRotationWindowSettings(next);
         setSettings(next);
+    }, []);
+
+    useEffect(() => {
+        const handleStorage = (e: StorageEvent) => {
+            if (e.key !== ROTATION_WINDOW_SETTINGS_KEY) return;
+            const loaded = loadRotationWindowSettings();
+            setSettings(loaded);
+        };
+        window.addEventListener('storage', handleStorage);
+        return () => window.removeEventListener('storage', handleStorage);
     }, []);
 
     useEffect(() => {
@@ -136,16 +159,20 @@ const RotationWindow: React.FC = () => {
                             </div>
                         ) : (
                             <div className="rotation-window-timeline">
-                                {steps.map((step, index) => (
-                                    <div key={step.id} className="rotation-window-step-wrapper">
-                                        <div className="rotation-window-step">
-                                            <RotationStepNodeReadOnly step={step} index={index} />
-                                        </div>
-                                        {index < steps.length - 1 && (
-                                            <span className="rotation-window-arrow">&#8594;</span>
-                                        )}
+                            {steps.map((step, index) => (
+                                <div key={step.id} className="rotation-window-step-wrapper">
+                                    <div className="rotation-window-step">
+                                        <RotationStepNodeReadOnly
+                                            step={step}
+                                            index={index}
+                                            characterLabel={getCharacterLabel(step.character?.id)}
+                                        />
                                     </div>
-                                ))}
+                                    {index < steps.length - 1 && (
+                                        <span className="rotation-window-arrow">&#8594;</span>
+                                    )}
+                                </div>
+                            ))}
                             </div>
                         )}
                     </div>
@@ -182,6 +209,15 @@ const RotationWindow: React.FC = () => {
                                 }}
                                 className="rotation-window-settings-slider"
                             />
+                        </label>
+                        <label className="rotation-window-settings-label rotation-window-settings-label--checkbox">
+                            <input
+                                type="checkbox"
+                                checked={settings.showSquadIndex}
+                                onChange={(e) => applySettings({ ...settings, showSquadIndex: e.target.checked })}
+                                className="rotation-window-settings-checkbox"
+                            />
+                            <span>Show squad index instead of name</span>
                         </label>
                         <button type="button" className="rotation-window-settings-close" onClick={() => setShowSettings(false)}>
                             Close

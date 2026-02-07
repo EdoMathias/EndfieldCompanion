@@ -544,6 +544,32 @@
   gap: 4px;
 }
 
+.rotations-editor-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rotations-editor-show-squad-index {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ark);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  user-select: none;
+}
+
+.rotations-editor-show-squad-index-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent-primary);
+  cursor: pointer;
+}
+
 .rotations-editor-title {
   font-family: var(--font-ark);
   font-size: 16px;
@@ -1120,6 +1146,27 @@
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.3px;
+}
+
+.rotation-window-settings-label--checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.rotation-window-settings-label--checkbox span {
+  color: var(--color-text-primary);
+  font-size: 12px;
+}
+
+.rotation-window-settings-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent-primary);
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .rotation-window-settings-input {

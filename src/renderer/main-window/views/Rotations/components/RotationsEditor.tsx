@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Character, CharacterAction, Rotation, RotationStep } from '../types/rotations.types';
 import RotationStepNode from './RotationStepNode';
 import AbilityPicker from './AbilityPicker';
+import { useShowSquadIndexSetting } from '../hooks/useShowSquadIndexSetting';
 
 interface RotationsEditorProps {
     squad: Character[];
@@ -16,8 +17,18 @@ const RotationsEditor: React.FC<RotationsEditorProps> = ({ squad, currentRotatio
 
     const [editingStepId, setEditingStepId] = useState<string | null>(null);
     const stepRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+    const [showSquadIndex, setShowSquadIndex] = useShowSquadIndexSetting();
 
     const steps = currentRotation?.steps ?? [];
+
+    const getCharacterLabel = useCallback(
+        (characterId: string | undefined) => {
+            if (!showSquadIndex || !characterId) return undefined;
+            const idx = squad.findIndex((c) => c.id === characterId);
+            return idx >= 0 ? String(idx + 1) : undefined;
+        },
+        [squad, showSquadIndex]
+    );
 
     const setStepRef = useCallback((stepId: string, el: HTMLDivElement | null) => {
         if (el) stepRefs.current.set(stepId, el);
@@ -40,7 +51,18 @@ const RotationsEditor: React.FC<RotationsEditorProps> = ({ squad, currentRotatio
     return (
         <div className="rotations-editor">
             <div className="rotations-editor-header">
-                <h2 className="rotations-editor-title">Rotation Editor</h2>
+                <div className="rotations-editor-header-top">
+                    <h2 className="rotations-editor-title">Rotation Editor</h2>
+                    <label className="rotations-editor-show-squad-index">
+                        <input
+                            type="checkbox"
+                            checked={showSquadIndex}
+                            onChange={(e) => setShowSquadIndex(e.target.checked)}
+                            className="rotations-editor-show-squad-index-checkbox"
+                        />
+                        <span>Show squad index in steps</span>
+                    </label>
+                </div>
                 <p className="rotations-editor-description">
                     {steps.length === 0
                         ? 'Click the + button to add a step to your rotation.'
@@ -62,6 +84,7 @@ const RotationsEditor: React.FC<RotationsEditorProps> = ({ squad, currentRotatio
                                     isEditing={editingStepId === step.id}
                                     onClick={() => setEditingStepId(editingStepId === step.id ? null : step.id)}
                                     onRemove={() => onRemoveRotationStep(step.id)}
+                                    characterLabel={getCharacterLabel(step.character?.id)}
                                 />
                             </div>
 

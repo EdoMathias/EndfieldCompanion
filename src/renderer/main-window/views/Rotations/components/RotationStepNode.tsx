@@ -8,13 +8,16 @@ interface RotationStepNodeProps {
     isEditing: boolean;
     onClick: () => void;
     onRemove: () => void;
+    /** When set, shown instead of character name (e.g. squad index "1", "2"). */
+    characterLabel?: string;
 }
 
-const RotationStepNode: React.FC<RotationStepNodeProps> = ({ step, index, isEditing, onClick, onRemove }) => {
+const RotationStepNode: React.FC<RotationStepNodeProps> = ({ step, index, isEditing, onClick, onRemove, characterLabel }) => {
 
     const isEmpty = !step.action;
     const typeConfig = step.action ? ACTION_TYPE_CONFIG[step.action.type] : null;
     const borderColor = !isEmpty && !isEditing && typeConfig ? typeConfig.color : undefined;
+    const nameOrLabel = characterLabel ?? step.character?.name ?? '—';
 
     return (
         <div className="rotation-step-node">
@@ -33,7 +36,7 @@ const RotationStepNode: React.FC<RotationStepNodeProps> = ({ step, index, isEdit
                     ) : (
                         <>
                             <div className="rotation-step-node-ability">
-                                {step.character?.name}
+                                {nameOrLabel}
                             </div>
                             <div className="rotation-step-node-action-type">
                                 {ACTION_TYPE_CONFIG[step.action?.type].shortLabel}
