@@ -63,6 +63,18 @@
   white-space: nowrap;
 }
 
+.rotations-header-hotkey-hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.rotations-header-hotkey-hint kbd {
+  color: var(--color-accent-primary);
+  font-weight: var(--font-weight-medium);
+}
+
 .rotations-header-button {
   padding: 6px 12px;
   border-radius: var(--radius-sm);

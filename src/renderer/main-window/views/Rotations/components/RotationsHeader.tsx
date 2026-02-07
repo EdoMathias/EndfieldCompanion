@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Character, Rotation } from '../types/rotations.types';
 import RotationsOperatorCard from './RotationsOperatorCard';
+import { HotkeysAPI } from '../../../../../shared/services/hotkeys';
+import { kHotkeys } from '../../../../../shared/consts';
 
 interface RotationsHeaderProps {
     characters: Character[];
@@ -24,8 +26,38 @@ const RotationsHeader: React.FC<RotationsHeaderProps> = ({ squad, currentRotatio
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [presetName, setPresetName] = useState('');
     const [overlayStyle, setOverlayStyle] = useState<React.CSSProperties>({});
+    const [rotationHotkey, setRotationHotkey] = useState<string>('');
 
     const isModalOpen = showSaveModal || showDeleteModal;
+
+    // Load the rotation in-game window hotkey
+    useEffect(() => {
+        let cancelled = false;
+        const load = async () => {
+            try {
+                const hotkeysMap = await HotkeysAPI.fetchAll();
+                const hk = hotkeysMap.get(kHotkeys.toggleRotationIngameWindow);
+                if (!cancelled) {
+                    const binding = hk?.binding;
+                    const unassigned = hk?.IsUnassigned ?? true;
+                    setRotationHotkey(
+                        unassigned || !binding || binding === 'Unassigned' || binding.trim() === ''
+                            ? ''
+                            : binding
+                    );
+                }
+            } catch {
+                if (!cancelled) setRotationHotkey('');
+            }
+        };
+        load();
+        const onChanged = () => load();
+        overwolf.settings.hotkeys.onChanged.addListener(onChanged);
+        return () => {
+            cancelled = true;
+            overwolf.settings.hotkeys.onChanged.removeListener(onChanged);
+        };
+    }, []);
 
     // Scope modal overlays to the container
     useEffect(() => {
@@ -79,9 +111,14 @@ const RotationsHeader: React.FC<RotationsHeaderProps> = ({ squad, currentRotatio
 
     return (
         <div className="rotations-header" data-ftue="rotations-header">
-            {/* Row 1: Title */}
+            {/* Row 1: Title + in-game hotkey hint */}
             <div className="rotations-header-row-1">
                 <h1 className="rotations-header-title">Rotations</h1>
+                {rotationHotkey && (
+                    <span className="rotations-header-hotkey-hint">
+                        In-Game Window: <kbd>{rotationHotkey}</kbd>
+                    </span>
+                )}
             </div>
 
             {/* Row 2: Preset controls */}
