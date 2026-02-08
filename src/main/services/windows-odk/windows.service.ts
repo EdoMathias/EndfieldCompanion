@@ -228,6 +228,17 @@ export class WindowsService {
     }
 
     //--------------------------------------------------------------------------
+    public async closeApp(): Promise<void> {
+        // Get background window from Overwolf API since it's not created by the ODK
+        const backgroundWindow = overwolf.windows.getMainWindow();
+        if (backgroundWindow) {
+            logger.log('Closing app');
+            backgroundWindow.close();
+        }
+    }
+
+
+    //--------------------------------------------------------------------------
     /**
      * Shows a window
      * @param window - The window to show

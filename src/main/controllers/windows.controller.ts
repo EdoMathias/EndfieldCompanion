@@ -111,5 +111,9 @@ export class WindowsController {
             logger.error('Error closing companion app ready window:', error);
         }
     }
+
+    public async closeApp(): Promise<void> {
+        await this._windowsService.closeApp();
+    }
 }
 

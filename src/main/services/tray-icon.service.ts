@@ -40,6 +40,10 @@ export class TrayIconService {
                     id: 'show-window'
                 },
                 {
+                    label: 'Close window',
+                    id: 'close-window'
+                },
+                {
                     label: '-'
                 },
                 {

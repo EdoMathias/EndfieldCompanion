@@ -205,8 +205,11 @@ export class BackgroundController {
           await this._windowsController.showMainDesktopWindow('primary');
         }
         break;
-      case 'close-app':
+      case 'close-window':
         await this._windowsController.closeAllWindows();
+        break;
+      case 'close-app':
+        await this._windowsController.closeApp();
         break;
       default:
         logger.error('Unknown tray menu item clicked:', event.item);
