@@ -5,11 +5,14 @@ export const kWindowNames = {
   background: 'background',
   mainDesktop: 'main_desktop',
   mainIngame: 'main_ingame',
+  rotationIngame: 'rotation_ingame',
+  companionAppReady: 'companion_app_ready',
 };
 
 export const kHotkeys = {
   toggleMainIngameWindow: 'ToggleInGameMain',
   toggleMainDesktopWindow: 'ToggleDesktopMain',
+  toggleRotationIngameWindow: 'ToggleInGameRotation',
 };
 
 export type HotkeyData = {

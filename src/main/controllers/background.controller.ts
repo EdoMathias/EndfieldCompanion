@@ -1,10 +1,14 @@
 import { GameStateService } from '../services/game-state.service';
 import { HotkeysService } from '../services/hotkeys.service';
 import { AppLaunchService } from '../services/app-launch.service';
-import { MessageChannel, MessageType } from '../services/MessageChannel';
-import { kHotkeys, kWindowNames } from '../../shared/consts';
+import { MessageChannel, MessagePayload, MessageType } from '../services/MessageChannel';
+import { Edge } from '@overwolf/odk-ts/window/enums/edge';
+import { kEndfieldClassId, kHotkeys, kWindowNames } from '../../shared/consts';
 import { createLogger } from '../../shared/services/Logger';
 import { WindowsController } from './windows.controller';
+import { TrayIconService } from '../services/tray-icon.service';
+import onMenuItemClickedEvent = overwolf.os.tray.onMenuItemClickedEvent;
+import AppLaunchTriggeredEvent = overwolf.extensions.AppLaunchTriggeredEvent;
 
 const logger = createLogger('BackgroundController');
 
@@ -21,14 +25,17 @@ export class BackgroundController {
   private _gameStateService: GameStateService;
   private _hotkeysService: HotkeysService;
   private _appLaunchService: AppLaunchService;
+  private _trayIconService: TrayIconService;
 
   private _isGameRunning: boolean = false;
+  private _companionReadyDismissTimer: ReturnType<typeof setTimeout> | null = null;
 
   private constructor() {
     // Initialize MessageChannel first (used by other services)
     this._messageChannel = new MessageChannel();
     this._hotkeysService = new HotkeysService();
-    this._appLaunchService = new AppLaunchService(() => this.handleAppLaunch());
+    this._appLaunchService = new AppLaunchService((event: AppLaunchTriggeredEvent) => this.handleAppLaunch(event));
+    this._trayIconService = new TrayIconService(() => this.handleTrayIconClick(), (event: onMenuItemClickedEvent) => this.handleTrayMenuItemClick(event), () => this.handleTrayIconDoubleClick());
     this._gameStateService = new GameStateService(
       this._messageChannel,
       (isRunning, gameInfo) => this.handleGameStateChange(isRunning, gameInfo)
@@ -54,10 +61,11 @@ export class BackgroundController {
     // Determine which window to show based on game state
     const shouldShowInGame = await this._gameStateService.isSupportedGameRunning();
     if (shouldShowInGame) {
+      logger.log('Game is Endfield, showing in-game window');
       await this._windowsController.onGameLaunch();
       this._isGameRunning = true;
     } else {
-      // Change later to primary
+      logger.log('No game running, showing primary desktop window');
       await this._windowsController.showMainDesktopWindow('primary');
       this._isGameRunning = false;
     }
@@ -66,14 +74,23 @@ export class BackgroundController {
   /**
    * Handles game state changes (game launched/terminated).
    */
-  private async handleGameStateChange(isRunning: boolean, gameInfo?: overwolf.games.RunningGameInfo): Promise<void> {
-    if (isRunning) {
+  private async handleGameStateChange(isEndfieldRunning: boolean, gameInfo?: overwolf.games.RunningGameInfo): Promise<void> {
+    if (isEndfieldRunning) {
       await this._windowsController.onGameLaunch();
       this._isGameRunning = true;
+      await this.showCompanionReadyNotification();
     } else {
-      // Change later to primary
-      await this._windowsController.showMainDesktopWindow('primary');
-      this._isGameRunning = false;
+      // If the game is Endfield, show the main desktop window
+      if (gameInfo?.classId === kEndfieldClassId) {
+        logger.log('Game was Endfield, showing main desktop window');
+        await this._windowsController.onGameExit();
+        this._isGameRunning = false;
+      }
+      // If the game is not Endfield, don't do anything
+      else {
+        logger.log('Game was not Endfield, not showing main desktop window');
+        return;
+      }
     }
   }
 
@@ -99,24 +116,113 @@ export class BackgroundController {
       }
     });
 
+    // Show/Hide In-Game Rotation Window
+    this._hotkeysService.on(kHotkeys.toggleRotationIngameWindow, async () => {
+      try {
+        await this._windowsController.toggleRotationIngameWindow();
+      } catch (error) {
+        logger.error('Error toggling in-game rotation window:', error);
+      }
+    });
   }
 
   /** 
    * Handles user-initiated app launches (clicking the app icon). 
    */
-  private async handleAppLaunch(): Promise<void> {
-    if (this._isGameRunning) {
-      await this._windowsController.onGameLaunch();
+  private async handleAppLaunch(event: AppLaunchTriggeredEvent): Promise<void> {
+
+    // If the launch event is from the dock
+    if (event.origin?.includes('dock')) {
+      // If the game is running, show the in-game window
+      if (this._isGameRunning) {
+        logger.log('showing in-game window from dock');
+        await this._windowsController.showMainIngameWindow();
+      } else {
+        logger.log('showing primary desktop window from dock');
+        await this._windowsController.showMainDesktopWindow('primary');
+      }
     } else {
-      // Change later to primary
-      await this._windowsController.showMainDesktopWindow('primary');
+      // If the launch event is not from the dock
+      if (this._isGameRunning) {
+        logger.log('Game is running, showing in-game window');
+        await this._windowsController.onGameLaunch();
+      } else {
+        logger.log('No game running, showing primary desktop window');
+        await this._windowsController.showMainDesktopWindow('primary');
+      }
     }
   }
+
+  /**
+   * Shows the companion app ready notification window anchored to top-center.
+   * Auto-dismisses after 10 seconds.
+   */
+  private async showCompanionReadyNotification(): Promise<void> {
+    // Clear any existing dismiss timer
+    if (this._companionReadyDismissTimer) {
+      clearTimeout(this._companionReadyDismissTimer);
+      this._companionReadyDismissTimer = null;
+    }
+
+    try {
+      await this._windowsController.showCompanionAppReadyWindow('primary', Edge.Top);
+      logger.log('Companion app ready notification shown');
+
+      // Auto-dismiss after 10 seconds
+      this._companionReadyDismissTimer = setTimeout(async () => {
+        try {
+          await this._windowsController.closeCompanionAppReadyWindow();
+          logger.log('Companion app ready notification auto-dismissed');
+        } catch (error) {
+          logger.error('Error auto-dismissing companion ready window:', error);
+        }
+        this._companionReadyDismissTimer = null;
+      }, 10_000);
+    } catch (error) {
+      logger.error('Error showing companion ready notification:', error);
+    }
+  }
+
+  //---------------------------------TRAY ICON HANDLERS-------------------------
+  private async handleTrayIconClick(): Promise<void> {
+    logger.log('Tray icon clicked, showing primary desktop window');
+    await this._windowsController.showMainDesktopWindow('primary');
+  }
+
+  private async handleTrayIconDoubleClick(): Promise<void> {
+    logger.log('Tray icon double clicked, showing primary desktop window');
+    await this._windowsController.showMainDesktopWindow('primary');
+  }
+
+  private async handleTrayMenuItemClick(event: onMenuItemClickedEvent): Promise<void> {
+    logger.log('Tray menu item clicked:', event);
+    switch (event.item) {
+      case 'show-window':
+        if (this._isGameRunning) {
+          await this._windowsController.showMainDesktopWindow('secondary');
+          await this._windowsController.showMainIngameWindow();
+        } else {
+          await this._windowsController.showMainDesktopWindow('primary');
+        }
+        break;
+      case 'close-app':
+        await this._windowsController.closeAllWindows();
+        break;
+      default:
+        logger.error('Unknown tray menu item clicked:', event.item);
+        break;
+    }
+  }
+
+  //---------------------------------TRAY ICON HANDLERS-------------------------
 
   /**
    * Sets up message handlers for window-related messages
    */
   private setupMessageHandlers(): void {
+    overwolf.windows.onMessageReceived.addListener((message: overwolf.windows.MessageReceivedEvent) => {
+      logger.log('Message received:', message);
+    });
   }
 
 }

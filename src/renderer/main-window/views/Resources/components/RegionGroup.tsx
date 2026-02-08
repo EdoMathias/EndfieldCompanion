@@ -42,10 +42,13 @@ const RegionGroup: React.FC<RegionGroupProps> = ({
 
     return (
         <div className="region-group">
-            <button
+            <div
                 className="region-group-header"
                 onClick={onToggleExpanded}
+                role="button"
+                tabIndex={0}
                 aria-expanded={isExpanded}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggleExpanded(); } }}
             >
                 <div className="region-group-header-left">
                     <span className="region-group-icon">{isExpanded ? '▼' : '▶'}</span>
@@ -61,7 +64,7 @@ const RegionGroup: React.FC<RegionGroupProps> = ({
                         Clear Region
                     </button>
                 </div>
-            </button>
+            </div>
 
             {isExpanded && (
                 <div className="region-group-content">

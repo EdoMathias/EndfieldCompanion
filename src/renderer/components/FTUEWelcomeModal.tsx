@@ -11,6 +11,7 @@ const logger = createLogger('FTUEWelcomeModal');
 const DEFAULT_HOTKEYS = {
   toggleMainIngameWindow: 'Ctrl+T',
   toggleMainDesktopWindow: 'Ctrl+Shift+T',
+  toggleRotationIngameWindow: 'Ctrl+R',
 };
 
 function displayHotkey(binding: string | undefined, unassigned: boolean): string {
@@ -25,6 +26,7 @@ export const FTUEWelcomeModal: React.FC = () => {
   const [hotkeys, setHotkeys] = useState<{
     toggleMainIngameWindow: string;
     toggleMainDesktopWindow: string;
+    toggleRotationIngameWindow: string;
   }>(DEFAULT_HOTKEYS);
 
   const show = shouldShowStep('welcome');
@@ -37,6 +39,7 @@ export const FTUEWelcomeModal: React.FC = () => {
         const hotkeysMap = await HotkeysAPI.fetchAll();
         const inGame = hotkeysMap.get(kHotkeys.toggleMainIngameWindow);
         const desktop = hotkeysMap.get(kHotkeys.toggleMainDesktopWindow);
+        const rotation = hotkeysMap.get(kHotkeys.toggleRotationIngameWindow);
 
         const toggleMainIngameWindow =
           displayHotkey(inGame?.binding, inGame?.IsUnassigned ?? true) ||
@@ -44,8 +47,10 @@ export const FTUEWelcomeModal: React.FC = () => {
         const toggleMainDesktopWindow =
           displayHotkey(desktop?.binding, desktop?.IsUnassigned ?? true) ||
           DEFAULT_HOTKEYS.toggleMainDesktopWindow;
-
-        setHotkeys({ toggleMainIngameWindow, toggleMainDesktopWindow });
+        const toggleRotationIngameWindow =
+          displayHotkey(rotation?.binding, rotation?.IsUnassigned ?? true) ||
+          DEFAULT_HOTKEYS.toggleRotationIngameWindow;
+        setHotkeys({ toggleMainIngameWindow, toggleMainDesktopWindow, toggleRotationIngameWindow });
       } catch (error) {
         logger.error('Error loading hotkeys:', error);
         setHotkeys(DEFAULT_HOTKEYS);
@@ -82,6 +87,16 @@ export const FTUEWelcomeModal: React.FC = () => {
               <br />
               <span>Show/Hide the desktop window with: </span>
               <div className="ftue-hotkey-badge">{hotkeys.toggleMainDesktopWindow}</div>
+            </div>
+          </div>
+
+          <div className="ftue-feature">
+            <div className="ftue-feature-icon">🔄</div>
+            <div className="ftue-feature-info">
+              <h3>Rotation Planner</h3>
+              <p>Build and save ability rotations for your squad. Load presets to display them in the in-game overlay.</p>
+              <span>Show/Hide the rotation window with: </span>
+              <div className="ftue-hotkey-badge">{hotkeys.toggleRotationIngameWindow}</div>
             </div>
           </div>
 

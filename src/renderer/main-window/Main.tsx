@@ -3,17 +3,18 @@ import { createRoot } from 'react-dom/client';
 import '../styles/index.css';
 
 // Components
-import { AppHeader, FTUEWelcomeModal } from '../components';
+import { AppHeader, FTUEWelcomeModal, ReleaseNotesModal } from '../components';
 import { AdContainer } from './components/AdContainer/AdContainer';
 import SideNav from './components/SideNav/SideNav';
 import { Settings } from './views/Settings';
 
 // Contexts
-import { FTUEProvider } from '../contexts/FTUEContext';
+import { FTUEProvider, useFTUE } from '../contexts/FTUEContext';
 
 // Custom hooks
 import { useWindowInfo } from '../hooks/useWindowInfo';
 import { useAppVersion } from '../hooks/useAppVersion';
+import { useReleaseNotes } from '../hooks/useReleaseNotes';
 
 // Config
 import { viewsConfig } from './config/views.config';
@@ -32,9 +33,23 @@ function displayHotkey(binding: string | undefined, unassigned: boolean): string
     return binding;
 }
 
-const Main: React.FC = () => {
+const defaultViewName = viewsConfig.find(view => view.active)?.name ?? viewsConfig[0].name;
+const ACTIVE_VIEW_STORAGE_KEY = 'endfield_companion_active_view';
+
+/**
+ * Inner component that lives inside FTUEProvider so it can consume the FTUE
+ * context (e.g. to gate release-notes auto-open on FTUE completion).
+ */
+const MainInner: React.FC<{ resetTrigger: number }> = ({ resetTrigger }) => {
     const { isIngameWindow } = useWindowInfo();
+    const { isFTUEComplete } = useFTUE();
     const appVersion = useAppVersion();
+    const {
+        releaseNote,
+        isOpen: isReleaseNotesOpen,
+        dismiss: dismissReleaseNotes,
+        open: openReleaseNotes,
+    } = useReleaseNotes(appVersion, isFTUEComplete);
 
     const [showSettings, setShowSettings] = React.useState(false);
     const [settingsInitialTab, setSettingsInitialTab] = React.useState<'general' | 'hotkeys' | 'about'>('general');
@@ -42,6 +57,37 @@ const Main: React.FC = () => {
         inGame: DEFAULT_HOTKEYS.toggleMainIngameWindow,
         desktop: DEFAULT_HOTKEYS.toggleMainDesktopWindow,
     });
+
+    const [activeView, setActiveView] = React.useState(() => {
+        try {
+            const stored = localStorage.getItem(ACTIVE_VIEW_STORAGE_KEY);
+            if (stored && viewsConfig.some(v => v.name === stored)) {
+                return stored;
+            }
+        } catch {
+            // Ignore errors
+        }
+        return defaultViewName;
+    });
+    const [navExpanded, setNavExpanded] = React.useState(false);
+
+    // Persist active view to localStorage
+    useEffect(() => {
+        try {
+            localStorage.setItem(ACTIVE_VIEW_STORAGE_KEY, activeView);
+        } catch {
+            // Ignore errors
+        }
+    }, [activeView]);
+
+    // React to FTUE reset (triggered by the parent via resetTrigger)
+    useEffect(() => {
+        if (resetTrigger > 0) {
+            setShowSettings(false);
+            setActiveView(defaultViewName);
+            setNavExpanded(false);
+        }
+    }, [resetTrigger]);
 
     const loadHotkeys = React.useCallback(async () => {
         try {
@@ -92,6 +138,11 @@ const Main: React.FC = () => {
         onClick: () => void;
     }> = [
             {
+                icon: '🆕',
+                title: "What's New",
+                onClick: openReleaseNotes,
+            },
+            {
                 icon: '📝',
                 title: 'Submit Feedback',
                 onClick: handleSubmissionFormClick,
@@ -110,23 +161,11 @@ const Main: React.FC = () => {
         icon: view.icon,
     }));
 
-    const defaultViewName = viewsConfig.find(view => view.active)?.name ?? viewsConfig[0].name;
-    const [activeView, setActiveView] = React.useState(defaultViewName);
-
-    const [navExpanded, setNavExpanded] = React.useState(false);
-
-    const handleFTUEReset = React.useCallback(() => {
-        setShowSettings(false);
-        setActiveView(defaultViewName);
-        setNavExpanded(false);
-    }, [defaultViewName]);
-
     // Get the active view component
     const activeViewConfig = viewsConfig.find(view => view.name === activeView);
     const ActiveViewComponent = activeViewConfig?.component;
 
     return (
-        <FTUEProvider onReset={handleFTUEReset}>
         <div className="app-layout">
 
             <div className="app-header-wrapper">
@@ -158,6 +197,12 @@ const Main: React.FC = () => {
                     )}
                     <div className="main-content-wrapper">
                         <FTUEWelcomeModal />
+                        <ReleaseNotesModal
+                            isOpen={isReleaseNotesOpen}
+                            note={releaseNote}
+                            onClose={dismissReleaseNotes}
+                            scope="content"
+                        />
                         <div className="main-content-container">
                             {showSettings ? (
                                 <div className="settings-wrapper">
@@ -187,6 +232,23 @@ const Main: React.FC = () => {
                 </aside>
             </div>
         </div>
+    );
+};
+
+/**
+ * Top-level component. Provides the FTUE context so that MainInner can
+ * consume it (e.g. to defer the release-notes modal until FTUE finishes).
+ */
+const Main: React.FC = () => {
+    const [resetTrigger, setResetTrigger] = useState(0);
+
+    const handleFTUEReset = React.useCallback(() => {
+        setResetTrigger(t => t + 1);
+    }, []);
+
+    return (
+        <FTUEProvider onReset={handleFTUEReset}>
+            <MainInner resetTrigger={resetTrigger} />
         </FTUEProvider>
     );
 };

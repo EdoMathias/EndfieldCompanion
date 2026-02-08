@@ -32,6 +32,7 @@
 @import './views/widgets.css';
 @import './views/resources.css';
 @import './views/rotations.css';
+@import './views/companion-ready.css';
 
 /* 
  * CSS Modules Migration Guide:

@@ -1,0 +1,810 @@
+{
+    "version": 1,
+    "characters": [
+        {
+            "id": "endministrator",
+            "name": "Endministrator",
+            "image": "../characters-img/endministrator.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Destructive Sequence",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Constructive Sequence",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Sealing Sequence",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Bombardment Sequence",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "gilberta",
+            "name": "Gilberta",
+            "image": "../characters-img/gilberta.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Arcane Staff: Beam Cohesion Arts",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Arcane Staff: Gravity Mode",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Arcane Staff: Matrix Displacement",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Arcane Staff: Gravity Field",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "lifeng",
+            "name": "Lifeng",
+            "image": "../characters-img/lifeng.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Ruination",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Turbid Avatar",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Aspect of Wrath",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Heart of the Unmoving",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "ardelia",
+            "name": "Ardelia",
+            "image": "../characters-img/ardelia.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Rocky Whispers",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Dolly Rush",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Eruption Column",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Wooly Party",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "perlica",
+            "name": "Perlica",
+            "image": "../characters-img/perlica.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Protocol α: Breach",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Protocol ω: Strike",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Instant Protocol: Chain",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Protocol ε: 70.41K",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "chen_qianyu",
+            "name": "Chen Qianyu",
+            "image": "../characters-img/chen_qianyu.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Soaring Break",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Ascending Strike",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Soar to the Stars",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Blade Gale",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "wulfgard",
+            "name": "Wulfgard",
+            "image": "../characters-img/wulfgard.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Rapid Fire Akimbo",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Thermite Tracers",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Frag Grenade·β",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Wolven Fury",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "da_pan",
+            "name": "Da Pan",
+            "image": "../characters-img/da_pan.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "ROLLING CUT!",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "FLIP DA WOK!",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "MORE SPICE!",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "CHOP 'N DUNK!",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "avywenna",
+            "name": "Avywenna",
+            "image": "../characters-img/avywenna.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Thunderlance: Blitz",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Thunderlance: Interdiction",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Thunderlance: Strike",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Thunderlance: Final Shock",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "xaihi",
+            "name": "Xaihi",
+            "image": "../characters-img/xaihi.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Cooldown",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Distributed DoS",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Stress Testing",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Stack Overflow",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "snowshine",
+            "name": "Snowshine",
+            "image": "../characters-img/snowshine.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Hypothermic Assault",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Saturated Defense",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Polar Rescue",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Frigid Snowfield",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "arclight",
+            "name": "Arclight",
+            "image": "../characters-img/arclight.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Seek and Hunt",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Tempestuous Arc",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Peal of Thunder",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Exploding Blitz",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "alesh",
+            "name": "Alesh",
+            "image": "../characters-img/alesh.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Basic Rod Casting",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Unconventional Lure",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Auger Angling",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "One Monster Catch!",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "antal",
+            "name": "Antal",
+            "image": "../characters-img/antal.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Exchange Current",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Specified Research Subject",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "EMP Test Site",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Overclocked Moment",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "fluorite",
+            "name": "Fluorite",
+            "image": "../characters-img/fluorite.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Signature Gun Kata",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Tiny Surprise",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Free Giveaway",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Apex Prankster",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "estella",
+            "name": "Estella",
+            "image": "../characters-img/estella.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Audio Noise",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Onomatopoeia",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Distortion",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Tremolo",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "catcher",
+            "name": "Catcher",
+            "image": "../characters-img/catcher.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Basic Tactics",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Rigid Interdiction",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Timely Supression",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Textbook Assault",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "akekuri",
+            "name": "Akekuri",
+            "image": "../characters-img/akekuri.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Sword of Aspiration",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Burst of Passion",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Flash and Dash",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "SQUAD! ON ME!",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "yvonne",
+            "name": "Yvonne",
+            "image": "../characters-img/yvonne.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Exuberant Trigger",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Brr-Brr-Bomb β",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Flashfreezer υ37",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Cryoblasting Pistolier",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "laevatain",
+            "name": "Laevatain",
+            "image": "../characters-img/laevatain.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Flaming Cinders",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Smouldering Fire",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Seethe",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Twilight",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "pogranichnik",
+            "name": "Pogranichnik",
+            "image": "../characters-img/pogranichnik.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "All-Out Offensive",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "The Pulverizing Front",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Full Moon Slash",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Shieldguard Banner, Forward",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "last_rite",
+            "name": "Last Rite",
+            "image": "../characters-img/last_rite.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Dance of Rime",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Esoteric Legacy of Seš'qa",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Winter's Devourer",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Vigil Services",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        },
+        {
+            "id": "ember",
+            "name": "Ember",
+            "image": "../characters-img/ember.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "Sword Art of Assault",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "Forward March",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "Frontline Support",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "Re-ignited Oath",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
+        }
+    ]
+}

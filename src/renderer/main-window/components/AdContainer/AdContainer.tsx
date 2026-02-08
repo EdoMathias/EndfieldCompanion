@@ -38,13 +38,13 @@ const waitForOwAd = (): Promise<any> => {
 export const AdContainer: React.FC<AdContainerProps> = ({ width, height, className = '' }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
   const hiddenElementsRef = useRef<HTMLElement[]>([]);
-  // const { isFTUEComplete } = useFTUE();
+  const { isFTUEComplete } = useFTUE();
 
   useEffect(() => {
-    // if (!isFTUEComplete) {
-    //   logger.debug('Delaying ad initialization until FTUE is complete', { width, height });
-    //   return;
-    // }
+    if (!isFTUEComplete) {
+      logger.debug('Delaying ad initialization until FTUE is complete', { width, height });
+      return;
+    }
 
     let owAdInstance: any = null;
     let isMounted = true;
@@ -202,7 +202,7 @@ export const AdContainer: React.FC<AdContainerProps> = ({ width, height, classNa
         }
       }
     };
-  }, [width, height]);
+  }, [width, height, isFTUEComplete]);
 
   return (
     <div

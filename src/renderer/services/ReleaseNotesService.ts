@@ -17,7 +17,7 @@ interface ReleaseNotesApiResponse {
 export const RELEASE_NOTES_STORAGE_KEY = 'endfield_companion_release_notes_viewed';
 
 const RELEASE_NOTES_BASE_URL = 'https://console-api.overwolf.com/v1/apps';
-const RELEASE_NOTES_APP_ID = 'flicmkjhlmjkhfjngkcggjhmddjneknbadaelkbh';
+const RELEASE_NOTES_APP_ID = 'kiglhbmjdbkpnjoeoghfdbjkdmehnjidkiblddgf';
 const MAX_RELEASE_NOTES_PAGES = 4;
 
 interface ViewedReleaseNotePayload {
