@@ -41,4 +41,5 @@ export interface Rotation {
     id: string;
     name: string;
     steps: RotationStep[];
+    squad?: Character[];
 }

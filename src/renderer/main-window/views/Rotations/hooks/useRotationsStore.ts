@@ -205,11 +205,12 @@ export function useRotationsStore() {
             ...currentRotation,
             id: `preset-${Date.now()}`,
             name,
+            squad: [...squad],
         };
         setRotationsPresetsState(prevPresets => [...prevPresets, preset]);
         setSelectedPresetIdState(preset.id);
         return preset.id;
-    }, [currentRotation]);
+    }, [currentRotation, squad]);
 
     /**
      * Removes a preset from the rotations presets.
@@ -234,17 +235,22 @@ export function useRotationsStore() {
             ...preset,
             steps: preset.steps.map(step => ({ ...step, action: step.action, character: step.character ?? undefined })),
         });
-        // Set squad from characters used in the preset (unique, order of first appearance, max 4)
-        const squadFromPreset: Character[] = [];
-        const seen = new Set<string>();
-        for (const step of preset.steps) {
-            if (step.character && !seen.has(step.character.id)) {
-                seen.add(step.character.id);
-                squadFromPreset.push(step.character);
-                if (squadFromPreset.length >= 4) break;
+        // Restore squad from preset if saved, otherwise fall back to deriving from steps
+        if (preset.squad && preset.squad.length > 0) {
+            setSquadState(preset.squad);
+        } else {
+            // Fallback for older presets that don't have a saved squad
+            const squadFromPreset: Character[] = [];
+            const seen = new Set<string>();
+            for (const step of preset.steps) {
+                if (step.character && !seen.has(step.character.id)) {
+                    seen.add(step.character.id);
+                    squadFromPreset.push(step.character);
+                    if (squadFromPreset.length >= 4) break;
+                }
             }
+            setSquadState(squadFromPreset);
         }
-        setSquadState(squadFromPreset);
     }, [rotationsPresets]);
 
     /**
