@@ -43,9 +43,7 @@ const SideNav: React.FC<SideNavProps> = ({
   };
 
   const openDiscord = () => {
-    overwolf.utils.openUrlInDefaultBrowser(
-      'https://discord.gg/arknightsendfield',
-    );
+    overwolf.utils.openUrlInDefaultBrowser('https://discord.gg/NdStdHah');
   };
 
   return (

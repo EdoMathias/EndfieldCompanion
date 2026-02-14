@@ -147,9 +147,7 @@ const MainInner: React.FC<{ resetTrigger: number }> = ({ resetTrigger }) => {
   };
 
   const openDiscord = () => {
-    overwolf.utils.openUrlInDefaultBrowser(
-      'https://discord.gg/arknightsendfield',
-    );
+    overwolf.utils.openUrlInDefaultBrowser('https://discord.gg/NdStdHah');
   };
 
   const discordIcon = (
