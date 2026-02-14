@@ -1,14 +1,14 @@
 import markerTypeDict from './type.json';
 import { REGION_DICT } from '../map';
 import DJ_1 from './data/DJ_1.json';
-import WL_1 from './data/WL_1.json';
-import WL_2 from './data/WL_2.json';
 import VL_1 from './data/VL_1.json';
 import VL_2 from './data/VL_2.json';
 import VL_3 from './data/VL_3.json';
 import VL_5 from './data/VL_5.json';
 import VL_6 from './data/VL_6.json';
 import VL_7 from './data/VL_7.json';
+import WL_1 from './data/WL_1.json';
+import WL_2 from './data/WL_2.json';
 
 /**
  * Marker data interface

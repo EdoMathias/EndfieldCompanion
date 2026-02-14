@@ -3,16 +3,22 @@
     "dimensions": [8000, 8000],
     "maxZoom": 3,
     "tileSize": 200,
-    "initialOffset": { "x": -1000, "y": 1000 },
+    "initialOffset": {
+      "x": -1000,
+      "y": 1000
+    },
     "initialZoom": 2,
     "subregions": ["VL_1", "VL_2", "VL_3", "VL_5", "VL_6", "VL_7"],
-    "layers": ["L1", "B1", "B2"]
+    "layers": ["L2", "L1", "B1", "B2"]
   },
   "wuling": {
     "dimensions": [8000, 8000],
     "maxZoom": 3,
     "tileSize": 200,
-    "initialOffset": { "x": 0, "y": -1000 },
+    "initialOffset": {
+      "x": 0,
+      "y": -1000
+    },
     "initialZoom": 2,
     "subregions": ["WL_1", "WL_2"],
     "layers": ["L3", "L2", "L1", "B1", "B2", "B3", "B4"]
@@ -21,9 +27,11 @@
     "dimensions": [4000, 5000],
     "maxZoom": 2,
     "tileSize": 200,
-    "initialOffset": { "x": 0, "y": -500 },
+    "initialOffset": {
+      "x": 0,
+      "y": -500
+    },
     "initialZoom": 0,
-    "subregions": ["DJ_1"],
-    "layers": []
+    "subregions": ["DJ_1"]
   }
 }
