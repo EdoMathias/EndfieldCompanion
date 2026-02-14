@@ -29,9 +29,11 @@
   gap: 12px;
   padding: 16px;
   background-color: var(--color-bg-card);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   border-radius: var(--radius);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
   margin-bottom: 16px;
   position: sticky;
   top: 0;
@@ -104,10 +106,16 @@
   color: var(--color-accent-primary);
   font-size: 15px;
   padding: 4px 10px;
-  background-color: color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 20%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
   border-radius: 6px;
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
   letter-spacing: 0.5px;
   font-variant-numeric: tabular-nums;
 }
@@ -121,7 +129,8 @@
 .resources-header-exploration-input {
   padding: 6px 10px;
   background-color: var(--color-bg-secondary);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-family: var(--font-ark);
@@ -134,14 +143,31 @@
 }
 
 .resources-header-exploration-input:hover {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 50%,
+    transparent
+  );
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 5%,
+    transparent
+  );
 }
 
 .resources-header-exploration-input:focus {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 60%,
+    transparent
+  );
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 8%,
+    transparent
+  );
 }
 
 .resources-header-chip {
@@ -149,8 +175,13 @@
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background-color: color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 15%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
   border-radius: var(--radius-sm);
   font-family: var(--font-ark);
   white-space: nowrap;
@@ -188,7 +219,8 @@
 .resources-header-select {
   padding: 6px 10px;
   background-color: var(--color-bg-secondary);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-family: var(--font-ark);
@@ -201,14 +233,31 @@
 }
 
 .resources-header-select:hover {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 50%,
+    transparent
+  );
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 5%,
+    transparent
+  );
 }
 
 .resources-header-select:focus {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 60%,
+    transparent
+  );
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 8%,
+    transparent
+  );
 }
 
 .resources-header-select option {
@@ -227,9 +276,11 @@
   gap: 16px;
   padding: 8px 16px;
   background-color: var(--color-bg-card);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
   border-radius: var(--radius);
-  box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+  box-shadow: 0 0 6px
+    color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
   margin-bottom: 16px;
 }
 
@@ -257,7 +308,8 @@
 .resources-subheader-select {
   padding: 6px 10px;
   background-color: var(--color-bg-secondary);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-family: var(--font-ark);
@@ -270,14 +322,31 @@
 }
 
 .resources-subheader-select:hover {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 50%,
+    transparent
+  );
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 5%,
+    transparent
+  );
 }
 
 .resources-subheader-select:focus {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 60%,
+    transparent
+  );
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 8%,
+    transparent
+  );
 }
 
 .resources-subheader-select option {
@@ -316,10 +385,12 @@
   flex-direction: column;
   gap: 12px;
   background-color: var(--color-bg-card);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   border-radius: var(--radius);
   padding: 12px;
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
 }
 
 .region-group-header {
@@ -373,10 +444,16 @@
   letter-spacing: 0.5px;
   white-space: nowrap;
   padding: 8px 12px;
-  background-color: color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 35%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 20%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 35%, transparent);
   border-radius: 4px;
-  box-shadow: 0 0 4px color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
+  box-shadow: 0 0 4px
+    color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
 }
 
 .region-group-header-right {
@@ -398,7 +475,8 @@
 .region-group-clear-button {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 14%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 14%, transparent);
   background-color: transparent;
   color: var(--color-text-muted);
   font-family: var(--font-ark);
@@ -413,10 +491,19 @@
 }
 
 .region-group-clear-button:hover {
-  background-color: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
-  border-color: color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 10%,
+    transparent
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 40%,
+    transparent
+  );
   color: var(--color-accent-primary);
-  box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  box-shadow: 0 0 6px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   transform: translateY(-1px);
 }
 
@@ -460,10 +547,12 @@
 
 .resource-node-card {
   background-color: var(--color-bg-card);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   border-radius: var(--radius);
   padding: 16px;
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -472,8 +561,13 @@
 }
 
 .resource-node-card:hover {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 40%,
+    transparent
+  );
+  box-shadow: 0 0 12px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   transform: translateY(-2px);
 }
 
@@ -482,7 +576,8 @@
   flex-direction: column;
   gap: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
 }
 
 .resource-node-card-title-row {
@@ -526,7 +621,8 @@
 .resource-node-card-map-location {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 14%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 14%, transparent);
   background-color: transparent;
   color: var(--color-text-muted);
   font-family: var(--font-ark);
@@ -541,10 +637,19 @@
 }
 
 .resource-node-card-map-location:hover {
-  background-color: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
-  border-color: color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 10%,
+    transparent
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 40%,
+    transparent
+  );
   color: var(--color-accent-primary);
-  box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  box-shadow: 0 0 6px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   transform: translateY(-1px);
 }
 
@@ -569,7 +674,8 @@
 .resource-node-card-toggle-tracking {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 14%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 14%, transparent);
   background-color: transparent;
   color: var(--color-text-muted);
   font-family: var(--font-ark);
@@ -586,10 +692,19 @@
 }
 
 .resource-node-card-toggle-tracking:hover {
-  background-color: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
-  border-color: color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 10%,
+    transparent
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 40%,
+    transparent
+  );
   color: var(--color-accent-primary);
-  box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  box-shadow: 0 0 6px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
   transform: translateY(-1px);
 }
 
@@ -598,23 +713,42 @@
 }
 
 /* Tracked state - more prominent styling */
-.resource-node-card-toggle-tracking[data-tracked="true"] {
-  background-color: color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
-  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
+.resource-node-card-toggle-tracking[data-tracked='true'] {
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 15%,
+    transparent
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 50%,
+    transparent
+  );
   color: var(--color-accent-primary);
-  box-shadow: 0 0 4px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  box-shadow: 0 0 4px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
 }
 
-.resource-node-card-toggle-tracking[data-tracked="true"]:hover {
-  background-color: color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
-  border-color: color-mix(in srgb, var(--color-accent-primary) 70%, transparent);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+.resource-node-card-toggle-tracking[data-tracked='true']:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 25%,
+    transparent
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 70%,
+    transparent
+  );
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
 }
 
 .resource-node-card-clear {
   padding: 6px 12px;
   border-radius: var(--radius-sm);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 14%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 14%, transparent);
   background-color: transparent;
   color: var(--color-text-muted);
   font-family: var(--font-ark);
@@ -629,10 +763,19 @@
 }
 
 .resource-node-card-clear:hover {
-  background-color: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
-  border-color: color-mix(in srgb, var(--color-accent-primary) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 10%,
+    transparent
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 40%,
+    transparent
+  );
   color: var(--color-accent-primary);
-  box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  box-shadow: 0 0 6px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
 }
 
 .resource-node-card-clear:active {
@@ -704,20 +847,37 @@
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
-  border: 1px dashed color-mix(in srgb, var(--color-text-primary) 30%, transparent);
-  background-color: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px dashed
+    color-mix(in srgb, var(--color-text-primary) 30%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 5%,
+    transparent
+  );
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   user-select: none;
 }
 
 .resource-node-card-body-counter-current:hover {
-  background-color: color-mix(in srgb, var(--color-text-primary) 15%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 15%,
+    transparent
+  );
   border-color: color-mix(in srgb, var(--color-text-primary) 50%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--color-text-primary) 20%, transparent);
 }
 
 .resource-node-card-body-counter-current:active {
-  background-color: color-mix(in srgb, var(--color-text-primary) 25%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 25%,
+    transparent
+  );
 }
 
 .resource-node-card-body-counter-current:focus-visible {
@@ -728,8 +888,13 @@
 .resource-node-card-body-counter-current-input {
   width: 50px;
   padding: 4px 8px;
-  background-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 12%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 35%, transparent);
   border-radius: 4px;
   color: var(--color-text-primary);
   font-family: var(--font-ark);
@@ -741,7 +906,8 @@
 
 .resource-node-card-body-counter-current-input:focus {
   border-color: var(--color-text-primary);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-text-primary) 25%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--color-text-primary) 25%, transparent);
 }
 
 .resource-node-card-body-counter-divider {
@@ -754,20 +920,37 @@
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
-  border: 1px dashed color-mix(in srgb, var(--color-text-primary) 30%, transparent);
-  background-color: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px dashed
+    color-mix(in srgb, var(--color-text-primary) 30%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 5%,
+    transparent
+  );
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   user-select: none;
 }
 
 .resource-node-card-body-counter-max:hover {
-  background-color: color-mix(in srgb, var(--color-text-primary) 15%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 15%,
+    transparent
+  );
   border-color: color-mix(in srgb, var(--color-text-primary) 50%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+  box-shadow: 0 0 0 1px
+    color-mix(in srgb, var(--color-text-primary) 20%, transparent);
 }
 
 .resource-node-card-body-counter-max:active {
-  background-color: color-mix(in srgb, var(--color-text-primary) 25%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 25%,
+    transparent
+  );
 }
 
 .resource-node-card-body-counter-max:focus-visible {
@@ -778,8 +961,13 @@
 .resource-node-card-body-counter-max-input {
   width: 50px;
   padding: 4px 8px;
-  background-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text-primary) 12%,
+    transparent
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 35%, transparent);
   border-radius: 4px;
   color: var(--color-text-primary);
   font-family: var(--font-ark);
@@ -791,7 +979,8 @@
 
 .resource-node-card-body-counter-max-input:focus {
   border-color: var(--color-text-primary);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-text-primary) 25%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--color-text-primary) 25%, transparent);
 }
 
 /* Status - below counter on right */
@@ -942,7 +1131,8 @@
   width: 100px;
   padding: 6px 10px;
   background-color: var(--color-bg-secondary);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-family: var(--font-ark);
@@ -955,14 +1145,31 @@
 }
 
 .resource-node-card-input:hover {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 50%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 50%,
+    transparent
+  );
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 5%,
+    transparent
+  );
 }
 
 .resource-node-card-input:focus {
-  border-color: color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
-  background-color: color-mix(in srgb, var(--color-accent-primary) 8%, transparent);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 60%,
+    transparent
+  );
+  box-shadow: 0 0 8px
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 8%,
+    transparent
+  );
 }
 
 .resource-node-card-input::-webkit-inner-spin-button,
@@ -1027,7 +1234,8 @@
   padding: 48px 24px;
   text-align: center;
   background: color-mix(in srgb, var(--color-accent-primary) 2%, transparent);
-  border: 1px dashed color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
+  border: 1px dashed
+    color-mix(in srgb, var(--color-accent-primary) 15%, transparent);
   border-radius: var(--radius);
   margin: 16px;
 }
@@ -1071,8 +1279,13 @@
 .resources-spinner {
   width: 24px;
   height: 24px;
-  border: 3px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
-  border-top-color: color-mix(in srgb, var(--color-accent-primary) 80%, transparent);
+  border: 3px solid
+    color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  border-top-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 80%,
+    transparent
+  );
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -1109,7 +1322,8 @@
 
 .map-location-modal-content {
   background-color: var(--color-bg-card);
-  border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
   border-radius: 8px;
   max-width: 90%;
   max-height: 90%;
@@ -1138,7 +1352,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
 }
 
 .map-location-modal-title {
@@ -1169,7 +1384,11 @@
 }
 
 .map-location-modal-close:hover {
-  background-color: color-mix(in srgb, var(--color-accent-primary) 10%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent-primary) 10%,
+    transparent
+  );
   color: var(--color-accent-primary);
 }
 
@@ -1177,20 +1396,48 @@
   transform: scale(0.95);
 }
 
-.map-location-modal-body {
-  padding: 20px;
+.map-location-modal-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.map-location-modal-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background-color: var(--color-bg-card);
+  border: 2px solid
+    color-mix(in srgb, var(--color-accent-primary) 60%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: auto;
-  max-height: calc(90vh - 100px);
+  overflow: hidden;
 }
 
-.map-location-modal-image {
-  max-width: 100%;
-  max-height: 100%;
+.map-location-modal-icon img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.map-location-modal-body {
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.map-location-modal-map {
   width: 700px;
   height: 500px;
-  border-radius: 4px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 8px 8px;
+  background-color: #1a1a2e;
+}
+
+.mini-map-marker .map-marker-icon {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
