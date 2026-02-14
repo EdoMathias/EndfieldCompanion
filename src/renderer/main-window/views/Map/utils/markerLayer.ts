@@ -8,7 +8,7 @@ import {
   MARKER_TYPE_DICT,
 } from '../../../../../shared/data/interactive-map/marker';
 import { gameToLatLng } from './coordinates';
-import { getLocalMarkerResourceUrl } from './resource';
+import { getMarkerIconUrl, preloadMarkerIcons } from './resource';
 
 // Category colors for cluster styling
 const CATEGORY_COLORS: Record<string, string> = {
@@ -67,7 +67,7 @@ export class MarkerLayer {
     const markerType = MARKER_TYPE_DICT[type];
     const category = markerType?.category?.sub || 'unknown';
     const categoryColor = CATEGORY_COLORS[category] || '#666666';
-    const iconUrl = getLocalMarkerResourceUrl(type);
+    const iconUrl = getMarkerIconUrl(type);
     const typeName = markerType?.name || type;
 
     const clusterGroup = L.markerClusterGroup({
@@ -101,7 +101,7 @@ export class MarkerLayer {
     return clusterGroup;
   }
 
-  public loadRegion(regionId: string) {
+  public async loadRegion(regionId: string) {
     this.currentRegion = regionId;
     this.clearMarkers();
 
@@ -111,6 +111,10 @@ export class MarkerLayer {
       regionId,
       markers.length,
     );
+
+    // Preload all unique marker type icons for this region
+    const uniqueTypes = [...new Set(markers.map((m) => m.type))];
+    await preloadMarkerIcons(uniqueTypes);
 
     // Group markers by type for efficient batch adding
     const markersByType: Map<string, L.Marker[]> = new Map();
@@ -258,7 +262,7 @@ export class MarkerLayer {
     isCollected: boolean,
     noFrame?: boolean,
   ): L.DivIcon {
-    const iconUrl = getLocalMarkerResourceUrl(type);
+    const iconUrl = getMarkerIconUrl(type);
     const collectedClass = isCollected ? 'collected' : '';
     const frameClass = noFrame ? 'no-frame' : '';
 
@@ -340,7 +344,7 @@ export class MarkerLayer {
     const category = markerType?.category?.sub || 'unknown';
     const categoryColor = CATEGORY_COLORS[category] || '#666666';
     const isCollected = this.collectedIds.has(markerData.id);
-    const iconUrl = getLocalMarkerResourceUrl(markerData.type);
+    const iconUrl = getMarkerIconUrl(markerData.type);
 
     return `
       <div class="map-popup-tooltip">

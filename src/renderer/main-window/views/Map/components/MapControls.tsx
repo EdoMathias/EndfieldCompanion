@@ -6,7 +6,7 @@ import {
   getMarkerCountsForRegion,
   getMarkerIdsForRegionAndType,
 } from '../../../../../shared/data/interactive-map/marker';
-import { getLocalMarkerResourceUrl } from '../utils/resource';
+import { getMarkerIconUrl } from '../utils/resource';
 
 interface MapControlsProps {
   regionId: string;
@@ -257,7 +257,7 @@ const MapControls: React.FC<MapControlsProps> = ({
                           </div>
                           <img
                             className="map-filter-item-icon"
-                            src={getLocalMarkerResourceUrl(type.key)}
+                            src={getMarkerIconUrl(type.key)}
                             alt=""
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display =

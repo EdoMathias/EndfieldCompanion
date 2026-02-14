@@ -3,7 +3,7 @@ import {
   IMarkerData,
   MARKER_TYPE_DICT,
 } from '../../../../../shared/data/interactive-map/marker';
-import { getLocalMarkerResourceUrl } from '../utils/resource';
+import { getMarkerIconUrl } from '../utils/resource';
 
 interface MarkerPopupProps {
   marker: IMarkerData | null;
@@ -54,7 +54,7 @@ const MarkerPopup: React.FC<MarkerPopupProps> = ({
         <div className="map-popup-icon-container">
           <div className="map-popup-icon-wrapper">
             <img
-              src={getLocalMarkerResourceUrl(marker.type)}
+              src={getMarkerIconUrl(marker.type)}
               alt={typeName}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
