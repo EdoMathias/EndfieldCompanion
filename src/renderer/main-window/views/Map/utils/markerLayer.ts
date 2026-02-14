@@ -22,6 +22,9 @@ const CATEGORY_COLORS: Record<string, string> = {
   boss: '#E91E63',
 };
 
+// Only these categories will be clustered; all others show individual markers
+const CLUSTERABLE_CATEGORIES = new Set(['natural', 'valuable', 'mob']);
+
 export interface MarkerLayerOptions {
   onToggleCollected: (markerId: string) => void;
 }
@@ -30,6 +33,8 @@ export class MarkerLayer {
   private map: L.Map;
   // One cluster group per marker type for type-specific clustering
   private clusterGroups: Map<string, L.MarkerClusterGroup> = new Map();
+  // Layer group for unclustered markers
+  private unclusteredLayer: L.LayerGroup = L.layerGroup();
   private markers: Map<string, L.Marker> = new Map();
   private markerTypeMap: Map<string, string> = new Map(); // markerId -> type
   private currentRegion: string = '';
@@ -48,6 +53,12 @@ export class MarkerLayer {
     this.options.onToggleCollected = callback;
   }
 
+  private shouldCluster(type: string): boolean {
+    const markerType = MARKER_TYPE_DICT[type];
+    const category = markerType?.category?.sub || 'unknown';
+    return CLUSTERABLE_CATEGORIES.has(category);
+  }
+
   private getOrCreateClusterGroup(type: string): L.MarkerClusterGroup {
     if (this.clusterGroups.has(type)) {
       return this.clusterGroups.get(type)!;
@@ -64,7 +75,7 @@ export class MarkerLayer {
       spiderfyOnMaxZoom: true,
       showCoverageOnHover: false,
       zoomToBoundsOnClick: true,
-      disableClusteringAtZoom: 3,
+      disableClusteringAtZoom: 4,
       chunkedLoading: true,
       chunkInterval: 100,
       chunkDelay: 50,
@@ -115,10 +126,17 @@ export class MarkerLayer {
       }
     });
 
-    // Add markers to their respective cluster groups
+    // Add unclustered layer to map
+    this.unclusteredLayer.addTo(this.map);
+
+    // Add markers to cluster groups or unclustered layer based on category
     markersByType.forEach((typeMarkers, type) => {
-      const clusterGroup = this.getOrCreateClusterGroup(type);
-      clusterGroup.addLayers(typeMarkers);
+      if (this.shouldCluster(type)) {
+        const clusterGroup = this.getOrCreateClusterGroup(type);
+        clusterGroup.addLayers(typeMarkers);
+      } else {
+        typeMarkers.forEach((marker) => this.unclusteredLayer.addLayer(marker));
+      }
     });
 
     this.applyFilters();
@@ -130,6 +148,8 @@ export class MarkerLayer {
       this.map.removeLayer(group);
     });
     this.clusterGroups.clear();
+    this.unclusteredLayer.clearLayers();
+    this.map.removeLayer(this.unclusteredLayer);
     this.markers.clear();
     this.markerTypeMap.clear();
   }
@@ -173,6 +193,7 @@ export class MarkerLayer {
     this.clusterGroups.forEach((group) => {
       count += group.getLayers().length;
     });
+    count += this.unclusteredLayer.getLayers().length;
     return count;
   }
 
@@ -259,20 +280,26 @@ export class MarkerLayer {
       // @ts-ignore
       const markerData: IMarkerData = marker.options.markerData;
       const type = markerData.type;
-      const clusterGroup = this.clusterGroups.get(type);
-      if (!clusterGroup) return;
-
       const typeVisible = this.activeTypes.has(type);
       const isCollected = this.collectedIds.has(id);
       const collectedVisible = !this.hideCollected || !isCollected;
+      const shouldShow = typeVisible && collectedVisible;
 
-      if (typeVisible && collectedVisible) {
-        if (!clusterGroup.hasLayer(marker)) {
-          clusterGroup.addLayer(marker);
+      if (this.shouldCluster(type)) {
+        const clusterGroup = this.clusterGroups.get(type);
+        if (!clusterGroup) return;
+        if (shouldShow) {
+          if (!clusterGroup.hasLayer(marker)) clusterGroup.addLayer(marker);
+        } else {
+          if (clusterGroup.hasLayer(marker)) clusterGroup.removeLayer(marker);
         }
       } else {
-        if (clusterGroup.hasLayer(marker)) {
-          clusterGroup.removeLayer(marker);
+        if (shouldShow) {
+          if (!this.unclusteredLayer.hasLayer(marker))
+            this.unclusteredLayer.addLayer(marker);
+        } else {
+          if (this.unclusteredLayer.hasLayer(marker))
+            this.unclusteredLayer.removeLayer(marker);
         }
       }
     });
