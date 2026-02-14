@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import MapContainer from './components/MapContainer';
 import MarkerLayer from './components/MarkerLayer';
@@ -9,12 +9,14 @@ import {
 } from '../../../../shared/data/interactive-map/map';
 import { useMarkerStore } from './hooks/useMarkerStore';
 import { useCollectionStore } from './hooks/useCollectionStore';
+import { useFTUE } from '../../../contexts/FTUEContext';
 
 const MapView: React.FC = () => {
   const [map, setMap] = useState<L.Map | null>(null);
   const [currentRegion, setCurrentRegion] = useState(DEFAULT_REGION);
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { markInteractiveMapSeen } = useFTUE();
 
   // Marker filter state
   const {
@@ -40,6 +42,10 @@ const MapView: React.FC = () => {
     setMap(mapInstance);
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    markInteractiveMapSeen();
+  }, [markInteractiveMapSeen]);
 
   const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentRegion(e.target.value);
