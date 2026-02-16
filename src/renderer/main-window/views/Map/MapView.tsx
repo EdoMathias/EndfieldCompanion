@@ -67,6 +67,18 @@ const MapView: React.FC = () => {
     }
   };
 
+  const zoomIn = useCallback(() => {
+    if (map) {
+      map.zoomIn(0.75);
+    }
+  }, [map]);
+
+  const zoomOut = useCallback(() => {
+    if (map) {
+      map.zoomOut(0.75);
+    }
+  }, [map]);
+
   return (
     <section className="map-view">
       {/* Map Header */}
@@ -133,6 +145,48 @@ const MapView: React.FC = () => {
               style={{ display: 'none' }}
               onChange={handleFileChange}
             />
+          </div>
+          <div className="map-header-actions">
+            <button
+              type="button"
+              className="map-header-btn"
+              onClick={zoomIn}
+              title="Zoom in"
+              aria-label="Zoom in"
+              disabled={!map}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                width="16"
+                height="16"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="map-header-btn"
+              onClick={zoomOut}
+              title="Zoom out"
+              aria-label="Zoom out"
+              disabled={!map}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                width="16"
+                height="16"
+              >
+                <path d="M5 12h14" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>

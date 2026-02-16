@@ -219,7 +219,7 @@
   transition: all 0.2s ease;
 }
 
-.map-header-btn:hover {
+.map-header-btn:hover:not(:disabled) {
   border-color: color-mix(
     in srgb,
     var(--color-accent-primary) 50%,
@@ -230,6 +230,11 @@
     var(--color-accent-primary) 10%,
     transparent
   );
+}
+
+.map-header-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .map-header-btn svg {
