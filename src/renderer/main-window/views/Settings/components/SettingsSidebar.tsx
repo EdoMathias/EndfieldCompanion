@@ -1,11 +1,14 @@
 import React from 'react';
 
 interface SettingsSidebarProps {
-  activeTab: 'general' | 'hotkeys' | 'about';
-  onTabChange: (tab: 'general' | 'hotkeys' | 'about') => void;
+  activeTab: 'general' | 'windows' | 'hotkeys' | 'about';
+  onTabChange: (tab: 'general' | 'windows' | 'hotkeys' | 'about') => void;
 }
 
-const SettingsSidebar: React.FC<SettingsSidebarProps> = ({ activeTab, onTabChange }) => {
+const SettingsSidebar: React.FC<SettingsSidebarProps> = ({
+  activeTab,
+  onTabChange,
+}) => {
   return (
     <div className="settings-sidebar">
       <button
@@ -14,6 +17,13 @@ const SettingsSidebar: React.FC<SettingsSidebarProps> = ({ activeTab, onTabChang
         onClick={() => onTabChange('general')}
       >
         General
+      </button>
+      <button
+        type="button"
+        className={`settings-sidebar-item ${activeTab === 'windows' ? 'active' : ''}`}
+        onClick={() => onTabChange('windows')}
+      >
+        Windows
       </button>
       <button
         type="button"

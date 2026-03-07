@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SettingsInfoProps {
-  tab: 'general' | 'hotkeys' | 'about';
+  tab: 'general' | 'windows' | 'hotkeys' | 'about';
 }
 
 const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
@@ -15,8 +15,22 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
 
             <h4>Tutorial</h4>
             <p>
-              Resetting the tutorial will re-enable the first-time user experience walkthrough.
-              Use this if you want to review the app&apos;s features and how to use them.
+              Resetting the tutorial will re-enable the first-time user
+              experience walkthrough. Use this if you want to review the
+              app&apos;s features and how to use them.
+            </p>
+          </>
+        );
+      case 'windows':
+        return (
+          <>
+            <h3>Window Settings</h3>
+            <p>Manage the position and behavior of overlay windows.</p>
+
+            <h4>Rotation Window</h4>
+            <p>
+              If the rotation window gets stuck outside the visible game area,
+              use the reset button to center it back on screen.
             </p>
           </>
         );
@@ -24,17 +38,21 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
         return (
           <>
             <h3>Hotkeys</h3>
-            <p>Customize your keyboard shortcuts for quick access to features.</p>
+            <p>
+              Customize your keyboard shortcuts for quick access to features.
+            </p>
 
             <h4>Instructions</h4>
             <p>
-              Click on a hotkey field and press the key combination you want to assign.
+              Click on a hotkey field and press the key combination you want to
+              assign.
             </p>
             <p>
               Press <strong>Escape</strong> to cancel editing.
             </p>
             <p>
-              Hotkeys must be unique. If you try to assign a key that is already in use, you will see an error message.
+              Hotkeys must be unique. If you try to assign a key that is already
+              in use, you will see an error message.
             </p>
           </>
         );
@@ -46,8 +64,8 @@ const SettingsInfo: React.FC<SettingsInfoProps> = ({ tab }) => {
 
             <h4>Disclaimer</h4>
             <p>
-              This application is a community-made fan project and is not affiliated with,
-              endorsed, or sponsored by the game developers.
+              This application is a community-made fan project and is not
+              affiliated with, endorsed, or sponsored by the game developers.
             </p>
           </>
         );

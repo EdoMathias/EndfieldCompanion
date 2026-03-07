@@ -1,7 +1,11 @@
 import { GameStateService } from '../services/game-state.service';
 import { HotkeysService } from '../services/hotkeys.service';
 import { AppLaunchService } from '../services/app-launch.service';
-import { MessageChannel, MessagePayload, MessageType } from '../services/MessageChannel';
+import {
+  MessageChannel,
+  MessagePayload,
+  MessageType,
+} from '../services/MessageChannel';
 import { Edge } from '@overwolf/odk-ts/window/enums/edge';
 import { kEndfieldClassId, kHotkeys, kWindowNames } from '../../shared/consts';
 import { createLogger } from '../../shared/services/Logger';
@@ -28,17 +32,24 @@ export class BackgroundController {
   private _trayIconService: TrayIconService;
 
   private _isGameRunning: boolean = false;
-  private _companionReadyDismissTimer: ReturnType<typeof setTimeout> | null = null;
+  private _companionReadyDismissTimer: ReturnType<typeof setTimeout> | null =
+    null;
 
   private constructor() {
     // Initialize MessageChannel first (used by other services)
     this._messageChannel = new MessageChannel();
     this._hotkeysService = new HotkeysService();
-    this._appLaunchService = new AppLaunchService((event: AppLaunchTriggeredEvent) => this.handleAppLaunch(event));
-    this._trayIconService = new TrayIconService(() => this.handleTrayIconClick(), (event: onMenuItemClickedEvent) => this.handleTrayMenuItemClick(event), () => this.handleTrayIconDoubleClick());
+    this._appLaunchService = new AppLaunchService(
+      (event: AppLaunchTriggeredEvent) => this.handleAppLaunch(event),
+    );
+    this._trayIconService = new TrayIconService(
+      () => this.handleTrayIconClick(),
+      (event: onMenuItemClickedEvent) => this.handleTrayMenuItemClick(event),
+      () => this.handleTrayIconDoubleClick(),
+    );
     this._gameStateService = new GameStateService(
       this._messageChannel,
-      (isRunning, gameInfo) => this.handleGameStateChange(isRunning, gameInfo)
+      (isRunning, gameInfo) => this.handleGameStateChange(isRunning, gameInfo),
     );
     this._windowsController = new WindowsController(this._messageChannel);
 
@@ -59,7 +70,8 @@ export class BackgroundController {
    */
   public async run(): Promise<void> {
     // Determine which window to show based on game state
-    const shouldShowInGame = await this._gameStateService.isSupportedGameRunning();
+    const shouldShowInGame =
+      await this._gameStateService.isSupportedGameRunning();
     if (shouldShowInGame) {
       logger.log('Game is Endfield, showing in-game window');
       await this._windowsController.onGameLaunch();
@@ -74,7 +86,10 @@ export class BackgroundController {
   /**
    * Handles game state changes (game launched/terminated).
    */
-  private async handleGameStateChange(isEndfieldRunning: boolean, gameInfo?: overwolf.games.RunningGameInfo): Promise<void> {
+  private async handleGameStateChange(
+    isEndfieldRunning: boolean,
+    gameInfo?: overwolf.games.RunningGameInfo,
+  ): Promise<void> {
     if (isEndfieldRunning) {
       await this._windowsController.onGameLaunch();
       this._isGameRunning = true;
@@ -126,11 +141,10 @@ export class BackgroundController {
     });
   }
 
-  /** 
-   * Handles user-initiated app launches (clicking the app icon). 
+  /**
+   * Handles user-initiated app launches (clicking the app icon).
    */
   private async handleAppLaunch(event: AppLaunchTriggeredEvent): Promise<void> {
-
     // If the launch event is from the dock
     if (event.origin?.includes('dock')) {
       // If the game is running, show the in-game window
@@ -165,7 +179,10 @@ export class BackgroundController {
     }
 
     try {
-      await this._windowsController.showCompanionAppReadyWindow('primary', Edge.Top);
+      await this._windowsController.showCompanionAppReadyWindow(
+        'primary',
+        Edge.Top,
+      );
       logger.log('Companion app ready notification shown');
 
       // Auto-dismiss after 10 seconds
@@ -194,7 +211,9 @@ export class BackgroundController {
     await this._windowsController.showMainDesktopWindow('primary');
   }
 
-  private async handleTrayMenuItemClick(event: onMenuItemClickedEvent): Promise<void> {
+  private async handleTrayMenuItemClick(
+    event: onMenuItemClickedEvent,
+  ): Promise<void> {
     logger.log('Tray menu item clicked:', event);
     switch (event.item) {
       case 'show-window':
@@ -223,9 +242,19 @@ export class BackgroundController {
    * Sets up message handlers for window-related messages
    */
   private setupMessageHandlers(): void {
-    overwolf.windows.onMessageReceived.addListener((message: overwolf.windows.MessageReceivedEvent) => {
-      logger.log('Message received:', message);
-    });
-  }
+    overwolf.windows.onMessageReceived.addListener(
+      (message: overwolf.windows.MessageReceivedEvent) => {
+        logger.log('Message received:', message);
 
+        if (message?.id === MessageType.CENTER_ROTATION_WINDOW) {
+          logger.log('Centering rotation window');
+          this._windowsController
+            .centerRotationIngameWindow()
+            .catch((error) => {
+              logger.error('Error centering rotation window:', error);
+            });
+        }
+      },
+    );
+  }
 }
