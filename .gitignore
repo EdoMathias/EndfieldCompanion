@@ -138,3 +138,7 @@ releases
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Endfield Companion specific ignores
+scripts
+local-assets

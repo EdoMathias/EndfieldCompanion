@@ -22,6 +22,8 @@
 /** Database version - increment when schema changes */
 const DB_VERSION = 1;
 
+export const DB_NAME = 'ak-db';
+
 /**
  * Generic IndexedDB storage class with type safety.
  * @template T - The type of data being stored

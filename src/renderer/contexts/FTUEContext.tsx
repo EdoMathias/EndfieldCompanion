@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 
 export type FTUEStep =
   | 'welcome'
@@ -19,10 +26,7 @@ const MAIN_STEPS: FTUEStep[] = [
 ];
 
 /** Steps that belong to the rotations FTUE flow */
-const ROTATIONS_STEPS: FTUEStep[] = [
-  'rotations_header',
-  'rotations_editor',
-];
+const ROTATIONS_STEPS: FTUEStep[] = ['rotations_header', 'rotations_editor'];
 
 interface FTUEContextType {
   isFTUEComplete: boolean;
@@ -32,6 +36,8 @@ interface FTUEContextType {
   shouldShowStep: (step: FTUEStep) => boolean;
   /** Call when the user navigates to the Rotations view to kick off its FTUE. */
   startRotationsFTUE: () => void;
+  /** Call when the user visits the Interactive Map view to clear its new badge. */
+  markInteractiveMapSeen: () => void;
   /**
    * Returns true when a view has an FTUE the user hasn't seen yet.
    * Use this to show a "New" badge on sidebar items, cards, etc.
@@ -50,9 +56,15 @@ const FTUEContext = createContext<FTUEContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'endfield_companion_ftue_completed';
 const STEPS_STORAGE_KEY = 'endfield_companion_ftue_steps';
-const ROTATIONS_FTUE_STORAGE_KEY = 'endfield_companion_rotations_ftue_completed';
+const ROTATIONS_FTUE_STORAGE_KEY =
+  'endfield_companion_rotations_ftue_completed';
+const INTERACTIVE_MAP_FTUE_STORAGE_KEY =
+  'endfield_companion_interactive_map_ftue_completed';
 
-export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset }) => {
+export const FTUEProvider: React.FC<FTUEProviderProps> = ({
+  children,
+  onReset,
+}) => {
   // ── Main FTUE ──────────────────────────────────────────────
   const [isFTUEComplete, setIsFTUEComplete] = useState<boolean>(() => {
     try {
@@ -63,13 +75,26 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
   });
 
   // ── Rotations FTUE ────────────────────────────────────────
-  const [isRotationsFTUEComplete, setIsRotationsFTUEComplete] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem(ROTATIONS_FTUE_STORAGE_KEY) === 'true';
-    } catch {
-      return false;
-    }
-  });
+  const [isRotationsFTUEComplete, setIsRotationsFTUEComplete] =
+    useState<boolean>(() => {
+      try {
+        return localStorage.getItem(ROTATIONS_FTUE_STORAGE_KEY) === 'true';
+      } catch {
+        return false;
+      }
+    });
+
+  // ── Interactive Map FTUE ──────────────────────────────────
+  const [isInteractiveMapFTUEComplete, setIsInteractiveMapFTUEComplete] =
+    useState<boolean>(() => {
+      try {
+        return (
+          localStorage.getItem(INTERACTIVE_MAP_FTUE_STORAGE_KEY) === 'true'
+        );
+      } catch {
+        return false;
+      }
+    });
 
   /** Runtime flag – true while the rotations FTUE is being presented. */
   const [isRotationsFTUEActive, setIsRotationsFTUEActive] = useState(false);
@@ -89,16 +114,19 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
   });
 
   const markStepComplete = (step: FTUEStep) => {
-    setCompletedSteps(prev => {
+    setCompletedSteps((prev) => {
       const newSet = new Set(prev);
       newSet.add(step);
-      
+
       try {
-        localStorage.setItem(STEPS_STORAGE_KEY, JSON.stringify(Array.from(newSet)));
+        localStorage.setItem(
+          STEPS_STORAGE_KEY,
+          JSON.stringify(Array.from(newSet)),
+        );
       } catch {
         // Ignore errors
       }
-      
+
       return newSet;
     });
   };
@@ -107,11 +135,13 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
     setIsFTUEComplete(false);
     setIsRotationsFTUEComplete(false);
     setIsRotationsFTUEActive(false);
+    setIsInteractiveMapFTUEComplete(false);
     setCompletedSteps(new Set());
     try {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STEPS_STORAGE_KEY);
       localStorage.removeItem(ROTATIONS_FTUE_STORAGE_KEY);
+      localStorage.removeItem(INTERACTIVE_MAP_FTUE_STORAGE_KEY);
     } catch {
       // Ignore errors
     }
@@ -138,26 +168,45 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
     }
   };
 
+  const completeInteractiveMapFTUE = () => {
+    setIsInteractiveMapFTUEComplete(true);
+    try {
+      localStorage.setItem(INTERACTIVE_MAP_FTUE_STORAGE_KEY, 'true');
+    } catch {
+      // Ignore errors
+    }
+  };
+
   // ── Step sequencing ───────────────────────────────────────
-  const shouldShowStep = useCallback((step: FTUEStep): boolean => {
-    if (completedSteps.has(step)) return false;
+  const shouldShowStep = useCallback(
+    (step: FTUEStep): boolean => {
+      if (completedSteps.has(step)) return false;
 
-    // Main FTUE flow
-    if (MAIN_STEPS.includes(step)) {
-      if (isFTUEComplete) return false;
-      const nextMainStep = MAIN_STEPS.find(s => !completedSteps.has(s));
-      return nextMainStep === step;
-    }
+      // Main FTUE flow
+      if (MAIN_STEPS.includes(step)) {
+        if (isFTUEComplete) return false;
+        const nextMainStep = MAIN_STEPS.find((s) => !completedSteps.has(s));
+        return nextMainStep === step;
+      }
 
-    // Rotations FTUE flow
-    if (ROTATIONS_STEPS.includes(step)) {
-      if (isRotationsFTUEComplete || !isRotationsFTUEActive) return false;
-      const nextRotationsStep = ROTATIONS_STEPS.find(s => !completedSteps.has(s));
-      return nextRotationsStep === step;
-    }
+      // Rotations FTUE flow
+      if (ROTATIONS_STEPS.includes(step)) {
+        if (isRotationsFTUEComplete || !isRotationsFTUEActive) return false;
+        const nextRotationsStep = ROTATIONS_STEPS.find(
+          (s) => !completedSteps.has(s),
+        );
+        return nextRotationsStep === step;
+      }
 
-    return false;
-  }, [completedSteps, isFTUEComplete, isRotationsFTUEComplete, isRotationsFTUEActive]);
+      return false;
+    },
+    [
+      completedSteps,
+      isFTUEComplete,
+      isRotationsFTUEComplete,
+      isRotationsFTUEActive,
+    ],
+  );
 
   /** Activate the rotations FTUE (no-op if already completed). */
   const startRotationsFTUE = useCallback(() => {
@@ -166,30 +215,45 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
     }
   }, [isRotationsFTUEComplete]);
 
+  /** Mark the interactive map as seen so its new badge disappears. */
+  const markInteractiveMapSeen = useCallback(() => {
+    if (!isInteractiveMapFTUEComplete) {
+      completeInteractiveMapFTUE();
+    }
+  }, [isInteractiveMapFTUEComplete]);
+
   /**
    * Generic check: does this view have an unseen FTUE?
    * Add a case for each new feature that has its own FTUE flow.
    */
-  const hasUnseenFTUE = useCallback((viewName: string): boolean => {
-    switch (viewName) {
-      case 'Rotations':
-        return !isRotationsFTUEComplete;
-      // Future features: add cases here
-      default:
-        return false;
-    }
-  }, [isRotationsFTUEComplete]);
+  const hasUnseenFTUE = useCallback(
+    (viewName: string): boolean => {
+      switch (viewName) {
+        case 'Rotations':
+          return !isRotationsFTUEComplete;
+        case 'Interactive Map':
+          return !isInteractiveMapFTUEComplete;
+        default:
+          return false;
+      }
+    },
+    [isRotationsFTUEComplete, isInteractiveMapFTUEComplete],
+  );
 
   // ── Auto-complete when all steps in a group are done ──────
   useEffect(() => {
-    const allMainComplete = MAIN_STEPS.every(step => completedSteps.has(step));
+    const allMainComplete = MAIN_STEPS.every((step) =>
+      completedSteps.has(step),
+    );
     if (allMainComplete && !isFTUEComplete) {
       completeMainFTUE();
     }
   }, [completedSteps, isFTUEComplete]);
 
   useEffect(() => {
-    const allRotationsComplete = ROTATIONS_STEPS.every(step => completedSteps.has(step));
+    const allRotationsComplete = ROTATIONS_STEPS.every((step) =>
+      completedSteps.has(step),
+    );
     if (allRotationsComplete && !isRotationsFTUEComplete) {
       completeRotationsFTUE();
     }
@@ -204,6 +268,7 @@ export const FTUEProvider: React.FC<FTUEProviderProps> = ({ children, onReset })
         resetFTUE,
         shouldShowStep,
         startRotationsFTUE,
+        markInteractiveMapSeen,
         hasUnseenFTUE,
       }}
     >
@@ -219,4 +284,3 @@ export const useFTUE = (): FTUEContextType => {
   }
   return context;
 };
-

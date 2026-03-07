@@ -23,3 +23,4 @@ export type HotkeyData = {
   virtualKeycode: number;
 };
 
+export const baseUrl = 'https://endfield.kofim.dev';

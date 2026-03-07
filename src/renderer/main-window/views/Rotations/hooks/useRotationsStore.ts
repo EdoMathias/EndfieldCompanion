@@ -1,7 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
-import { Character, CharacterAction, Rotation, RotationActionType, RotationStep } from "../types/rotations.types";
-import { STORAGE_CURRENT_ROTATION, STORAGE_CURRENT_SQUAD } from "../consts/rotations.consts";
-import characters from "../../../../../shared/data/characters.json";
+import { useCallback, useEffect, useState } from 'react';
+import {
+  Character,
+  CharacterAction,
+  Rotation,
+  RotationActionType,
+  RotationStep,
+} from '../types/rotations.types';
+import {
+  STORAGE_CURRENT_ROTATION,
+  STORAGE_CURRENT_SQUAD,
+} from '../consts/rotations.consts';
+import characters from '../../../../../shared/data/characters.json';
 
 /**
  * Local storage key for the rotations presets.
@@ -18,39 +27,106 @@ const STORAGE_SELECTED_PRESET = 'endfield.rotations.selectedPreset.v1';
  */
 const STORAGE_CHARACTERS = 'endfield.characters.v1';
 
-const DEFAULT_CHARACTERS: Character[] = characters.characters.map(character => ({
+const CHARACTER_ICON_BASE_URL = 'https://endfield.kofim.dev/characters-icon';
+
+const getCharacterImageUrl = (id: string): string =>
+  `${CHARACTER_ICON_BASE_URL}/${id}.png`;
+
+const DEFAULT_CHARACTERS: Character[] = characters.characters.map(
+  (character) => ({
     id: character.id,
     name: character.name,
-    image: character.image,
-    actions: character.actions.map(action => ({
-        id: action.id,
-        name: action.name,
-        type: action.type as RotationActionType,
-        description: action.description,
-        image: action.image,
+    image: getCharacterImageUrl(character.id),
+    actions: character.actions.map((action) => ({
+      id: action.id,
+      name: action.name,
+      type: action.type as RotationActionType,
+      description: action.description,
+      image: action.image,
     })),
-}));
+  }),
+);
+
+const DEFAULT_CHARACTERS_BY_ID = new Map(
+  DEFAULT_CHARACTERS.map((character) => [character.id, character]),
+);
+
+const hydrateAction = (
+  action: CharacterAction,
+  characterId?: string,
+): CharacterAction => {
+  if (!characterId) return action;
+  const defaults = DEFAULT_CHARACTERS_BY_ID.get(characterId);
+  const defaultAction = defaults?.actions.find(
+    (defaultItem) => defaultItem.id === action.id,
+  );
+  if (!defaultAction) return action;
+  return {
+    ...defaultAction,
+    ...action,
+    id: defaultAction.id,
+    name: defaultAction.name,
+    type: defaultAction.type,
+    description: defaultAction.description,
+    image: defaultAction.image,
+  };
+};
+
+const hydrateCharacter = (character: Character): Character => {
+  const defaults = DEFAULT_CHARACTERS_BY_ID.get(character.id);
+  if (!defaults) {
+    return {
+      ...character,
+      image: character.image || getCharacterImageUrl(character.id),
+    };
+  }
+
+  const actions = Array.isArray(character.actions) ? character.actions : [];
+  const nextActions = actions.map((action) =>
+    hydrateAction(action, defaults.id),
+  );
+  const knownActionIds = new Set(nextActions.map((action) => action.id));
+  const missingActions = defaults.actions.filter(
+    (action) => !knownActionIds.has(action.id),
+  );
+
+  return {
+    ...defaults,
+    ...character,
+    id: defaults.id,
+    name: defaults.name,
+    image: defaults.image,
+    actions: nextActions.concat(missingActions),
+  };
+};
 
 /**
  * Loads the characters data from the local storage.
  * @returns The characters data
  */
 function loadCharactersData(): Character[] {
-    try {
-        const characters = localStorage.getItem(STORAGE_CHARACTERS);
-        if (!characters) {
-            return DEFAULT_CHARACTERS;
-        }
-        const parsedCharacters = JSON.parse(characters);
-        if (!Array.isArray(parsedCharacters) || parsedCharacters.length === 0) {
-            return DEFAULT_CHARACTERS;
-        }
-        return parsedCharacters as Character[];
+  try {
+    const characters = localStorage.getItem(STORAGE_CHARACTERS);
+    if (!characters) {
+      return DEFAULT_CHARACTERS;
     }
-    catch (error) {
-        console.error('Error loading characters data from local storage:', error);
-        return DEFAULT_CHARACTERS;
+    const parsedCharacters = JSON.parse(characters);
+    if (!Array.isArray(parsedCharacters) || parsedCharacters.length === 0) {
+      return DEFAULT_CHARACTERS;
     }
+
+    const migrated = (parsedCharacters as Character[]).map((character) =>
+      hydrateCharacter(character),
+    );
+    const knownIds = new Set(migrated.map((character) => character.id));
+    const missing = DEFAULT_CHARACTERS.filter(
+      (character) => !knownIds.has(character.id),
+    );
+    return migrated.concat(missing);
+  } catch (error) {
+    console.error('Error loading characters data from local storage:', error);
+    return DEFAULT_CHARACTERS;
+  }
 }
 
 /**
@@ -58,21 +134,39 @@ function loadCharactersData(): Character[] {
  * @returns The current rotation
  */
 function loadCurrentRotation(): Rotation | null {
-    try {
-        const currentRotation = localStorage.getItem(STORAGE_CURRENT_ROTATION);
-        if (!currentRotation) {
-            return null;
-        }
-        const parsedCurrentRotation = JSON.parse(currentRotation);
-        if (!parsedCurrentRotation) {
-            return null;
-        }
-        return parsedCurrentRotation as Rotation;
+  try {
+    const currentRotation = localStorage.getItem(STORAGE_CURRENT_ROTATION);
+    if (!currentRotation) {
+      return null;
     }
-    catch (error) {
-        console.error('Error loading current rotation from local storage:', error);
-        return null;
+    const parsedCurrentRotation = JSON.parse(currentRotation);
+    if (!parsedCurrentRotation) {
+      return null;
     }
+    const rotation = parsedCurrentRotation as Rotation;
+    return {
+      ...rotation,
+      squad:
+        rotation.squad?.map((character) => hydrateCharacter(character)) ??
+        rotation.squad,
+      steps: rotation.steps.map((step) => {
+        const nextCharacter = step.character
+          ? hydrateCharacter(step.character)
+          : undefined;
+        const nextAction = step.action
+          ? hydrateAction(step.action, nextCharacter?.id)
+          : step.action;
+        return {
+          ...step,
+          character: nextCharacter,
+          action: nextAction,
+        };
+      }),
+    };
+  } catch (error) {
+    console.error('Error loading current rotation from local storage:', error);
+    return null;
+  }
 }
 
 /**
@@ -80,21 +174,41 @@ function loadCurrentRotation(): Rotation | null {
  * @returns The rotations presets
  */
 function loadRotationsPresets(): Rotation[] {
-    try {
-        const rotationsPresets = localStorage.getItem(STORAGE_ROTATIONS_PRESETS);
-        if (!rotationsPresets) {
-            return [];
-        }
-        const parsedRotationsPresets = JSON.parse(rotationsPresets);
-        if (!Array.isArray(parsedRotationsPresets) || parsedRotationsPresets.length === 0) {
-            return [];
-        }
-        return parsedRotationsPresets as Rotation[];
+  try {
+    const rotationsPresets = localStorage.getItem(STORAGE_ROTATIONS_PRESETS);
+    if (!rotationsPresets) {
+      return [];
     }
-    catch (error) {
-        console.error('Error loading rotations presets from local storage:', error);
-        return [];
+    const parsedRotationsPresets = JSON.parse(rotationsPresets);
+    if (
+      !Array.isArray(parsedRotationsPresets) ||
+      parsedRotationsPresets.length === 0
+    ) {
+      return [];
     }
+    return (parsedRotationsPresets as Rotation[]).map((rotation) => ({
+      ...rotation,
+      squad:
+        rotation.squad?.map((character) => hydrateCharacter(character)) ??
+        rotation.squad,
+      steps: rotation.steps.map((step) => {
+        const nextCharacter = step.character
+          ? hydrateCharacter(step.character)
+          : undefined;
+        const nextAction = step.action
+          ? hydrateAction(step.action, nextCharacter?.id)
+          : step.action;
+        return {
+          ...step,
+          character: nextCharacter,
+          action: nextAction,
+        };
+      }),
+    }));
+  } catch (error) {
+    console.error('Error loading rotations presets from local storage:', error);
+    return [];
+  }
 }
 
 /**
@@ -102,208 +216,247 @@ function loadRotationsPresets(): Rotation[] {
  * @returns The current squad
  */
 function loadSquad(): Character[] {
-    try {
-        const squad = localStorage.getItem(STORAGE_CURRENT_SQUAD);
-        if (!squad) return [];
-        const parsed = JSON.parse(squad);
-        if (!Array.isArray(parsed)) return [];
-        return parsed as Character[];
-    }
-    catch (error) {
-        console.error('Error loading squad from local storage:', error);
-        return [];
-    }
+  try {
+    const squad = localStorage.getItem(STORAGE_CURRENT_SQUAD);
+    if (!squad) return [];
+    const parsed = JSON.parse(squad);
+    if (!Array.isArray(parsed)) return [];
+    return (parsed as Character[]).map((character) =>
+      hydrateCharacter(character),
+    );
+  } catch (error) {
+    console.error('Error loading squad from local storage:', error);
+    return [];
+  }
 }
 
 export function useRotationsStore() {
-    const [characters, setCharactersState] = useState<Character[]>(loadCharactersData());
-    const [currentRotation, setCurrentRotationState] = useState<Rotation | null>(loadCurrentRotation());
-    const [rotationsPresets, setRotationsPresetsState] = useState<Rotation[]>(loadRotationsPresets());
-    const [squad, setSquadState] = useState<Character[]>(() => loadSquad());
-    const [selectedPresetId, setSelectedPresetIdState] = useState<string>(
-        () => localStorage.getItem(STORAGE_SELECTED_PRESET) ?? ''
+  const [characters, setCharactersState] =
+    useState<Character[]>(loadCharactersData());
+  const [currentRotation, setCurrentRotationState] = useState<Rotation | null>(
+    loadCurrentRotation(),
+  );
+  const [rotationsPresets, setRotationsPresetsState] = useState<Rotation[]>(
+    loadRotationsPresets(),
+  );
+  const [squad, setSquadState] = useState<Character[]>(() => loadSquad());
+  const [selectedPresetId, setSelectedPresetIdState] = useState<string>(
+    () => localStorage.getItem(STORAGE_SELECTED_PRESET) ?? '',
+  );
+
+  // Persist the characters to the local storage.
+  useEffect(() => {
+    localStorage.setItem(STORAGE_CHARACTERS, JSON.stringify(characters));
+  }, [characters]);
+
+  // Persist the current rotation to the local storage.
+  useEffect(() => {
+    localStorage.setItem(
+      STORAGE_CURRENT_ROTATION,
+      JSON.stringify(currentRotation),
     );
+  }, [currentRotation]);
 
-    // Persist the characters to the local storage.
-    useEffect(() => {
-        localStorage.setItem(STORAGE_CHARACTERS, JSON.stringify(characters));
-    }, [characters]);
+  // Persist the rotations presets to the local storage.
+  useEffect(() => {
+    localStorage.setItem(
+      STORAGE_ROTATIONS_PRESETS,
+      JSON.stringify(rotationsPresets),
+    );
+  }, [rotationsPresets]);
 
-    // Persist the current rotation to the local storage.
-    useEffect(() => {
-        localStorage.setItem(STORAGE_CURRENT_ROTATION, JSON.stringify(currentRotation));
-    }, [currentRotation]);
+  // Persist the squad to the local storage.
+  useEffect(() => {
+    localStorage.setItem(STORAGE_CURRENT_SQUAD, JSON.stringify(squad));
+  }, [squad]);
 
-    // Persist the rotations presets to the local storage.
-    useEffect(() => {
-        localStorage.setItem(STORAGE_ROTATIONS_PRESETS, JSON.stringify(rotationsPresets));
-    }, [rotationsPresets]);
+  // Persist the selected preset id to the local storage.
+  useEffect(() => {
+    localStorage.setItem(STORAGE_SELECTED_PRESET, selectedPresetId);
+  }, [selectedPresetId]);
 
-    // Persist the squad to the local storage.
-    useEffect(() => {
-        localStorage.setItem(STORAGE_CURRENT_SQUAD, JSON.stringify(squad));
-    }, [squad]);
+  /**
+   * Adds a character to the squad.
+   * Characters are stored in an array of objects
+   */
+  const addCharacterToSquad = useCallback((character: Character) => {
+    setSquadState((prevSquad) => {
+      if (prevSquad.length >= 4) return prevSquad;
+      if (prevSquad.some((c) => c.id === character.id)) return prevSquad;
+      return [...prevSquad, character];
+    });
+  }, []);
 
-    // Persist the selected preset id to the local storage.
-    useEffect(() => {
-        localStorage.setItem(STORAGE_SELECTED_PRESET, selectedPresetId);
-    }, [selectedPresetId]);
+  /**
+   * Removes a character from the squad.
+   */
+  const removeCharacterFromSquad = useCallback((characterId: string) => {
+    // Remove the character's steps from the current rotation.
+    setCurrentRotationState((prevRotation) => {
+      if (!prevRotation) return { id: '', name: '', steps: [] };
+      return {
+        ...prevRotation,
+        steps: prevRotation.steps.filter(
+          (step) => step.character?.id !== characterId,
+        ),
+      };
+    });
 
-    /**
-     * Adds a character to the squad.
-     * Characters are stored in an array of objects
-     */
-    const addCharacterToSquad = useCallback((character: Character) => {
-        setSquadState(prevSquad => {
-            if (prevSquad.length >= 4) return prevSquad;
-            if (prevSquad.some(c => c.id === character.id)) return prevSquad;
-            return [...prevSquad, character];
-        });
-    }, []);
+    setSquadState((prevSquad) =>
+      prevSquad.filter((character) => character.id !== characterId),
+    );
+  }, []);
 
-    /**
-     * Removes a character from the squad.
-     */
-    const removeCharacterFromSquad = useCallback((characterId: string) => {
-        // Remove the character's steps from the current rotation.
-        setCurrentRotationState(prevRotation => {
-            if (!prevRotation) return { id: '', name: '', steps: [] };
-            return { ...prevRotation, steps: prevRotation.steps.filter(step => step.character?.id !== characterId) };
-        });
+  /**
+   * Sets the current rotation.
+   */
+  const setCurrentRotation = useCallback((rotation: Rotation) => {
+    setCurrentRotationState(rotation);
+  }, []);
 
+  /**
+   * Clears the current rotation.
+   */
+  const clearCurrentRotation = useCallback(() => {
+    setCurrentRotationState(null);
+  }, []);
 
-        setSquadState(prevSquad =>
-            prevSquad.filter(character => character.id !== characterId)
-        );
-    }, []);
+  /**
+   * Saves the current rotation as a preset.
+   * @param name The name for the preset
+   */
+  const setSelectedPresetId = useCallback((presetId: string) => {
+    setSelectedPresetIdState(presetId);
+  }, []);
 
-    /**
-     * Sets the current rotation.
-     */
-    const setCurrentRotation = useCallback((rotation: Rotation) => {
-        setCurrentRotationState(rotation);
-    }, []);
+  const saveCurrentRotationAsPreset = useCallback(
+    (name: string): string | null => {
+      if (!currentRotation) return null;
+      const preset: Rotation = {
+        ...currentRotation,
+        id: `preset-${Date.now()}`,
+        name,
+        squad: [...squad],
+      };
+      setRotationsPresetsState((prevPresets) => [...prevPresets, preset]);
+      setSelectedPresetIdState(preset.id);
+      return preset.id;
+    },
+    [currentRotation, squad],
+  );
 
-    /**
-     * Clears the current rotation.
-     */
-    const clearCurrentRotation = useCallback(() => {
-        setCurrentRotationState(null);
-    }, []);
+  /**
+   * Removes a preset from the rotations presets.
+   * @param presetId The id of the preset to remove
+   */
+  const removePreset = useCallback((presetId: string) => {
+    setRotationsPresetsState((prevPresets) =>
+      prevPresets.filter((preset) => preset.id !== presetId),
+    );
+    setSelectedPresetIdState((prev) => (prev === presetId ? '' : prev));
+  }, []);
 
-    /**
-     * Saves the current rotation as a preset.
-     * @param name The name for the preset
-     */
-    const setSelectedPresetId = useCallback((presetId: string) => {
-        setSelectedPresetIdState(presetId);
-    }, []);
+  /**
+   * Loads a preset into the current rotation and sets the squad to the characters used in that preset.
+   * @param presetId The id of the preset to load
+   */
+  const loadPreset = useCallback(
+    (presetId: string) => {
+      const preset = rotationsPresets.find((p) => p.id === presetId);
+      if (!preset) {
+        setCurrentRotationState({ id: '', name: '', steps: [] });
+        return;
+      }
+      setCurrentRotationState({
+        ...preset,
+        steps: preset.steps.map((step) => ({
+          ...step,
+          action: step.action,
+          character: step.character ?? undefined,
+        })),
+      });
+      // Restore squad from preset if saved, otherwise fall back to deriving from steps
+      if (preset.squad && preset.squad.length > 0) {
+        setSquadState(preset.squad);
+      } else {
+        // Fallback for older presets that don't have a saved squad
+        const squadFromPreset: Character[] = [];
+        const seen = new Set<string>();
+        for (const step of preset.steps) {
+          if (step.character && !seen.has(step.character.id)) {
+            seen.add(step.character.id);
+            squadFromPreset.push(step.character);
+            if (squadFromPreset.length >= 4) break;
+          }
+        }
+        setSquadState(squadFromPreset);
+      }
+    },
+    [rotationsPresets],
+  );
 
-    const saveCurrentRotationAsPreset = useCallback((name: string): string | null => {
-        if (!currentRotation) return null;
-        const preset: Rotation = {
-            ...currentRotation,
-            id: `preset-${Date.now()}`,
-            name,
-            squad: [...squad],
+  /**
+   * Adds a step to the current rotation.
+   * @param step The step to add
+   */
+  const addStepToCurrentRotation = useCallback((step: RotationStep) => {
+    setCurrentRotationState((prevRotation) => {
+      if (!prevRotation) return { id: '', name: '', steps: [] };
+      return { ...prevRotation, steps: [...prevRotation.steps, step] };
+    });
+  }, []);
+
+  /**
+   * Removes a step from the current rotation.
+   * @param stepId The id of the step to remove
+   */
+  const removeStepFromCurrentRotation = useCallback((stepId: string) => {
+    setCurrentRotationState((prevRotation) => {
+      if (!prevRotation) return { id: '', name: '', steps: [] };
+      return {
+        ...prevRotation,
+        steps: prevRotation.steps.filter((step) => step.id !== stepId),
+      };
+    });
+  }, []);
+
+  /**
+   * Sets the action for a step.
+   * @param stepId The id of the step to set the action for
+   * @param action The action to set
+   * @param character The character to set the action for
+   */
+  const setStepAction = useCallback(
+    (stepId: string, action: CharacterAction, character: Character) => {
+      setCurrentRotationState((prevRotation) => {
+        if (!prevRotation) return { id: '', name: '', steps: [] };
+        return {
+          ...prevRotation,
+          steps: prevRotation.steps.map((step) =>
+            step.id === stepId ? { ...step, action, character } : step,
+          ),
         };
-        setRotationsPresetsState(prevPresets => [...prevPresets, preset]);
-        setSelectedPresetIdState(preset.id);
-        return preset.id;
-    }, [currentRotation, squad]);
+      });
+    },
+    [],
+  );
 
-    /**
-     * Removes a preset from the rotations presets.
-     * @param presetId The id of the preset to remove
-     */
-    const removePreset = useCallback((presetId: string) => {
-        setRotationsPresetsState(prevPresets => prevPresets.filter(preset => preset.id !== presetId));
-        setSelectedPresetIdState(prev => prev === presetId ? '' : prev);
-    }, []);
-
-    /**
-     * Loads a preset into the current rotation and sets the squad to the characters used in that preset.
-     * @param presetId The id of the preset to load
-     */
-    const loadPreset = useCallback((presetId: string) => {
-        const preset = rotationsPresets.find(p => p.id === presetId);
-        if (!preset) {
-            setCurrentRotationState({ id: '', name: '', steps: [] });
-            return;
-        }
-        setCurrentRotationState({
-            ...preset,
-            steps: preset.steps.map(step => ({ ...step, action: step.action, character: step.character ?? undefined })),
-        });
-        // Restore squad from preset if saved, otherwise fall back to deriving from steps
-        if (preset.squad && preset.squad.length > 0) {
-            setSquadState(preset.squad);
-        } else {
-            // Fallback for older presets that don't have a saved squad
-            const squadFromPreset: Character[] = [];
-            const seen = new Set<string>();
-            for (const step of preset.steps) {
-                if (step.character && !seen.has(step.character.id)) {
-                    seen.add(step.character.id);
-                    squadFromPreset.push(step.character);
-                    if (squadFromPreset.length >= 4) break;
-                }
-            }
-            setSquadState(squadFromPreset);
-        }
-    }, [rotationsPresets]);
-
-    /**
-     * Adds a step to the current rotation.
-     * @param step The step to add
-     */
-    const addStepToCurrentRotation = useCallback((step: RotationStep) => {
-        setCurrentRotationState(prevRotation => {
-            if (!prevRotation) return { id: '', name: '', steps: [] };
-            return { ...prevRotation, steps: [...prevRotation.steps, step] };
-        });
-    }, []);
-
-    /**
-     * Removes a step from the current rotation.
-     * @param stepId The id of the step to remove
-     */
-    const removeStepFromCurrentRotation = useCallback((stepId: string) => {
-        setCurrentRotationState(prevRotation => {
-            if (!prevRotation) return { id: '', name: '', steps: [] };
-            return { ...prevRotation, steps: prevRotation.steps.filter(step => step.id !== stepId) };
-        });
-    }, []);
-
-    /**
-     * Sets the action for a step.
-     * @param stepId The id of the step to set the action for
-     * @param action The action to set
-     * @param character The character to set the action for
-     */
-    const setStepAction = useCallback((stepId: string, action: CharacterAction, character: Character) => {
-        setCurrentRotationState(prevRotation => {
-            if (!prevRotation) return { id: '', name: '', steps: [] };
-            return { ...prevRotation, steps: prevRotation.steps.map(step => step.id === stepId ? { ...step, action, character } : step) };
-        });
-    }, []);
-
-    return {
-        characters,
-        squad,
-        currentRotation,
-        rotationsPresets,
-        selectedPresetId,
-        addCharacterToSquad,
-        removeCharacterFromSquad,
-        setCurrentRotation,
-        clearCurrentRotation,
-        saveCurrentRotationAsPreset,
-        removePreset,
-        loadPreset,
-        setSelectedPresetId,
-        addStepToCurrentRotation,
-        removeStepFromCurrentRotation,
-        setStepAction,
-    };
+  return {
+    characters,
+    squad,
+    currentRotation,
+    rotationsPresets,
+    selectedPresetId,
+    addCharacterToSquad,
+    removeCharacterFromSquad,
+    setCurrentRotation,
+    clearCurrentRotation,
+    saveCurrentRotationAsPreset,
+    removePreset,
+    loadPreset,
+    setSelectedPresetId,
+    addStepToCurrentRotation,
+    removeStepFromCurrentRotation,
+    setStepAction,
+  };
 }

@@ -11,7 +11,7 @@ interface AppHeaderProps {
   hotkeyTextDesktop?: string;
   showHotkey?: boolean;
   actionButtons?: Array<{
-    icon: string;
+    icon: React.ReactNode;
     title: string;
     onClick: () => void;
   }>;
@@ -24,7 +24,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   hotkeyTextInGame,
   hotkeyTextDesktop,
   showHotkey = true,
-  actionButtons = []
+  actionButtons = [],
 }) => {
   const { windowName } = useWindowInfo();
   const hasBothHotkeys = hotkeyTextInGame != null && hotkeyTextDesktop != null;
@@ -79,17 +79,21 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
     <header id="header" className="app-header" onMouseDown={handleDragStart}>
-      <img src="../../img/logo-window.png" alt="Header icon" draggable={false} />
+      <img
+        src="../../img/logo-window.png"
+        alt="Header icon"
+        draggable={false}
+      />
       <h1>
         {title}
-        {appVersion && (
-          <span className="app-version-tag">v{appVersion}</span>
-        )}
+        {appVersion && <span className="app-version-tag">v{appVersion}</span>}
       </h1>
       {showHotkey && hotkeyDisplay && (
         <h1 className="hotkey-text">
           {hotkeyDisplay.single != null ? (
-            <>Show/Hide: <kbd id="hotkey">{hotkeyDisplay.single}</kbd></>
+            <>
+              Show/Hide: <kbd id="hotkey">{hotkeyDisplay.single}</kbd>
+            </>
           ) : (
             <>
               Show/Hide: In-Game <kbd>{hotkeyDisplay.inGame}</kbd>
@@ -99,9 +103,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           )}
         </h1>
       )}
-      <div className='header-drag-handle'></div>
+      <div className="header-drag-handle"></div>
       {actionButtons.length > 0 && (
-        <div className="header-actions-group" onMouseDown={(e) => e.stopPropagation()}>
+        <div
+          className="header-actions-group"
+          onMouseDown={(e) => e.stopPropagation()}
+        >
           {actionButtons.map((button, index) => (
             <button
               key={index}
@@ -114,12 +121,26 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           ))}
         </div>
       )}
-      <div className="window-controls-group" onMouseDown={(e) => e.stopPropagation()}>
-        <button id="minimizeButton" className="window-control window-control-minimize" onClick={handleMinimize} />
-        <button id="maximizeButton" className="window-control window-control-maximize" onClick={handleRestore} />
-        <button id="closeButton" className="window-control window-control-close" onClick={handleClose} />
+      <div
+        className="window-controls-group"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <button
+          id="minimizeButton"
+          className="window-control window-control-minimize"
+          onClick={handleMinimize}
+        />
+        <button
+          id="maximizeButton"
+          className="window-control window-control-maximize"
+          onClick={handleRestore}
+        />
+        <button
+          id="closeButton"
+          className="window-control window-control-close"
+          onClick={handleClose}
+        />
       </div>
     </header>
   );
 };
-

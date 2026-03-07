@@ -4,7 +4,7 @@
   "meta": {
     "name": "Arknights Companion",
     "author": "KofimBadam",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "minimum-overwolf-version": "0.160.0",
     "description": "An Overwolf app for Arknights: Endfield",
     "dock_button_title": "ArknightsCompanion",
@@ -95,20 +95,14 @@
     },
     "game_targeting": {
       "type": "dedicated",
-      "game_ids": [
-        27724
-      ]
+      "game_ids": [27724]
     },
-    "game_events": [
-      27724
-    ],
+    "game_events": [27724],
     "launch_events": [
       {
         "event": "GameLaunch",
         "event_data": {
-          "game_ids": [
-            27724
-          ]
+          "game_ids": [27724]
         },
         "start_minimized": true
       }
