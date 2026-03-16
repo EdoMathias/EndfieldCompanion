@@ -805,6 +805,41 @@
                     "image": ""
                 }
             ]
+        },
+        {
+            "id": "tang_tang",
+            "name": "Tang Tang",
+            "image": "../characters-img/tang_tang.png",
+            "actions": [
+                {
+                    "id": "basic",
+                    "name": "I'LL BLOW YOUR MIND!",
+                    "type": "final_strike",
+                    "description": "A basic attack.",
+                    "image": ""
+                },
+                {
+                    "id": "skill",
+                    "name": "IMA WAVERIDAAH!",
+                    "type": "skill",
+                    "description": "A skill attack.",
+                    "image": ""
+                },
+                {
+                    "id": "combo",
+                    "name": "RIVER, TO ME!",
+                    "type": "combo",
+                    "description": "A combo attack.",
+                    "image": ""
+                },
+                {
+                    "id": "ultimate",
+                    "name": "DA CHIEF SEES YOU!",
+                    "type": "ultimate",
+                    "description": "A ultimate attack.",
+                    "image": ""
+                }
+            ]
         }
     ]
 }
